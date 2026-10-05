@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>🌳 Heimische Bäume Deutschlands</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eef5ed;
+    color: #18351f;
+}
+
+
+/* =================================
+   STARTSEITE
+================================= */
+
+.hero {
+
+    height: 100vh;
+    min-height: 650px;
+
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            rgba(10,45,20,0.35),
+            rgba(5,25,10,0.85)
+        ),
+        url("https://images.unsplash.com/photo-1448375240586-882707db888b")
+        center / cover;
+}
+
+.hero::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            transparent 40%,
+            rgba(0,0,0,0.7)
+        );
+
+    z-index: 1;
+}
+
+
+.hero-content {
+
+    position: relative;
+
+    z-index: 3;
+
+    color: white;
+
+    max-width: 900px;
+
+    padding: 30px;
+
+    animation:
+        heroAppear 1.2s ease;
+}
+
+
+@keyframes heroAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+.hero-icon {
+
+    font-size: 100px;
+
+    animation:
+        treeFloat 4s ease-in-out infinite;
+}
+
+
+@keyframes treeFloat {
+
+    0%,100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+
+}
+
+
+.hero h1 {
+
+    font-size:
+        clamp(42px,7vw,82px);
+
+    margin: 10px 0;
+
+    line-height: 1.05;
+
+    text-shadow:
+        0 5px 20px rgba(0,0,0,0.6);
+}
+
+
+.hero h1 span {
+
+    color: #9be28f;
+}
+
+
+.hero p {
+
+    font-size: 22px;
+
+    line-height: 1.5;
+
+    margin: 25px auto 35px;
+
+    max-width: 700px;
+
+    color: #e5f4e5;
+}
+
+
+/* START BUTTON */
+
+.start-button {
+
+    display: inline-block;
+
+    padding: 18px 38px;
+
+    border-radius: 50px;
+
+    border: 2px solid white;
+
+    background: #2f7d43;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.3);
+}
+
+
+.start-button:hover {
+
+    transform: scale(1.08);
+
+    background: #3e9654;
+}
+
+
+/* SCROLL */
+
+.scroll {
+
+    position: absolute;
+
+    bottom: 25px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    z-index: 3;
+
+    color: white;
+
+    font-size: 15px;
+
+    animation:
+        scrollAnimation 2s infinite;
+}
+
+
+@keyframes scrollAnimation {
+
+    0%,100% {
+        transform:
+            translate(-50%,0);
+    }
+
+    50% {
+        transform:
+            translate(-50%,10px);
+    }
+
+}
+
+
+/* =================================
+   FALLENDE BLÄTTER
+================================= */
+
+.leaf {
+
+    position: absolute;
+
+    top: -50px;
+
+    z-index: 2;
+
+    font-size: 28px;
+
+    opacity: 0.8;
+
+    animation:
+        falling linear infinite;
+}
+
+
+.leaf:nth-child(1) {
+
+    left: 10%;
+
+    animation-duration: 8s;
+}
+
+
+.leaf:nth-child(2) {
+
+    left: 25%;
+
+    animation-duration: 11s;
+
+    animation-delay: 2s;
+}
+
+
+.leaf:nth-child(3) {
+
+    left: 45%;
+
+    animation-duration: 9s;
+
+    animation-delay: 1s;
+}
+
+
+.leaf:nth-child(4) {
+
+    left: 65%;
+
+    animation-duration: 12s;
+
+    animation-delay: 3s;
+}
+
+
+.leaf:nth-child(5) {
+
+    left: 85%;
+
+    animation-duration: 10s;
+
+    animation-delay: 1s;
+}
+
+
+@keyframes falling {
+
+    0% {
+
+        transform:
+            translateY(-50px)
+            rotate(0deg);
+    }
+
+    100% {
+
+        transform:
+            translateY(110vh)
+            rotate(720deg);
+    }
+
+}
+
+
+/* =================================
+   BÄUME
+================================= */
+
+#baeume {
+
+    padding: 80px 20px;
+
+    max-width: 1150px;
+
+    margin: auto;
+}
+
+
+.section-title {
+
+    text-align: center;
+
+    font-size: 42px;
+
+    color: #285c35;
+
+    margin-bottom: 15px;
+}
+
+
+.section-subtitle {
+
+    text-align: center;
+
+    font-size: 18px;
+
+    color: #607862;
+
+    margin-bottom: 45px;
+}
+
+
+.trees {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap: 25px;
+}
+
+
+.tree-button {
+
+    border: none;
+
+    border-radius: 25px;
+
+    padding: 35px;
+
+    background: white;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,0.12);
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+    color: #18351f;
+}
+
+
+.tree-button:hover {
+
+    transform:
+        translateY(-10px)
+        scale(1.02);
+
+    box-shadow:
+        0 18px 35px rgba(0,0,0,0.2);
+}
+
+
+.tree-icon {
+
+    font-size: 75px;
+
+    margin-bottom: 10px;
+
+    transition:
+        transform 0.35s ease;
+}
+
+
+.tree-button:hover .tree-icon {
+
+    transform:
+        scale(1.12)
+        rotate(-5deg);
+}
+
+
+.tree-button h2 {
+
+    margin: 5px;
+
+    font-size: 28px;
+}
+
+
+.scientific {
+
+    font-style: italic;
+
+    color: #66806c;
+}
+
+
+/* =================================
+   HINTERGRUND FÜR INFO
+================================= */
+
+#overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        rgba(0,0,0,0.6);
+
+    backdrop-filter:
+        blur(7px);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition:
+        opacity 0.45s ease;
+
+    z-index: 100;
+}
+
+
+#overlay.active {
+
+    opacity: 1;
+
+    visibility: visible;
+}
+
+
+/* =================================
+   INFO-FENSTER
+================================= */
+
+#info {
+
+    position: fixed;
+
+    left: 50%;
+
+    top: 50%;
+
+    width:
+        min(850px,90%);
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    padding: 45px;
+
+    background: white;
+
+    border-radius: 30px;
+
+    box-shadow:
+        0 30px 80px
+        rgba(0,0,0,0.4);
+
+    z-index: 101;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform:
+        translate(-50%,-43%)
+        scale(0.75);
+
+    transition:
+
+        transform 0.55s
+        cubic-bezier(.16,1,.3,1),
+
+        opacity 0.35s ease;
+}
+
+
+/* INFO GEÖFFNET */
+
+#info.active {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    transform:
+        translate(-50%,-50%)
+        scale(1);
+}
+
+
+/* =================================
+   INFO ICON
+================================= */
+
+.info-icon {
+
+    text-align: center;
+
+    font-size: 90px;
+
+    animation:
+        treeIconOpen
+        0.7s
+        cubic-bezier(.16,1,.3,1);
+}
+
+
+@keyframes treeIconOpen {
+
+    0% {
+
+        opacity: 0;
+
+        transform:
+            scale(0.3)
+            rotate(-20deg);
+    }
+
+    70% {
+
+        transform:
+            scale(1.12)
+            rotate(5deg);
+    }
+
+    100% {
+
+        opacity: 1;
+
+        transform:
+            scale(1)
+            rotate(0);
+    }
+
+}
+
+
+/* =================================
+   INFO TITEL
+================================= */
+
+#info h2 {
+
+    text-align: center;
+
+    font-size: 38px;
+
+    color: #285c35;
+
+    animation:
+        infoTextOpen
+        0.5s
+        0.15s
+        both;
+}
+
+
+#info .scientific {
+
+    text-align: center;
+
+    margin-bottom: 30px;
+
+    animation:
+        infoTextOpen
+        0.5s
+        0.2s
+        both;
+}
+
+
+@keyframes infoTextOpen {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(15px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+/* =================================
+   FAKTEN
+================================= */
+
+.facts {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap: 15px;
+}
+
+
+.fact {
+
+    background: #eef5ed;
+
+    padding: 18px;
+
+    border-radius: 15px;
+
+    transition:
+        transform 0.2s;
+
+    animation:
+        factOpen
+        0.5s
+        both;
+}
+
+
+.fact:hover {
+
+    transform:
+        translateY(-3px);
+}
+
+
+.fact:nth-child(1) {
+    animation-delay: 0.20s;
+}
+
+.fact:nth-child(2) {
+    animation-delay: 0.25s;
+}
+
+.fact:nth-child(3) {
+    animation-delay: 0.30s;
+}
+
+.fact:nth-child(4) {
+    animation-delay: 0.35s;
+}
+
+.fact:nth-child(5) {
+    animation-delay: 0.40s;
+}
+
+.fact:nth-child(6) {
+    animation-delay: 0.45s;
+}
+
+
+.fact span {
+
+    display: block;
+
+    margin-top: 5px;
+}
+
+
+@keyframes factOpen {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(18px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+/* =================================
+   BESCHREIBUNG
+================================= */
+
+.description {
+
+    margin-top: 30px;
+
+    padding: 20px;
+
+    background: #e0eee1;
+
+    border-radius: 18px;
+
+    line-height: 1.6;
+
+    animation:
+        infoTextOpen
+        0.5s
+        0.45s
+        both;
+}
+
+
+/* =================================
+   SCHLIESSEN
+================================= */
+
+.close {
+
+    position: absolute;
+
+    right: 20px;
+
+    top: 15px;
+
+    width: 45px;
+
+    height: 45px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #285c35;
+
+    color: white;
+
+    font-size: 28px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.3s;
+}
+
+
+.close:hover {
+
+    transform:
+        rotate(90deg)
+        scale(1.1);
+}
+
+
+.closeButton {
+
+    width: 100%;
+
+    margin-top: 20px;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 15px;
+
+    background: #285c35;
+
+    color: white;
+
+    font-size: 17px;
+
+    cursor: pointer;
+
+    animation:
+        infoTextOpen
+        0.5s
+        0.5s
+        both;
+}
+
+
+.closeButton:hover {
+
+    background: #3e9654;
+}
+
+
+/* =================================
+   FOOTER
+================================= */
+
+footer {
+
+    text-align: center;
+
+    padding: 35px;
+
+    background: #18351f;
+
+    color: white;
+}
+
+
+/* =================================
+   HANDY
+================================= */
+
+@media(max-width:700px) {
+
+    .trees {
+
+        grid-template-columns: 1fr;
+    }
+
+    .facts {
+
+        grid-template-columns: 1fr;
+    }
+
+    #info {
+
+        padding:
+            30px 20px;
+    }
+
+    .hero p {
+
+        font-size: 18px;
+    }
+
+    .hero-icon {
+
+        font-size: 75px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =================================
+     STARTSEITE
+================================= -->
+
+<section class="hero">
+
+    <div class="leaf">🍂</div>
+
+    <div class="leaf">🍃</div>
+
+    <div class="leaf">🍂</div>
+
+    <div class="leaf">🍁</div>
+
+    <div class="leaf">🍃</div>
+
+
+    <div class="hero-content">
+
+        <div class="hero-icon">
+            🌳
+        </div>
+
+        <h1>
+
+            Heimische Bäume
+            <span>Deutschlands</span>
+
+        </h1>
+
+
+        <p>
+
+            Entdecke vier besondere Baumarten,
+            die in Deutschland wachsen.
+            Erfahre mehr über ihre Blätter,
+            Früchte, Lebensräume und ihre
+            Bedeutung für unsere Natur.
+
+        </p>
+
+
+        <a
+            href="#baeume"
+            class="start-button"
+        >
+
+            🌿 Bäume entdecken
+
+        </a>
+
+    </div>
+
+
+    <div class="scroll">
+
+        ↓ Nach unten scrollen
+
+    </div>
+
+</section>
+
+
+
+<!-- =================================
+     BAUM-BEREICH
+================================= -->
+
+<section id="baeume">
+
+    <h2 class="section-title">
+
+        🌳 Entdecke die 4 Baumarten
+
+    </h2>
+
+
+    <p class="section-subtitle">
+
+        Klicke auf einen Baum
+        für den vollständigen Steckbrief.
+
+    </p>
+
+
+    <div class="trees">
+
+
+        <!-- ROTBUCHE -->
+
+        <button
+            class="tree-button"
+            onclick="showTree('buche')"
+        >
+
+            <div class="tree-icon">
+                🌳
+            </div>
+
+            <h2>
+                Rotbuche
+            </h2>
+
+            <div class="scientific">
+                Fagus sylvatica
+            </div>
+
+        </button>
+
+
+        <!-- STIELEICHE -->
+
+        <button
+            class="tree-button"
+            onclick="showTree('eiche')"
+        >
+
+            <div class="tree-icon">
+                🌳
+            </div>
+
+            <h2>
+                Stieleiche
+            </h2>
+
+            <div class="scientific">
+                Quercus robur
+            </div>
+
+        </button>
+
+
+        <!-- HÄNGEBIRKE -->
+
+        <button
+            class="tree-button"
+            onclick="showTree('birke')"
+        >
+
+            <div class="tree-icon">
+                🤍
+            </div>
+
+            <h2>
+                Hängebirke
+            </h2>
+
+            <div class="scientific">
+                Betula pendula
+            </div>
+
+        </button>
+
+
+        <!-- BERGAHORN -->
+
+        <button
+            class="tree-button"
+            onclick="showTree('ahorn')"
+        >
+
+            <div class="tree-icon">
+                🍁
+            </div>
+
+            <h2>
+                Bergahorn
+            </h2>
+
+            <div class="scientific">
+                Acer pseudoplatanus
+            </div>
+
+        </button>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =================================
+     INFO-HINTERGRUND
+================================= -->
+
+<div
+    id="overlay"
+    onclick="closeInfo()"
+></div>
+
+
+
+<!-- =================================
+     INFO-FENSTER
+================================= -->
+
+<div id="info">
+
+
+    <button
+        class="close"
+        onclick="closeInfo()"
+    >
+
+        ×
+
+    </button>
+
+
+    <div
+        class="info-icon"
+        id="treeIcon"
+    ></div>
+
+
+    <h2 id="treeName"></h2>
+
+
+    <p
+        class="scientific"
+        id="scientific"
+    ></p>
+
+
+    <div class="facts">
+
+
+        <div class="fact">
+
+            📏 <b>Höhe</b>
+
+            <span id="height"></span>
+
+        </div>
+
+
+        <div class="fact">
+
+            🍃 <b>Blätter</b>
+
+            <span id="leaves"></span>
+
+        </div>
+
+
+        <div class="fact">
+
+            🌱 <b>Früchte</b>
+
+            <span id="fruit"></span>
+
+        </div>
+
+
+        <div class="fact">
+
+            🌸 <b>Blüte</b>
+
+            <span id="flower"></span>
+
+        </div>
+
+
+        <div class="fact">
+
+            📍 <b>Vorkommen</b>
+
+            <span id="location"></span>
+
+        </div>
+
+
+        <div class="fact">
+
+            🪵 <b>Holz</b>
+
+            <span id="wood"></span>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="description">
+
+        <h3>
+
+            🌳 Über diese Baumart
+
+        </h3>
+
+
+        <p id="description"></p>
+
+    </div>
+
+
+    <button
+        class="closeButton"
+        onclick="closeInfo()"
+    >
+
+        Schließen
+
+    </button>
+
+
+</div>
+
+
+
+<!-- =================================
+     FOOTER
+================================= -->
+
+<footer>
+
+    🌳 Schulprojekt –
+    Heimische Bäume in Deutschland 🇩🇪
+
+</footer>
+
+
+
+<script>
+
+
+/* =================================
+   BAUMDATEN
+================================= */
+
+const trees = {
+
+
+    buche: {
+
+        icon: "🌳",
+
+        name: "Rotbuche",
+
+        scientific:
+            "Fagus sylvatica",
+
+        height:
+            "bis ca. 40 m",
+
+        leaves:
+            "oval und glatt",
+
+        fruit:
+            "Bucheckern",
+
+        flower:
+            "April–Mai",
+
+        location:
+            "fast ganz Deutschland",
+
+        wood:
+            "hart und schwer",
+
+        description:
+            "Die Rotbuche ist eine der wichtigsten Laubbaumarten Deutschlands. Sie wächst besonders gut auf nährstoffreichen Böden und bietet vielen Tieren Nahrung und Lebensraum."
+
+    },
+
+
+    eiche: {
+
+        icon: "🌳",
+
+        name: "Stieleiche",
+
+        scientific:
+            "Quercus robur",
+
+        height:
+            "bis ca. 40 m",
+
+        leaves:
+            "gelappt",
+
+        fruit:
+            "Eicheln",
+
+        flower:
+            "April–Mai",
+
+        location:
+            "viele Regionen Deutschlands",
+
+        wood:
+            "sehr hart und langlebig",
+
+        description:
+            "Die Stieleiche kann sehr alt werden. Alte Eichen sind besonders wertvoll für die Natur und bieten vielen Tieren einen Lebensraum."
+
+    },
+
+
+    birke: {
+
+        icon: "🤍",
+
+        name: "Hängebirke",
+
+        scientific:
+            "Betula pendula",
+
+        height:
+            "bis ca. 30 m",
+
+        leaves:
+            "klein und gezähnt",
+
+        fruit:
+            "geflügelte Samen",
+
+        flower:
+            "April–Mai",
+
+        location:
+            "fast ganz Deutschland",
+
+        wood:
+            "hell und gut bearbeitbar",
+
+        description:
+            "Die Hängebirke erkennt man leicht an ihrer weißen Rinde. Sie wächst gerne an sonnigen Standorten und kommt auch mit eher nährstoffarmen Böden zurecht."
+
+    },
+
+
+    ahorn: {
+
+        icon: "🍁",
+
+        name: "Bergahorn",
+
+        scientific:
+            "Acer pseudoplatanus",
+
+        height:
+            "bis ca. 40 m",
+
+        leaves:
+            "groß und handförmig",
+
+        fruit:
+            "Flügelnüsse",
+
+        flower:
+            "April–Mai",
+
+        location:
+            "besonders Mittel- und Süddeutschland",
+
+        wood:
+            "hell und hochwertig",
+
+        description:
+            "Der Bergahorn ist ein großer heimischer Laubbaum. Seine geflügelten Früchte werden durch den Wind verbreitet."
+
+    }
+
+};
+
+
+
+/* =================================
+   BAUM ÖFFNEN
+================================= */
+
+function showTree(type) {
+
+
+    const tree =
+        trees[type];
+
+
+    document.getElementById(
+        "treeIcon"
+    ).textContent =
+        tree.icon;
+
+
+    document.getElementById(
+        "treeName"
+    ).textContent =
+        tree.name;
+
+
+    document.getElementById(
+        "scientific"
+    ).textContent =
+        tree.scientific;
+
+
+    document.getElementById(
+        "height"
+    ).textContent =
+        tree.height;
+
+
+    document.getElementById(
+        "leaves"
+    ).textContent =
+        tree.leaves;
+
+
+    document.getElementById(
+        "fruit"
+    ).textContent =
+        tree.fruit;
+
+
+    document.getElementById(
+        "flower"
+    ).textContent =
+        tree.flower;
+
+
+    document.getElementById(
+        "location"
+    ).textContent =
+        tree.location;
+
+
+    document.getElementById(
+        "wood"
+    ).textContent =
+        tree.wood;
+
+
+    document.getElementById(
+        "description"
+    ).textContent =
+        tree.description;
+
+
+    /* Popup öffnen */
+
+    document
+        .getElementById("overlay")
+        .classList.add("active");
+
+
+    document
+        .getElementById("info")
+        .classList.add("active");
+
+
+    /* Hintergrund nicht scrollen */
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+
+/* =================================
+   INFO SCHLIESSEN
+================================= */
+
+function closeInfo() {
+
+
+    document
+        .getElementById("overlay")
+        .classList.remove("active");
+
+
+    document
+        .getElementById("info")
+        .classList.remove("active");
+
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+
+/* =================================
+   ESC-TASTE
+================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeInfo();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
