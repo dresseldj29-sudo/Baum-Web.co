@@ -4,12 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>🌳 Heimische Bäume Deutschlands</title>
+<title>HolzWissen – Aufbau des Holzes</title>
 
 <style>
 
+/* =========================
+   GRUNDLAYOUT
+========================= */
+
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 html {
@@ -17,867 +23,493 @@ html {
 }
 
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #eef5ed;
-    color: #18351f;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    background:
+        radial-gradient(circle at top, #714523 0%, #321b0d 45%, #120a05 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
 
-/* =================================
+/* =========================
    STARTSEITE
-================================= */
+========================= */
 
-.hero {
-
-    height: 100vh;
-    min-height: 650px;
-
+#startseite {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     position: relative;
+    overflow: hidden;
+    padding: 30px;
+}
+
+.start-bg {
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    border-radius: 50%;
+    background: rgba(197, 124, 55, 0.15);
+    filter: blur(80px);
+    animation: bgPulse 6s infinite alternate;
+}
+
+@keyframes bgPulse {
+    from {
+        transform: scale(.7);
+        opacity: .4;
+    }
+
+    to {
+        transform: scale(1.2);
+        opacity: .8;
+    }
+}
+
+.start-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1000px;
+}
+
+.logo {
+    font-size: 100px;
+    animation: floatingTree 3s ease-in-out infinite;
+}
+
+@keyframes floatingTree {
+
+    0%,100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(2deg);
+    }
+}
+
+.start-content h1 {
+    font-size: clamp(45px, 8vw, 90px);
+    margin: 20px 0;
+    text-shadow:
+        0 5px 10px #000,
+        0 15px 40px #000;
+}
+
+.start-content h2 {
+    font-size: 25px;
+    color: #e7c39d;
+    font-weight: normal;
+}
+
+.start-content p {
+    max-width: 700px;
+    margin: 25px auto;
+    color: #d9c5b0;
+    font-size: 19px;
+    line-height: 1.7;
+}
+
+.start-button {
+    margin-top: 30px;
+    padding: 18px 50px;
+    border: none;
+    border-radius: 50px;
+    color: white;
+    background: linear-gradient(
+        135deg,
+        #e19a52,
+        #7d411c
+    );
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 15px 40px rgba(0,0,0,.5);
+    transition: .3s;
+}
+
+.start-button:hover {
+    transform: scale(1.1);
+}
+
+
+/* =========================
+   HAUPTSEITE
+========================= */
+
+#app {
+    display: none;
+    min-height: 100vh;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 15px 25px;
+    background: rgba(20,10,5,.85);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255,255,255,.1);
+}
+
+.nav {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.nav-logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.nav-button {
+    border: none;
+    border-radius: 25px;
+    padding: 10px 17px;
+    background: rgba(255,255,255,.08);
+    color: white;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.nav-button:hover {
+    background: #9c5b2b;
+    transform: translateY(-2px);
+}
+
+
+/* =========================
+   SEITEN
+========================= */
+
+.page {
+    display: none;
+    max-width: 1200px;
+    margin: auto;
+    padding: 70px 25px 100px;
+    animation: pageIn .6s ease;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes pageIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+.page-title {
+    text-align: center;
+    font-size: clamp(40px,6vw,65px);
+    margin-bottom: 15px;
+}
+
+.page-subtitle {
+    text-align: center;
+    color: #d6c0aa;
+    font-size: 19px;
+    margin-bottom: 60px;
+}
+
+
+/* =========================
+   3D KARTEN
+========================= */
+
+.cards {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    perspective: 1500px;
+}
+
+.card-container {
+    height: 360px;
+    perspective: 1200px;
+}
+
+.card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition:
+        transform .9s cubic-bezier(.2,.8,.2,1);
+    cursor: pointer;
+}
+
+.card-container:hover .card {
+    transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 30px;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: 0 20px 50px rgba(0,0,0,.45);
+}
+
+.card-front {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(154,91,42,.95),
+            rgba(45,23,11,.98)
+        );
+}
+
+.card-back {
+    transform: rotateY(180deg);
+    background:
+        linear-gradient(
+            145deg,
+            #543017,
+            #1b0e07
+        );
+}
+
+.card-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+}
+
+.card h2 {
+    font-size: 30px;
+    margin-bottom: 15px;
+}
+
+.card p {
+    color: #dfc9b2;
+    line-height: 1.6;
+}
+
+.card-back h2 {
+    color: #e4a05b;
+}
+
+.card-button {
+    margin-top: 25px;
+    padding: 12px 24px;
+    border-radius: 30px;
+    background: #bd7131;
+    font-weight: bold;
+}
+
+
+/* =========================
+   INFO
+========================= */
+
+.info {
+    margin-top: 60px;
+    padding: 40px;
+    background: rgba(0,0,0,.3);
+    border-radius: 30px;
+    border: 1px solid rgba(255,255,255,.1);
+}
+
+.info h2 {
+    color: #e4a05b;
+    font-size: 38px;
+    margin-bottom: 20px;
+}
+
+.info p {
+    color: #dfc9b2;
+    font-size: 18px;
+    line-height: 1.8;
+}
+
+.info ul {
+    margin-top: 25px;
+    padding-left: 25px;
+}
+
+.info li {
+    margin: 12px 0;
+    color: #eee;
+}
+
+
+/* =========================
+   HOLZQUERSCHNITT
+========================= */
+
+.cross-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0 70px;
+}
+
+.tree-ring {
+    width: min(80vw, 500px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+
+    background:
+        repeating-radial-gradient(
+            circle,
+            #a86432 0px,
+            #a86432 10px,
+            #8c4d26 12px,
+            #c27b42 18px,
+            #915127 25px
+        );
+
+    border: 15px solid #633719;
+
+    box-shadow:
+        0 30px 70px rgba(0,0,0,.6),
+        inset 0 0 40px rgba(0,0,0,.3);
 
     display: flex;
     justify-content: center;
     align-items: center;
-
-    text-align: center;
-
-    overflow: hidden;
-
-    background:
-        linear-gradient(
-            rgba(10,45,20,0.35),
-            rgba(5,25,10,0.85)
-        ),
-        url("https://images.unsplash.com/photo-1448375240586-882707db888b")
-        center / cover;
 }
 
-.hero::after {
-
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    background:
-        linear-gradient(
-            transparent 40%,
-            rgba(0,0,0,0.7)
-        );
-
-    z-index: 1;
-}
-
-
-.hero-content {
-
-    position: relative;
-
-    z-index: 3;
-
-    color: white;
-
-    max-width: 900px;
-
-    padding: 30px;
-
-    animation:
-        heroAppear 1.2s ease;
-}
-
-
-@keyframes heroAppear {
-
-    from {
-        opacity: 0;
-        transform: translateY(40px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-}
-
-
-.hero-icon {
-
-    font-size: 100px;
-
-    animation:
-        treeFloat 4s ease-in-out infinite;
-}
-
-
-@keyframes treeFloat {
-
-    0%,100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-15px);
-    }
-
-}
-
-
-.hero h1 {
-
-    font-size:
-        clamp(42px,7vw,82px);
-
-    margin: 10px 0;
-
-    line-height: 1.05;
-
-    text-shadow:
-        0 5px 20px rgba(0,0,0,0.6);
-}
-
-
-.hero h1 span {
-
-    color: #9be28f;
-}
-
-
-.hero p {
-
-    font-size: 22px;
-
-    line-height: 1.5;
-
-    margin: 25px auto 35px;
-
-    max-width: 700px;
-
-    color: #e5f4e5;
-}
-
-
-/* START BUTTON */
-
-.start-button {
-
-    display: inline-block;
-
-    padding: 18px 38px;
-
-    border-radius: 50px;
-
-    border: 2px solid white;
-
-    background: #2f7d43;
-
-    color: white;
-
-    text-decoration: none;
-
-    font-size: 20px;
-
-    font-weight: bold;
-
-    cursor: pointer;
-
-    transition: 0.3s;
-
-    box-shadow:
-        0 10px 30px rgba(0,0,0,0.3);
-}
-
-
-.start-button:hover {
-
-    transform: scale(1.08);
-
-    background: #3e9654;
-}
-
-
-/* SCROLL */
-
-.scroll {
-
-    position: absolute;
-
-    bottom: 25px;
-
-    left: 50%;
-
-    transform:
-        translateX(-50%);
-
-    z-index: 3;
-
-    color: white;
-
-    font-size: 15px;
-
-    animation:
-        scrollAnimation 2s infinite;
-}
-
-
-@keyframes scrollAnimation {
-
-    0%,100% {
-        transform:
-            translate(-50%,0);
-    }
-
-    50% {
-        transform:
-            translate(-50%,10px);
-    }
-
-}
-
-
-/* =================================
-   FALLENDE BLÄTTER
-================================= */
-
-.leaf {
-
-    position: absolute;
-
-    top: -50px;
-
-    z-index: 2;
-
-    font-size: 28px;
-
-    opacity: 0.8;
-
-    animation:
-        falling linear infinite;
-}
-
-
-.leaf:nth-child(1) {
-
-    left: 10%;
-
-    animation-duration: 8s;
-}
-
-
-.leaf:nth-child(2) {
-
-    left: 25%;
-
-    animation-duration: 11s;
-
-    animation-delay: 2s;
-}
-
-
-.leaf:nth-child(3) {
-
-    left: 45%;
-
-    animation-duration: 9s;
-
-    animation-delay: 1s;
-}
-
-
-.leaf:nth-child(4) {
-
-    left: 65%;
-
-    animation-duration: 12s;
-
-    animation-delay: 3s;
-}
-
-
-.leaf:nth-child(5) {
-
-    left: 85%;
-
-    animation-duration: 10s;
-
-    animation-delay: 1s;
-}
-
-
-@keyframes falling {
-
-    0% {
-
-        transform:
-            translateY(-50px)
-            rotate(0deg);
-    }
-
-    100% {
-
-        transform:
-            translateY(110vh)
-            rotate(720deg);
-    }
-
-}
-
-
-/* =================================
-   BÄUME
-================================= */
-
-#baeume {
-
-    padding: 80px 20px;
-
-    max-width: 1150px;
-
-    margin: auto;
-}
-
-
-.section-title {
-
-    text-align: center;
-
-    font-size: 42px;
-
-    color: #285c35;
-
-    margin-bottom: 15px;
-}
-
-
-.section-subtitle {
-
-    text-align: center;
-
-    font-size: 18px;
-
-    color: #607862;
-
-    margin-bottom: 45px;
-}
-
-
-.trees {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(2,1fr);
-
-    gap: 25px;
-}
-
-
-.tree-button {
-
-    border: none;
-
-    border-radius: 25px;
-
-    padding: 35px;
-
-    background: white;
-
-    box-shadow:
-        0 8px 25px rgba(0,0,0,0.12);
-
-    cursor: pointer;
-
-    transition: 0.3s;
-
-    color: #18351f;
-}
-
-
-.tree-button:hover {
-
-    transform:
-        translateY(-10px)
-        scale(1.02);
-
-    box-shadow:
-        0 18px 35px rgba(0,0,0,0.2);
-}
-
-
-.tree-icon {
-
-    font-size: 75px;
-
-    margin-bottom: 10px;
-
-    transition:
-        transform 0.35s ease;
-}
-
-
-.tree-button:hover .tree-icon {
-
-    transform:
-        scale(1.12)
-        rotate(-5deg);
-}
-
-
-.tree-button h2 {
-
-    margin: 5px;
-
-    font-size: 28px;
-}
-
-
-.scientific {
-
-    font-style: italic;
-
-    color: #66806c;
-}
-
-
-/* =================================
-   HINTERGRUND FÜR INFO
-================================= */
-
-#overlay {
-
-    position: fixed;
-
-    inset: 0;
-
-    background:
-        rgba(0,0,0,0.6);
-
-    backdrop-filter:
-        blur(7px);
-
-    opacity: 0;
-
-    visibility: hidden;
-
-    transition:
-        opacity 0.45s ease;
-
-    z-index: 100;
-}
-
-
-#overlay.active {
-
-    opacity: 1;
-
-    visibility: visible;
-}
-
-
-/* =================================
-   INFO-FENSTER
-================================= */
-
-#info {
-
-    position: fixed;
-
-    left: 50%;
-
-    top: 50%;
-
-    width:
-        min(850px,90%);
-
-    max-height: 90vh;
-
-    overflow-y: auto;
-
-    padding: 45px;
-
-    background: white;
-
-    border-radius: 30px;
-
-    box-shadow:
-        0 30px 80px
-        rgba(0,0,0,0.4);
-
-    z-index: 101;
-
-    opacity: 0;
-
-    visibility: hidden;
-
-    transform:
-        translate(-50%,-43%)
-        scale(0.75);
-
-    transition:
-
-        transform 0.55s
-        cubic-bezier(.16,1,.3,1),
-
-        opacity 0.35s ease;
-}
-
-
-/* INFO GEÖFFNET */
-
-#info.active {
-
-    opacity: 1;
-
-    visibility: visible;
-
-    transform:
-        translate(-50%,-50%)
-        scale(1);
-}
-
-
-/* =================================
-   INFO ICON
-================================= */
-
-.info-icon {
-
-    text-align: center;
-
-    font-size: 90px;
-
-    animation:
-        treeIconOpen
-        0.7s
-        cubic-bezier(.16,1,.3,1);
-}
-
-
-@keyframes treeIconOpen {
-
-    0% {
-
-        opacity: 0;
-
-        transform:
-            scale(0.3)
-            rotate(-20deg);
-    }
-
-    70% {
-
-        transform:
-            scale(1.12)
-            rotate(5deg);
-    }
-
-    100% {
-
-        opacity: 1;
-
-        transform:
-            scale(1)
-            rotate(0);
-    }
-
-}
-
-
-/* =================================
-   INFO TITEL
-================================= */
-
-#info h2 {
-
-    text-align: center;
-
-    font-size: 38px;
-
-    color: #285c35;
-
-    animation:
-        infoTextOpen
-        0.5s
-        0.15s
-        both;
-}
-
-
-#info .scientific {
-
-    text-align: center;
-
-    margin-bottom: 30px;
-
-    animation:
-        infoTextOpen
-        0.5s
-        0.2s
-        both;
-}
-
-
-@keyframes infoTextOpen {
-
-    from {
-
-        opacity: 0;
-
-        transform:
-            translateY(15px);
-    }
-
-    to {
-
-        opacity: 1;
-
-        transform:
-            translateY(0);
-    }
-
-}
-
-
-/* =================================
-   FAKTEN
-================================= */
-
-.facts {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(2,1fr);
-
-    gap: 15px;
-}
-
-
-.fact {
-
-    background: #eef5ed;
-
-    padding: 18px;
-
-    border-radius: 15px;
-
-    transition:
-        transform 0.2s;
-
-    animation:
-        factOpen
-        0.5s
-        both;
-}
-
-
-.fact:hover {
-
-    transform:
-        translateY(-3px);
-}
-
-
-.fact:nth-child(1) {
-    animation-delay: 0.20s;
-}
-
-.fact:nth-child(2) {
-    animation-delay: 0.25s;
-}
-
-.fact:nth-child(3) {
-    animation-delay: 0.30s;
-}
-
-.fact:nth-child(4) {
-    animation-delay: 0.35s;
-}
-
-.fact:nth-child(5) {
-    animation-delay: 0.40s;
-}
-
-.fact:nth-child(6) {
-    animation-delay: 0.45s;
-}
-
-
-.fact span {
-
-    display: block;
-
-    margin-top: 5px;
-}
-
-
-@keyframes factOpen {
-
-    from {
-
-        opacity: 0;
-
-        transform:
-            translateY(18px);
-    }
-
-    to {
-
-        opacity: 1;
-
-        transform:
-            translateY(0);
-    }
-
-}
-
-
-/* =================================
-   BESCHREIBUNG
-================================= */
-
-.description {
-
-    margin-top: 30px;
-
-    padding: 20px;
-
-    background: #e0eee1;
-
-    border-radius: 18px;
-
-    line-height: 1.6;
-
-    animation:
-        infoTextOpen
-        0.5s
-        0.45s
-        both;
-}
-
-
-/* =================================
-   SCHLIESSEN
-================================= */
-
-.close {
-
-    position: absolute;
-
-    right: 20px;
-
-    top: 15px;
-
-    width: 45px;
-
-    height: 45px;
-
-    border: none;
-
+.tree-center {
+    width: 32%;
+    aspect-ratio: 1;
     border-radius: 50%;
-
-    background: #285c35;
-
-    color: white;
-
-    font-size: 28px;
-
-    cursor: pointer;
-
-    transition:
-        transform 0.3s;
+    background: #70401f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    box-shadow: inset 0 0 20px rgba(0,0,0,.4);
 }
 
 
-.close:hover {
+/* =========================
+   VERGLEICH
+========================= */
 
-    transform:
-        rotate(90deg)
-        scale(1.1);
+.table-wrapper {
+    overflow-x: auto;
 }
 
-
-.closeButton {
-
+table {
     width: 100%;
+    border-collapse: collapse;
+    background: rgba(0,0,0,.3);
+    border-radius: 20px;
+    overflow: hidden;
+}
 
-    margin-top: 20px;
+th,
+td {
+    padding: 17px;
+    border: 1px solid rgba(255,255,255,.1);
+    text-align: left;
+}
 
-    padding: 15px;
+th {
+    background: #78451f;
+}
 
+tr:hover {
+    background: rgba(255,255,255,.06);
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+.big-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 50px;
+}
+
+.big-button {
+    padding: 15px 28px;
     border: none;
-
-    border-radius: 15px;
-
-    background: #285c35;
-
+    border-radius: 30px;
+    background: #70401f;
     color: white;
-
-    font-size: 17px;
-
+    font-size: 16px;
     cursor: pointer;
+    transition: .3s;
+}
 
-    animation:
-        infoTextOpen
-        0.5s
-        0.5s
-        both;
+.big-button:hover {
+    background: #a36030;
+    transform: translateY(-4px);
 }
 
 
-.closeButton:hover {
-
-    background: #3e9654;
-}
-
-
-/* =================================
+/* =========================
    FOOTER
-================================= */
+========================= */
 
 footer {
-
     text-align: center;
-
-    padding: 35px;
-
-    background: #18351f;
-
-    color: white;
+    padding: 40px;
+    color: #927c68;
 }
 
 
-/* =================================
-   HANDY
-================================= */
+/* =========================
+   MOBILE
+========================= */
 
 @media(max-width:700px) {
 
-    .trees {
-
-        grid-template-columns: 1fr;
+    .nav {
+        flex-direction: column;
     }
 
-    .facts {
-
-        grid-template-columns: 1fr;
+    .card-container {
+        height: 330px;
     }
 
-    #info {
-
-        padding:
-            30px 20px;
+    .info {
+        padding: 25px;
     }
 
-    .hero p {
-
-        font-size: 18px;
+    .info h2 {
+        font-size: 30px;
     }
 
-    .hero-icon {
-
-        font-size: 75px;
+    table {
+        font-size: 13px;
     }
 
 }
@@ -889,63 +521,35 @@ footer {
 <body>
 
 
-<!-- =================================
+<!-- =====================================================
      STARTSEITE
-================================= -->
+===================================================== -->
 
-<section class="hero">
+<section id="startseite">
 
-    <div class="leaf">🍂</div>
+    <div class="start-bg"></div>
 
-    <div class="leaf">🍃</div>
+    <div class="start-content">
 
-    <div class="leaf">🍂</div>
+        <div class="logo">🌳</div>
 
-    <div class="leaf">🍁</div>
+        <h1>HolzWissen</h1>
 
-    <div class="leaf">🍃</div>
-
-
-    <div class="hero-content">
-
-        <div class="hero-icon">
-            🌳
-        </div>
-
-        <h1>
-
-            Heimische Bäume
-            <span>Deutschlands</span>
-
-        </h1>
-
+        <h2>Der Aufbau eines Baumstammes</h2>
 
         <p>
-
-            Entdecke vier besondere Baumarten,
-            die in Deutschland wachsen.
-            Erfahre mehr über ihre Blätter,
-            Früchte, Lebensräume und ihre
-            Bedeutung für unsere Natur.
-
+            Willkommen auf deiner interaktiven Webseite
+            über den Aufbau von Holz.
+            Entdecke Splintholz, Kernholz, Reifholz
+            und Kernreifholz.
         </p>
 
+        <button class="start-button"
+                onclick="openApp()">
 
-        <a
-            href="#baeume"
-            class="start-button"
-        >
+            🌲 Webseite starten
 
-            🌿 Bäume entdecken
-
-        </a>
-
-    </div>
-
-
-    <div class="scroll">
-
-        ↓ Nach unten scrollen
+        </button>
 
     </div>
 
@@ -953,117 +557,363 @@ footer {
 
 
 
-<!-- =================================
-     BAUM-BEREICH
-================================= -->
+<!-- =====================================================
+     APP
+===================================================== -->
 
-<section id="baeume">
-
-    <h2 class="section-title">
-
-        🌳 Entdecke die 4 Baumarten
-
-    </h2>
+<div id="app">
 
 
-    <p class="section-subtitle">
+<header>
 
-        Klicke auf einen Baum
-        für den vollständigen Steckbrief.
+    <div class="nav">
 
+        <div class="nav-logo">
+            🌳 HolzWissen
+        </div>
+
+        <div class="nav-buttons">
+
+            <button class="nav-button"
+                    onclick="showPage('home')">
+                🏠 Start
+            </button>
+
+            <button class="nav-button"
+                    onclick="showPage('holz')">
+                🌲 Holzbereiche
+            </button>
+
+            <button class="nav-button"
+                    onclick="showPage('aufbau')">
+                🔬 Aufbau
+            </button>
+
+            <button class="nav-button"
+                    onclick="showPage('vergleich')">
+                📋 Vergleich
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     HOME
+===================================================== -->
+
+<section id="home" class="page active">
+
+    <h1 class="page-title">
+        🌳 Willkommen
+    </h1>
+
+    <p class="page-subtitle">
+        Entdecke den Aufbau eines Baumstammes.
+    </p>
+
+    <div class="info">
+
+        <h2>Was ist Holz?</h2>
+
+        <p>
+            Holz ist ein natürlicher Werkstoff, der aus
+            dem Stamm, den Ästen und den Wurzeln von Bäumen
+            entsteht. Ein Baumstamm besteht aus verschiedenen
+            Bereichen, die unterschiedliche Aufgaben und
+            Eigenschaften haben.
+        </p>
+
+    </div>
+
+    <div class="big-buttons">
+
+        <button class="big-button"
+                onclick="showPage('holz')">
+            🌲 Holzbereiche entdecken
+        </button>
+
+        <button class="big-button"
+                onclick="showPage('aufbau')">
+            🔬 Stammaufbau ansehen
+        </button>
+
+        <button class="big-button"
+                onclick="showPage('vergleich')">
+            📋 Vergleich öffnen
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     HOLZBEREICHE
+===================================================== -->
+
+<section id="holz" class="page">
+
+    <h1 class="page-title">
+        🌲 Die vier Holzbereiche
+    </h1>
+
+    <p class="page-subtitle">
+        Bewege deine Maus über eine Karte.
+        Sie dreht sich um und zeigt weitere Informationen.
     </p>
 
 
-    <div class="trees">
+    <div class="cards">
 
 
-        <!-- ROTBUCHE -->
+        <!-- SPLINTHOLZ -->
 
-        <button
-            class="tree-button"
-            onclick="showTree('buche')"
-        >
+        <div class="card-container">
 
-            <div class="tree-icon">
-                🌳
+            <div class="card">
+
+                <div class="card-front">
+
+                    <div class="card-icon">🌱</div>
+
+                    <h2>Splintholz</h2>
+
+                    <p>
+                        Der äußere, jüngere Bereich
+                        des Holzes.
+                    </p>
+
+                </div>
+
+                <div class="card-back">
+
+                    <h2>Splintholz</h2>
+
+                    <p>
+                        Transportiert Wasser und
+                        Mineralstoffe von den Wurzeln
+                        in Richtung Krone.
+                    </p>
+
+                    <div class="card-button">
+                        Aktiv
+                    </div>
+
+                </div>
+
             </div>
 
-            <h2>
-                Rotbuche
-            </h2>
+        </div>
 
-            <div class="scientific">
-                Fagus sylvatica
+
+
+        <!-- KERNHOLZ -->
+
+        <div class="card-container">
+
+            <div class="card">
+
+                <div class="card-front">
+
+                    <div class="card-icon">🪵</div>
+
+                    <h2>Kernholz</h2>
+
+                    <p>
+                        Der innere, ältere Bereich
+                        des Stammes.
+                    </p>
+
+                </div>
+
+                <div class="card-back">
+
+                    <h2>Kernholz</h2>
+
+                    <p>
+                        Transportiert normalerweise
+                        kein Wasser mehr und kann
+                        besonders dauerhaft sein.
+                    </p>
+
+                    <div class="card-button">
+                        Innen
+                    </div>
+
+                </div>
+
             </div>
 
-        </button>
+        </div>
 
 
-        <!-- STIELEICHE -->
 
-        <button
-            class="tree-button"
-            onclick="showTree('eiche')"
-        >
+        <!-- REIFHOLZ -->
 
-            <div class="tree-icon">
-                🌳
+        <div class="card-container">
+
+            <div class="card">
+
+                <div class="card-front">
+
+                    <div class="card-icon">🌲</div>
+
+                    <h2>Reifholz</h2>
+
+                    <p>
+                        Älterer innerer Holzbereich,
+                        der farblich ähnlich aussehen kann.
+                    </p>
+
+                </div>
+
+                <div class="card-back">
+
+                    <h2>Reifholz</h2>
+
+                    <p>
+                        Ist physiologisch älter als
+                        Splintholz, ohne unbedingt
+                        deutlich dunkler zu sein.
+                    </p>
+
+                    <div class="card-button">
+                        Älter
+                    </div>
+
+                </div>
+
             </div>
 
-            <h2>
-                Stieleiche
-            </h2>
+        </div>
 
-            <div class="scientific">
-                Quercus robur
+
+
+        <!-- KERNREIFHOLZ -->
+
+        <div class="card-container">
+
+            <div class="card">
+
+                <div class="card-front">
+
+                    <div class="card-icon">🌳</div>
+
+                    <h2>Kernreifholz</h2>
+
+                    <p>
+                        Innerer Holzbereich mit
+                        besonderen Eigenschaften.
+                    </p>
+
+                </div>
+
+                <div class="card-back">
+
+                    <h2>Kernreifholz</h2>
+
+                    <p>
+                        Der innere Reifholzbereich
+                        unterscheidet sich vom äußeren
+                        Splintholz.
+                    </p>
+
+                    <div class="card-button">
+                        Innen
+                    </div>
+
+                </div>
+
             </div>
 
-        </button>
+        </div>
+
+    </div>
 
 
-        <!-- HÄNGEBIRKE -->
+    <div class="info">
 
-        <button
-            class="tree-button"
-            onclick="showTree('birke')"
-        >
+        <h2>🌱 Splintholz</h2>
 
-            <div class="tree-icon">
-                🤍
-            </div>
+        <p>
+            Das Splintholz liegt außen im Stamm.
+            Es ist der Bereich, der hauptsächlich
+            am Transport von Wasser und Mineralstoffen
+            beteiligt ist.
+        </p>
 
-            <h2>
-                Hängebirke
-            </h2>
+        <ul>
+            <li>äußerer Holzbereich</li>
+            <li>meist heller</li>
+            <li>Wassertransport</li>
+            <li>jünger als der innere Holzbereich</li>
+        </ul>
 
-            <div class="scientific">
-                Betula pendula
-            </div>
-
-        </button>
+    </div>
 
 
-        <!-- BERGAHORN -->
+    <div class="info">
 
-        <button
-            class="tree-button"
-            onclick="showTree('ahorn')"
-        >
+        <h2>🪵 Kernholz</h2>
 
-            <div class="tree-icon">
-                🍁
-            </div>
+        <p>
+            Kernholz befindet sich weiter innen.
+            Seine Zellen sind nicht mehr am aktiven
+            Wassertransport beteiligt.
+        </p>
 
-            <h2>
-                Bergahorn
-            </h2>
+        <ul>
+            <li>innerer Holzbereich</li>
+            <li>häufig dunkler</li>
+            <li>kein aktiver Wassertransport</li>
+            <li>kann besonders dauerhaft sein</li>
+        </ul>
 
-            <div class="scientific">
-                Acer pseudoplatanus
-            </div>
+    </div>
 
-        </button>
 
+    <div class="info">
+
+        <h2>🌲 Reifholz</h2>
+
+        <p>
+            Reifholz ist ein älterer innerer
+            Holzbereich. Es muss sich optisch nicht
+            stark vom Splintholz unterscheiden.
+        </p>
+
+        <ul>
+            <li>innerer Bereich</li>
+            <li>älter als Splintholz</li>
+            <li>kein aktiver Wassertransport</li>
+            <li>oft ähnliche Farbe wie Splintholz</li>
+        </ul>
+
+    </div>
+
+
+    <div class="info">
+
+        <h2>🌳 Kernreifholz</h2>
+
+        <p>
+            Beim Kernreifholz gibt es einen inneren
+            Reifholzbereich, der sich von dem äußeren
+            Splintholz unterscheidet.
+        </p>
+
+        <ul>
+            <li>innerer Holzbereich</li>
+            <li>älter als Splintholz</li>
+            <li>kein aktiver Wassertransport</li>
+            <li>Eigenschaften abhängig von der Baumart</li>
+        </ul>
 
     </div>
 
@@ -1071,429 +921,218 @@ footer {
 
 
 
-<!-- =================================
-     INFO-HINTERGRUND
-================================= -->
+<!-- =====================================================
+     AUFBAU
+===================================================== -->
 
-<div
-    id="overlay"
-    onclick="closeInfo()"
-></div>
+<section id="aufbau" class="page">
 
+    <h1 class="page-title">
+        🔬 Aufbau eines Baumstammes
+    </h1>
 
-
-<!-- =================================
-     INFO-FENSTER
-================================= -->
-
-<div id="info">
+    <p class="page-subtitle">
+        Ein vereinfachter Querschnitt durch einen Baumstamm.
+    </p>
 
 
-    <button
-        class="close"
-        onclick="closeInfo()"
-    >
+    <div class="cross-section">
 
-        ×
+        <div class="tree-ring">
 
-    </button>
-
-
-    <div
-        class="info-icon"
-        id="treeIcon"
-    ></div>
-
-
-    <h2 id="treeName"></h2>
-
-
-    <p
-        class="scientific"
-        id="scientific"
-    ></p>
-
-
-    <div class="facts">
-
-
-        <div class="fact">
-
-            📏 <b>Höhe</b>
-
-            <span id="height"></span>
+            <div class="tree-center">
+                Kern
+            </div>
 
         </div>
-
-
-        <div class="fact">
-
-            🍃 <b>Blätter</b>
-
-            <span id="leaves"></span>
-
-        </div>
-
-
-        <div class="fact">
-
-            🌱 <b>Früchte</b>
-
-            <span id="fruit"></span>
-
-        </div>
-
-
-        <div class="fact">
-
-            🌸 <b>Blüte</b>
-
-            <span id="flower"></span>
-
-        </div>
-
-
-        <div class="fact">
-
-            📍 <b>Vorkommen</b>
-
-            <span id="location"></span>
-
-        </div>
-
-
-        <div class="fact">
-
-            🪵 <b>Holz</b>
-
-            <span id="wood"></span>
-
-        </div>
-
 
     </div>
 
 
-    <div class="description">
+    <div class="info">
 
-        <h3>
+        <h2>Von innen nach außen</h2>
 
-            🌳 Über diese Baumart
+        <ul>
 
-        </h3>
+            <li>
+                <b>Kernbereich:</b>
+                ältester innerer Bereich
+            </li>
+
+            <li>
+                <b>Reifholz/Kernholz:</b>
+                innerer Bereich des Holzkörpers
+            </li>
+
+            <li>
+                <b>Splintholz:</b>
+                äußerer, wasserleitender Bereich
+            </li>
+
+            <li>
+                <b>Rinde:</b>
+                äußerer Schutz des Baumes
+            </li>
+
+        </ul>
+
+    </div>
+
+</section>
 
 
-        <p id="description"></p>
+
+<!-- =====================================================
+     VERGLEICH
+===================================================== -->
+
+<section id="vergleich" class="page">
+
+    <h1 class="page-title">
+        📋 Vergleich
+    </h1>
+
+    <p class="page-subtitle">
+        Die wichtigsten Unterschiede auf einen Blick.
+    </p>
+
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <tr>
+                <th>Holzbereich</th>
+                <th>Lage</th>
+                <th>Wassertransport</th>
+                <th>Alter</th>
+                <th>Farbe</th>
+            </tr>
+
+            <tr>
+                <td>Splintholz</td>
+                <td>Außen</td>
+                <td>Ja</td>
+                <td>Jünger</td>
+                <td>Meist hell</td>
+            </tr>
+
+            <tr>
+                <td>Kernholz</td>
+                <td>Innen</td>
+                <td>Nein</td>
+                <td>Älter</td>
+                <td>Oft dunkler</td>
+            </tr>
+
+            <tr>
+                <td>Reifholz</td>
+                <td>Innen</td>
+                <td>Nein</td>
+                <td>Älter</td>
+                <td>Ähnlich wie Splintholz</td>
+            </tr>
+
+            <tr>
+                <td>Kernreifholz</td>
+                <td>Innen</td>
+                <td>Nein</td>
+                <td>Älter</td>
+                <td>Abhängig von Baumart</td>
+            </tr>
+
+        </table>
 
     </div>
 
 
-    <button
-        class="closeButton"
-        onclick="closeInfo()"
-    >
+    <div class="info">
 
-        Schließen
+        <h2>💡 Merksatz</h2>
 
-    </button>
+        <p>
+            <b>Splintholz</b> ist außen und transportiert
+            Wasser. <b>Kernholz</b> und <b>Reifholz</b>
+            liegen weiter innen und sind nicht mehr aktiv
+            am Wassertransport beteiligt.
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<footer>
+
+    🌳 HolzWissen · Interaktive Schul-Webseite
+
+</footer>
 
 
 </div>
 
 
 
-<!-- =================================
-     FOOTER
-================================= -->
-
-<footer>
-
-    🌳 Schulprojekt –
-    Heimische Bäume in Deutschland 🇩🇪
-
-</footer>
-
-
-
 <script>
 
+/* =====================================================
+   APP ÖFFNEN
+===================================================== */
 
-/* =================================
-   BAUMDATEN
-================================= */
+function openApp() {
 
-const trees = {
+    document.getElementById("startseite").style.display = "none";
 
+    document.getElementById("app").style.display = "block";
 
-    buche: {
+    showPage("home");
 
-        icon: "🌳",
-
-        name: "Rotbuche",
-
-        scientific:
-            "Fagus sylvatica",
-
-        height:
-            "bis ca. 40 m",
-
-        leaves:
-            "oval und glatt",
-
-        fruit:
-            "Bucheckern",
-
-        flower:
-            "April–Mai",
-
-        location:
-            "fast ganz Deutschland",
-
-        wood:
-            "hart und schwer",
-
-        description:
-            "Die Rotbuche ist eine der wichtigsten Laubbaumarten Deutschlands. Sie wächst besonders gut auf nährstoffreichen Böden und bietet vielen Tieren Nahrung und Lebensraum."
-
-    },
-
-
-    eiche: {
-
-        icon: "🌳",
-
-        name: "Stieleiche",
-
-        scientific:
-            "Quercus robur",
-
-        height:
-            "bis ca. 40 m",
-
-        leaves:
-            "gelappt",
-
-        fruit:
-            "Eicheln",
-
-        flower:
-            "April–Mai",
-
-        location:
-            "viele Regionen Deutschlands",
-
-        wood:
-            "sehr hart und langlebig",
-
-        description:
-            "Die Stieleiche kann sehr alt werden. Alte Eichen sind besonders wertvoll für die Natur und bieten vielen Tieren einen Lebensraum."
-
-    },
-
-
-    birke: {
-
-        icon: "🤍",
-
-        name: "Hängebirke",
-
-        scientific:
-            "Betula pendula",
-
-        height:
-            "bis ca. 30 m",
-
-        leaves:
-            "klein und gezähnt",
-
-        fruit:
-            "geflügelte Samen",
-
-        flower:
-            "April–Mai",
-
-        location:
-            "fast ganz Deutschland",
-
-        wood:
-            "hell und gut bearbeitbar",
-
-        description:
-            "Die Hängebirke erkennt man leicht an ihrer weißen Rinde. Sie wächst gerne an sonnigen Standorten und kommt auch mit eher nährstoffarmen Böden zurecht."
-
-    },
-
-
-    ahorn: {
-
-        icon: "🍁",
-
-        name: "Bergahorn",
-
-        scientific:
-            "Acer pseudoplatanus",
-
-        height:
-            "bis ca. 40 m",
-
-        leaves:
-            "groß und handförmig",
-
-        fruit:
-            "Flügelnüsse",
-
-        flower:
-            "April–Mai",
-
-        location:
-            "besonders Mittel- und Süddeutschland",
-
-        wood:
-            "hell und hochwertig",
-
-        description:
-            "Der Bergahorn ist ein großer heimischer Laubbaum. Seine geflügelten Früchte werden durch den Wind verbreitet."
-
-    }
-
-};
-
-
-
-/* =================================
-   BAUM ÖFFNEN
-================================= */
-
-function showTree(type) {
-
-
-    const tree =
-        trees[type];
-
-
-    document.getElementById(
-        "treeIcon"
-    ).textContent =
-        tree.icon;
-
-
-    document.getElementById(
-        "treeName"
-    ).textContent =
-        tree.name;
-
-
-    document.getElementById(
-        "scientific"
-    ).textContent =
-        tree.scientific;
-
-
-    document.getElementById(
-        "height"
-    ).textContent =
-        tree.height;
-
-
-    document.getElementById(
-        "leaves"
-    ).textContent =
-        tree.leaves;
-
-
-    document.getElementById(
-        "fruit"
-    ).textContent =
-        tree.fruit;
-
-
-    document.getElementById(
-        "flower"
-    ).textContent =
-        tree.flower;
-
-
-    document.getElementById(
-        "location"
-    ).textContent =
-        tree.location;
-
-
-    document.getElementById(
-        "wood"
-    ).textContent =
-        tree.wood;
-
-
-    document.getElementById(
-        "description"
-    ).textContent =
-        tree.description;
-
-
-    /* Popup öffnen */
-
-    document
-        .getElementById("overlay")
-        .classList.add("active");
-
-
-    document
-        .getElementById("info")
-        .classList.add("active");
-
-
-    /* Hintergrund nicht scrollen */
-
-    document.body.style.overflow =
-        "hidden";
-
+    window.scrollTo(0,0);
 }
 
 
+/* =====================================================
+   SEITE WECHSELN
+===================================================== */
 
-/* =================================
-   INFO SCHLIESSEN
-================================= */
+function showPage(pageID) {
 
-function closeInfo() {
+    const pages =
+        document.querySelectorAll(".page");
 
+    pages.forEach(function(page) {
 
-    document
-        .getElementById("overlay")
-        .classList.remove("active");
+        page.classList.remove("active");
 
+    });
 
-    document
-        .getElementById("info")
-        .classList.remove("active");
+    const page =
+        document.getElementById(pageID);
 
+    page.classList.add("active");
 
-    document.body.style.overflow =
-        "";
-
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 }
 
 
-
-/* =================================
+/* =====================================================
    ESC-TASTE
-================================= */
+===================================================== */
 
-document.addEventListener(
-    "keydown",
-    function(event) {
+document.addEventListener("keydown", function(event) {
 
-        if (
-            event.key === "Escape"
-        ) {
+    if(event.key === "Escape") {
 
-            closeInfo();
-
-        }
+        showPage("home");
 
     }
-);
+
+});
 
 </script>
 
