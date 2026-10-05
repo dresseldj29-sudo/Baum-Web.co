@@ -2,8 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>HolzWissen | Interaktiv</title>
 
 <style>
@@ -45,6 +44,8 @@ body{
 button{
  font:inherit;
 }
+
+/* PARTICLES */
 
 #particles{
  position:fixed;
@@ -166,7 +167,6 @@ button{
 
 .start-button:hover{
  transform:translateY(-6px) scale(1.04);
- box-shadow:0 30px 80px rgba(0,0,0,.75);
 }
 
 /* APP */
@@ -277,18 +277,6 @@ main{
  box-shadow:0 30px 100px rgba(0,0,0,.5);
  position:relative;
  overflow:hidden;
-}
-
-.hero::before{
- content:"";
- position:absolute;
- width:250px;
- height:250px;
- right:-100px;
- top:-100px;
- border-radius:50%;
- background:rgba(231,157,90,.13);
- filter:blur(20px);
 }
 
 .hero h2{
@@ -523,7 +511,9 @@ main{
  margin:7px 0;
 }
 
-/* DIAGRAM */
+/* =========================================================
+   ALTER STAMMQUERSCHNITT
+========================================================= */
 
 .diagram-wrap{
  display:flex;
@@ -591,6 +581,453 @@ main{
 .l-reif{bottom:23%;left:-13%}
 .l-core{top:19%;left:-10%}
 .l-pith{bottom:-4%;left:43%}
+
+/* =========================================================
+   NEUE INTERAKTIVE 3D-ANSICHT
+========================================================= */
+
+.threeD-box{
+ margin:30px auto 65px;
+ padding:35px 20px 30px;
+ border:1px solid rgba(255,255,255,.13);
+ border-radius:40px;
+ background:
+ radial-gradient(circle at 50% 40%,rgba(230,155,87,.13),transparent 35%),
+ linear-gradient(145deg,rgba(66,35,17,.75),rgba(10,5,2,.92));
+ box-shadow:
+ 0 35px 100px rgba(0,0,0,.65),
+ inset 0 1px rgba(255,255,255,.05);
+ overflow:hidden;
+}
+
+.threeD-title{
+ text-align:center;
+ margin-bottom:10px;
+}
+
+.threeD-title h2{
+ font-size:clamp(27px,4vw,42px);
+}
+
+.threeD-title p{
+ color:var(--muted);
+ margin-top:8px;
+}
+
+.threeD-stage{
+ height:min(650px,75vh);
+ min-height:420px;
+ position:relative;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ perspective:1100px;
+ perspective-origin:center center;
+ overflow:hidden;
+ touch-action:none;
+ cursor:grab;
+ user-select:none;
+ -webkit-user-select:none;
+}
+
+.threeD-stage.dragging{
+ cursor:grabbing;
+}
+
+/* Licht */
+
+.stage-light{
+ position:absolute;
+ width:430px;
+ height:430px;
+ border-radius:50%;
+ background:rgba(235,166,98,.11);
+ filter:blur(65px);
+ pointer-events:none;
+}
+
+/* 3D-Welt */
+
+.wood-world{
+ position:relative;
+ width:270px;
+ height:420px;
+ transform-style:preserve-3d;
+ transition:transform .12s linear;
+ animation:woodIntro 1.5s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes woodIntro{
+ from{
+  opacity:0;
+  transform:
+   translateY(100px)
+   rotateX(-20deg)
+   rotateY(-60deg)
+   scale(.45);
+ }
+ to{
+  opacity:1;
+  transform:
+   translateY(0)
+   rotateX(-8deg)
+   rotateY(25deg)
+   scale(1);
+ }
+}
+
+/* Stammkörper */
+
+.log-layer{
+ position:absolute;
+ left:50%;
+ top:50%;
+ width:270px;
+ height:420px;
+ transform-style:preserve-3d;
+ transform:translate(-50%,-50%);
+}
+
+.log-side{
+ position:absolute;
+ left:0;
+ top:0;
+ width:270px;
+ height:420px;
+ border-radius:50px;
+ transform-style:preserve-3d;
+ backface-visibility:hidden;
+}
+
+/* Seitenflächen */
+
+.bark-side{
+ background:
+ repeating-linear-gradient(
+  90deg,
+  #241006 0px,
+  #4d2110 10px,
+  #6b3116 19px,
+  #321308 30px
+ );
+ box-shadow:
+ inset 10px 0 25px rgba(0,0,0,.55),
+ inset -10px 0 25px rgba(0,0,0,.5),
+ 0 25px 50px rgba(0,0,0,.6);
+}
+
+.splint-side{
+ left:18px;
+ width:234px;
+ height:384px;
+ top:18px;
+ margin-top:0;
+ background:
+ repeating-linear-gradient(
+  90deg,
+  #b8733e,
+  #e0a66c 9px,
+  #c98b54 18px,
+  #e8b477 27px
+ );
+ border-radius:42px;
+}
+
+.reif-side{
+ left:47px;
+ width:176px;
+ height:326px;
+ top:47px;
+ background:
+ repeating-linear-gradient(
+  90deg,
+  #8f5128,
+  #b9713b 11px,
+  #7c421e 22px
+ );
+ border-radius:35px;
+}
+
+.core-side{
+ left:75px;
+ width:120px;
+ height:270px;
+ top:75px;
+ background:
+ repeating-linear-gradient(
+  90deg,
+  #4b2512,
+  #713a1c 10px,
+  #542a14 20px
+ );
+ border-radius:30px;
+}
+
+/* obere Schnittflächen */
+
+.log-top{
+ position:absolute;
+ left:50%;
+ top:0;
+ width:270px;
+ height:270px;
+ border-radius:50%;
+ transform:
+  translate(-50%,-50%)
+  rotateX(90deg);
+ transform-style:preserve-3d;
+ background:
+ repeating-radial-gradient(
+  ellipse at center,
+  #261006 0 3px,
+  #4b2110 4px 8px,
+  #6b3217 9px 13px,
+  #8d5027 14px 17px
+ );
+ border:8px solid #2c1108;
+ box-shadow:
+ inset 0 0 30px rgba(0,0,0,.65),
+ 0 15px 30px rgba(0,0,0,.55);
+}
+
+/* Innere Ringe */
+
+.top-splint{
+ position:absolute;
+ inset:23px;
+ border-radius:50%;
+ border:22px solid #d89a61;
+ box-shadow:
+ inset 0 0 15px rgba(0,0,0,.3);
+}
+
+.top-reif{
+ position:absolute;
+ inset:68px;
+ border-radius:50%;
+ border:24px solid #a76231;
+}
+
+.top-core{
+ position:absolute;
+ inset:115px;
+ border-radius:50%;
+ border:28px solid #663317;
+}
+
+.top-mark{
+ position:absolute;
+ left:50%;
+ top:50%;
+ width:28px;
+ height:28px;
+ transform:translate(-50%,-50%);
+ border-radius:50%;
+ background:#281007;
+ box-shadow:0 0 15px rgba(0,0,0,.7);
+}
+
+/* Unterseite */
+
+.log-bottom{
+ position:absolute;
+ left:50%;
+ top:420px;
+ width:270px;
+ height:270px;
+ border-radius:50%;
+ transform:
+  translate(-50%,-50%)
+  rotateX(90deg);
+ background:
+ repeating-radial-gradient(
+  ellipse at center,
+  #261006 0 3px,
+  #4b2110 4px 8px,
+  #6b3217 9px 13px,
+  #8d5027 14px 17px
+ );
+ border:8px solid #2c1108;
+}
+
+/* Seiten-Rillen */
+
+.groove{
+ position:absolute;
+ width:3px;
+ height:360px;
+ background:rgba(20,8,2,.35);
+ border-radius:50%;
+ top:30px;
+}
+
+.g1{left:28px}
+.g2{left:53px}
+.g3{left:83px}
+.g4{left:112px}
+.g5{left:147px}
+.g6{left:178px}
+.g7{left:211px}
+.g8{left:240px}
+
+/* Beschriftungen */
+
+.three-label{
+ position:absolute;
+ z-index:20;
+ padding:9px 14px;
+ border-radius:999px;
+ background:rgba(8,4,2,.9);
+ border:1px solid rgba(255,255,255,.18);
+ color:#fff;
+ font-size:13px;
+ font-weight:900;
+ box-shadow:0 8px 25px rgba(0,0,0,.55);
+ pointer-events:none;
+ white-space:nowrap;
+ opacity:0;
+ animation:labelIn .7s ease forwards;
+}
+
+.three-label::after{
+ content:"";
+ position:absolute;
+ width:45px;
+ height:1px;
+ background:rgba(255,255,255,.45);
+ top:50%;
+}
+
+.label-bark{
+ right:5%;
+ top:22%;
+ animation-delay:.8s;
+}
+
+.label-bark::after{
+ right:100%;
+}
+
+.label-splint{
+ right:1%;
+ top:39%;
+ animation-delay:1s;
+}
+
+.label-splint::after{
+ right:100%;
+}
+
+.label-reif{
+ left:1%;
+ top:51%;
+ animation-delay:1.2s;
+}
+
+.label-reif::after{
+ left:100%;
+}
+
+.label-core{
+ left:3%;
+ top:66%;
+ animation-delay:1.4s;
+}
+
+.label-core::after{
+ left:100%;
+}
+
+.label-mark{
+ right:8%;
+ bottom:19%;
+ animation-delay:1.6s;
+}
+
+.label-mark::after{
+ right:100%;
+}
+
+@keyframes labelIn{
+ from{
+  opacity:0;
+  transform:scale(.7);
+ }
+ to{
+  opacity:1;
+  transform:scale(1);
+ }
+}
+
+/* Steuerung */
+
+.threeD-controls{
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ gap:10px;
+ flex-wrap:wrap;
+ margin-top:10px;
+}
+
+.threeD-button{
+ border:1px solid rgba(255,255,255,.14);
+ border-radius:999px;
+ padding:11px 17px;
+ background:rgba(255,255,255,.055);
+ color:white;
+ cursor:pointer;
+ transition:.25s;
+}
+
+.threeD-button:hover{
+ background:rgba(231,157,90,.17);
+ border-color:rgba(233,163,93,.4);
+ transform:translateY(-2px);
+}
+
+.threeD-help{
+ text-align:center;
+ margin-top:18px;
+ color:#9d8874;
+ font-size:13px;
+}
+
+/* Info unter 3D */
+
+.layer-info{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+ gap:14px;
+ margin-top:25px;
+}
+
+.layer-card{
+ padding:20px;
+ border-radius:22px;
+ border:1px solid var(--line);
+ background:rgba(255,255,255,.045);
+ cursor:pointer;
+ transition:.25s;
+}
+
+.layer-card:hover{
+ transform:translateY(-4px);
+ border-color:rgba(233,163,93,.35);
+}
+
+.layer-card h3{
+ color:var(--gold);
+ margin-bottom:7px;
+}
+
+.layer-card p{
+ color:var(--muted);
+ line-height:1.6;
+ font-size:14px;
+}
+
+/* INFO */
 
 .info{
  margin-top:20px;
@@ -867,6 +1304,50 @@ footer{
  .l-splint{right:-2%}
  .l-reif{left:-2%}
  .l-core{left:-1%}
+
+ .threeD-box{
+  padding:25px 8px;
+  border-radius:30px;
+ }
+
+ .threeD-stage{
+  min-height:400px;
+  height:65vh;
+ }
+
+ .wood-world{
+  transform:scale(.75);
+ }
+
+ .three-label{
+  font-size:10px;
+  padding:7px 9px;
+ }
+
+ .label-bark{
+  right:0;
+ }
+
+ .label-splint{
+  right:0;
+ }
+
+ .label-reif{
+  left:0;
+ }
+
+ .label-core{
+  left:0;
+ }
+
+ .label-mark{
+  right:2%;
+ }
+
+ .threeD-help{
+  font-size:11px;
+ }
+
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -1001,7 +1482,6 @@ footer{
    dein Wissen.
   </p>
 
-
   <div class="stats">
 
    <div class="stat">
@@ -1053,7 +1533,7 @@ footer{
 
     <p>
      Erkunde den Querschnitt und
-     klicke die Beschriftungen an.
+     den interaktiven 3D-Stamm.
     </p>
 
    </div>
@@ -1120,7 +1600,6 @@ footer{
 
 
  <div class="cards">
-
 
   <!-- SPLINT -->
 
@@ -1320,7 +1799,6 @@ footer{
 
  <div class="details">
 
-
   <article id="detail-splint" class="detail">
 
    <div class="detail-title">
@@ -1460,11 +1938,240 @@ footer{
   <h1>🔬 Stammaufbau</h1>
 
   <p>
-   Ein interaktiver, vereinfachter
-   Stammquerschnitt.
+   Untersuche zuerst den klassischen
+   Stammquerschnitt und anschließend
+   den interaktiven 3D-Stamm.
   </p>
 
  </div>
+
+
+ <!-- NEUE 3D-ANSICHT -->
+
+ <div class="threeD-box">
+
+  <div class="threeD-title">
+
+   <h2>🪵 Interaktiver 3D-Stamm</h2>
+
+   <p>
+    Drehe den Stamm mit Maus oder Finger.
+    Zoome mit Mausrad oder zwei Fingern.
+   </p>
+
+  </div>
+
+
+  <div
+   id="threeDStage"
+   class="threeD-stage">
+
+   <div class="stage-light"></div>
+
+
+   <div
+    id="woodWorld"
+    class="wood-world">
+
+    <div class="log-layer">
+
+     <!-- äußerer Stamm -->
+
+     <div class="log-side bark-side">
+
+      <div class="groove g1"></div>
+      <div class="groove g2"></div>
+      <div class="groove g3"></div>
+      <div class="groove g4"></div>
+      <div class="groove g5"></div>
+      <div class="groove g6"></div>
+      <div class="groove g7"></div>
+      <div class="groove g8"></div>
+
+     </div>
+
+
+     <!-- Splintholz -->
+
+     <div class="log-side splint-side"></div>
+
+
+     <!-- Reifholz -->
+
+     <div class="log-side reif-side"></div>
+
+
+     <!-- Kernholz -->
+
+     <div class="log-side core-side"></div>
+
+
+     <!-- obere Schnittfläche -->
+
+     <div class="log-top">
+
+      <div class="top-splint"></div>
+      <div class="top-reif"></div>
+      <div class="top-core"></div>
+      <div class="top-mark"></div>
+
+     </div>
+
+
+     <!-- untere Schnittfläche -->
+
+     <div class="log-bottom"></div>
+
+    </div>
+
+   </div>
+
+
+   <!-- Beschriftungen -->
+
+   <div class="three-label label-bark">
+    🟤 Rinde
+   </div>
+
+   <div class="three-label label-splint">
+    🟡 Splintholz
+   </div>
+
+   <div class="three-label label-reif">
+    🟠 Reifholz
+   </div>
+
+   <div class="three-label label-core">
+    🔴 Kernholz
+   </div>
+
+   <div class="three-label label-mark">
+    ⚫ Mark
+   </div>
+
+  </div>
+
+
+  <div class="threeD-controls">
+
+   <button
+    class="threeD-button"
+    onclick="rotate3D(-25,0)">
+    ◀ Drehen
+   </button>
+
+   <button
+    class="threeD-button"
+    onclick="reset3D()">
+    🔄 Zurücksetzen
+   </button>
+
+   <button
+    class="threeD-button"
+    onclick="rotate3D(25,0)">
+    Drehen ▶
+   </button>
+
+   <button
+    class="threeD-button"
+    onclick="zoom3D(1.12)">
+    🔍+
+   </button>
+
+   <button
+    class="threeD-button"
+    onclick="zoom3D(.88)">
+    🔍−
+   </button>
+
+  </div>
+
+
+  <div class="threeD-help">
+   🖱️ Maus ziehen · 📱 Finger ziehen · 🔍 Mausrad / Pinch-Zoom
+  </div>
+
+
+  <div class="layer-info">
+
+   <div
+    class="layer-card"
+    onclick="diagramInfo('Rinde')">
+
+    <h3>🟤 Rinde</h3>
+
+    <p>
+     Äußerste Schutzschicht des Stammes.
+    </p>
+
+   </div>
+
+
+   <div
+    class="layer-card"
+    onclick="diagramInfo('Splintholz')">
+
+    <h3>🟡 Splintholz</h3>
+
+    <p>
+     Äußerer, physiologisch aktiver Holzbereich.
+    </p>
+
+   </div>
+
+
+   <div
+    class="layer-card"
+    onclick="diagramInfo('Reifholz')">
+
+    <h3>🟠 Reifholz</h3>
+
+    <p>
+     Innerer Bereich ohne aktiven Wassertransport.
+    </p>
+
+   </div>
+
+
+   <div
+    class="layer-card"
+    onclick="diagramInfo('Kernholz')">
+
+    <h3>🔴 Kernholz</h3>
+
+    <p>
+     Innerer, nicht mehr aktiv wasserleitender Bereich.
+    </p>
+
+   </div>
+
+
+   <div
+    class="layer-card"
+    onclick="diagramInfo('Mark')">
+
+    <h3>⚫ Mark</h3>
+
+    <p>
+     Zentraler Bereich der jungen Sprossachse.
+    </p>
+
+   </div>
+
+  </div>
+
+ </div>
+
+
+ <!-- BISHERIGER 2D-QUERSCHNITT -->
+
+ <h2 style="
+ text-align:center;
+ margin:30px 0;
+ font-size:clamp(25px,4vw,40px);
+ ">
+ 📐 Klassischer Stammquerschnitt
+ </h2>
 
 
  <div class="diagram-wrap">
@@ -1524,41 +2231,60 @@ footer{
  <div class="legend">
 
   <div class="legend-card">
+
    <h3>🟤 Rinde</h3>
+
    <p>
     Äußerste Schutzschicht des Baumes.
    </p>
+
   </div>
 
+
   <div class="legend-card">
+
    <h3>🟡 Splintholz</h3>
+
    <p>
     Äußerer, aktiver Holzbereich.
    </p>
+
   </div>
 
+
   <div class="legend-card">
+
    <h3>🟠 Reifholz</h3>
+
    <p>
     Innerer Bereich ohne aktiven
     Wassertransport.
    </p>
+
   </div>
 
+
   <div class="legend-card">
+
    <h3>🔴 Kernholz</h3>
+
    <p>
     Innerer, nicht mehr aktiv
     wasserleitender Bereich.
    </p>
+
   </div>
 
+
   <div class="legend-card">
+
    <h3>⚫ Mark</h3>
+
    <p>
     Zentraler Bereich der jungen
     Sprossachse.
    </p>
+
   </div>
 
  </div>
@@ -1610,6 +2336,7 @@ footer{
     </tr>
 
    </thead>
+
 
    <tbody>
 
@@ -1688,26 +2415,43 @@ footer{
  <div class="quiz">
 
   <div class="progress">
-   <div id="progressBar" class="progress-bar"></div>
+
+   <div
+    id="progressBar"
+    class="progress-bar">
+   </div>
+
   </div>
 
 
   <div id="quizGame">
 
-   <div id="question" class="question"></div>
+   <div
+    id="question"
+    class="question">
+   </div>
 
-   <div id="answers" class="answers"></div>
+   <div
+    id="answers"
+    class="answers">
+   </div>
 
   </div>
 
 
-  <div id="result" class="result">
+  <div
+   id="result"
+   class="result">
 
    <h2>🎉 Fertig!</h2>
 
-   <div id="score" class="score"></div>
+   <div
+    id="score"
+    class="score">
+   </div>
 
-   <button class="action"
+   <button
+    class="action"
     onclick="restartQuiz()">
     🔄 Noch einmal
    </button>
@@ -1728,7 +2472,8 @@ footer{
 </div>
 
 
-<button id="top"
+<button
+ id="top"
  onclick="window.scrollTo({top:0,behavior:'smooth'})">
  ↑
 </button>
@@ -1736,7 +2481,9 @@ footer{
 
 <script>
 
-/* PARTICLES */
+/* =========================================================
+   PARTICLES
+========================================================= */
 
 for(let i=0;i<35;i++){
 
@@ -1748,139 +2495,184 @@ for(let i=0;i<35;i++){
 
  p.style.animationDelay=(-Math.random()*12)+"s";
 
- p.style.animationDuration=(8+Math.random()*12)+"s";
+ p.style.animationDuration=
+  (8+Math.random()*12)+"s";
 
- p.style.opacity=(.15+Math.random()*.4);
+ p.style.opacity=
+  (.15+Math.random()*.4);
 
- document.getElementById("particles")
- .appendChild(p);
+ document
+  .getElementById("particles")
+  .appendChild(p);
+
 }
 
 
-/* START */
+/* =========================================================
+   START
+========================================================= */
 
 function startApp(){
 
- document.getElementById("start").style.display="none";
+ document
+  .getElementById("start")
+  .style.display="none";
 
- document.getElementById("app").style.display="block";
+ document
+  .getElementById("app")
+  .style.display="block";
 
  showPageById("home");
 
  window.scrollTo(0,0);
+
 }
 
 
-/* NAVIGATION */
+/* =========================================================
+   NAVIGATION
+========================================================= */
 
 function showPage(id,button){
 
- document.querySelectorAll(".page")
- .forEach(p=>p.classList.remove("active"));
+ document
+  .querySelectorAll(".page")
+  .forEach(p=>p.classList.remove("active"));
 
- const page=document.getElementById(id);
+ const page=
+  document.getElementById(id);
 
  if(!page)return;
 
  page.classList.add("active");
 
- document.querySelectorAll(".nav-button")
- .forEach(b=>b.classList.remove("active"));
+ document
+  .querySelectorAll(".nav-button")
+  .forEach(b=>b.classList.remove("active"));
 
- if(button)button.classList.add("active");
+ if(button)
+  button.classList.add("active");
 
  window.scrollTo({
   top:0,
   behavior:"smooth"
  });
-}
 
+}
 
 function showPageById(id){
 
- document.querySelectorAll(".page")
- .forEach(p=>p.classList.remove("active"));
+ document
+  .querySelectorAll(".page")
+  .forEach(p=>p.classList.remove("active"));
 
- document.getElementById(id)
- .classList.add("active");
+ const page=
+  document.getElementById(id);
 
- document.querySelectorAll(".nav-button")
- .forEach(b=>b.classList.remove("active"));
+ if(!page)return;
 
- const button=[...document.querySelectorAll(".nav-button")]
- .find(b=>
-  b.getAttribute("onclick")?.includes("'"+id+"'")
- );
+ page.classList.add("active");
 
- if(button)button.classList.add("active");
+ document
+  .querySelectorAll(".nav-button")
+  .forEach(b=>b.classList.remove("active"));
+
+ const button=
+  [...document.querySelectorAll(".nav-button")]
+  .find(b=>
+   b.getAttribute("onclick")
+   ?.includes("'"+id+"'")
+  );
+
+ if(button)
+  button.classList.add("active");
 
  window.scrollTo({
   top:0,
   behavior:"smooth"
  });
+
 }
 
 
-/* SEARCH */
+/* =========================================================
+   SEARCH
+========================================================= */
 
 function searchCards(){
 
  const search=
- document.getElementById("search")
- .value.toLowerCase();
+  document
+   .getElementById("search")
+   .value
+   .toLowerCase();
 
- document.querySelectorAll(".card-container")
- .forEach(card=>{
+ document
+  .querySelectorAll(".card-container")
+  .forEach(card=>{
 
-  const name=
-  card.dataset.name.toLowerCase();
+   const name=
+    card.dataset.name.toLowerCase();
 
-  card.style.display=
-  name.includes(search)?"block":"none";
+   card.style.display=
+    name.includes(search)
+     ?"block"
+     :"none";
 
- });
+  });
+
 }
 
 
-/* CARD FLIP */
+/* =========================================================
+   CARD FLIP
+========================================================= */
 
 function openCard(type,container){
 
- document.querySelectorAll(".card")
- .forEach(card=>{
+ document
+  .querySelectorAll(".card")
+  .forEach(card=>{
 
-  if(card!==container.querySelector(".card"))
-   card.classList.remove("flipped");
+   if(card!==container.querySelector(".card"))
+    card.classList.remove("flipped");
 
- });
+  });
 
- const card=container.querySelector(".card");
+ const card=
+  container.querySelector(".card");
 
  card.classList.add("flipped");
 
-
- document.querySelectorAll(".detail")
- .forEach(d=>d.classList.remove("active"));
-
+ document
+  .querySelectorAll(".detail")
+  .forEach(d=>d.classList.remove("active"));
 
  const detail=
- document.getElementById("detail-"+type);
+  document.getElementById("detail-"+type);
 
- detail.classList.add("active");
-
+ if(detail)
+  detail.classList.add("active");
 
  setTimeout(()=>{
 
-  detail.scrollIntoView({
-   behavior:"smooth",
-   block:"start"
-  });
+  if(detail){
+
+   detail.scrollIntoView({
+    behavior:"smooth",
+    block:"start"
+   });
+
+  }
 
  },600);
+
 }
 
 
-/* DIAGRAM */
+/* =========================================================
+   DIAGRAM INFO
+========================================================= */
 
 function diagramInfo(type){
 
@@ -1888,65 +2680,387 @@ function diagramInfo(type){
 
   "Rinde":{
    title:"🟤 Rinde",
-   text:"Die Rinde bildet die äußere Schutzschicht des Baumes und schützt die inneren Gewebe."
+   text:
+   "Die Rinde bildet die äußere Schutzschicht des Baumes und schützt die inneren Gewebe."
   },
 
   "Splintholz":{
    title:"🟡 Splintholz",
-   text:"Splintholz liegt außen und ist bei einem lebenden Baum am aktiven Wassertransport beteiligt."
+   text:
+   "Splintholz liegt außen und ist bei einem lebenden Baum am aktiven Wassertransport beteiligt."
   },
 
   "Reifholz":{
    title:"🟠 Reifholz",
-   text:"Reifholz ist ein innerer Bereich ohne aktiven Wassertransport, der sich farblich kaum vom Splintholz unterscheiden kann."
+   text:
+   "Reifholz ist ein innerer Bereich ohne aktiven Wassertransport, der sich farblich kaum vom Splintholz unterscheiden kann."
   },
 
   "Kernholz":{
    title:"🔴 Kernholz",
-   text:"Kernholz liegt im Inneren und ist physiologisch nicht mehr am aktiven Wassertransport beteiligt."
+   text:
+   "Kernholz liegt im Inneren und ist physiologisch nicht mehr am aktiven Wassertransport beteiligt."
   },
 
   "Mark":{
    title:"⚫ Mark",
-   text:"Das Mark liegt im Zentrum der Sprossachse."
+   text:
+   "Das Mark liegt im Zentrum der Sprossachse."
   }
 
  };
 
  const d=data[type];
 
- const box=document.getElementById("diagramInfo");
+ if(!d)return;
+
+ const box=
+  document.getElementById("diagramInfo");
 
  box.innerHTML=`
+
   <h3>${d.title}</h3>
+
   <p>${d.text}</p>
+
  `;
 
  box.scrollIntoView({
   behavior:"smooth",
   block:"center"
  });
+
 }
 
 
-/* QUIZ */
+/* =========================================================
+   3D-STAMM
+========================================================= */
+
+const woodWorld=
+ document.getElementById("woodWorld");
+
+const threeDStage=
+ document.getElementById("threeDStage");
+
+let rotX=-8;
+let rotY=25;
+let zoom=1;
+
+let dragging=false;
+let startX=0;
+let startY=0;
+let lastX=0;
+let lastY=0;
+
+
+/* Darstellung */
+
+function update3D(){
+
+ woodWorld.style.transform=
+  `
+   scale(${zoom})
+   rotateX(${rotX}deg)
+   rotateY(${rotY}deg)
+  `;
+
+}
+
+
+/* Maus */
+
+threeDStage.addEventListener(
+ "mousedown",
+ e=>{
+
+  dragging=true;
+
+  threeDStage.classList.add("dragging");
+
+  startX=e.clientX;
+  startY=e.clientY;
+
+  lastX=e.clientX;
+  lastY=e.clientY;
+
+ }
+);
+
+window.addEventListener(
+ "mousemove",
+ e=>{
+
+  if(!dragging)return;
+
+  const dx=
+   e.clientX-lastX;
+
+  const dy=
+   e.clientY-lastY;
+
+  rotY+=dx*.65;
+  rotX-=dy*.45;
+
+  rotX=Math.max(-75,Math.min(75,rotX));
+
+  lastX=e.clientX;
+  lastY=e.clientY;
+
+  update3D();
+
+ }
+);
+
+window.addEventListener(
+ "mouseup",
+ ()=>{
+
+  dragging=false;
+
+  threeDStage
+   .classList
+   .remove("dragging");
+
+ }
+);
+
+
+/* Touch / iPad */
+
+let touchDistance=null;
+
+threeDStage.addEventListener(
+ "touchstart",
+ e=>{
+
+  e.preventDefault();
+
+  if(e.touches.length===1){
+
+   dragging=true;
+
+   startX=e.touches[0].clientX;
+   startY=e.touches[0].clientY;
+
+   lastX=startX;
+   lastY=startY;
+
+  }
+
+  if(e.touches.length===2){
+
+   dragging=false;
+
+   touchDistance=
+    getTouchDistance(e.touches);
+
+  }
+
+ },
+ {passive:false}
+);
+
+
+threeDStage.addEventListener(
+ "touchmove",
+ e=>{
+
+  e.preventDefault();
+
+  if(e.touches.length===1 && dragging){
+
+   const x=
+    e.touches[0].clientX;
+
+   const y=
+    e.touches[0].clientY;
+
+   const dx=x-lastX;
+   const dy=y-lastY;
+
+   rotY+=dx*.65;
+   rotX-=dy*.45;
+
+   rotX=
+    Math.max(
+     -75,
+     Math.min(75,rotX)
+    );
+
+   lastX=x;
+   lastY=y;
+
+   update3D();
+
+  }
+
+
+  if(e.touches.length===2){
+
+   const newDistance=
+    getTouchDistance(e.touches);
+
+   if(touchDistance){
+
+    const factor=
+     newDistance/touchDistance;
+
+    zoom*=factor;
+
+    zoom=
+     Math.max(
+      .55,
+      Math.min(1.65,zoom)
+     );
+
+    update3D();
+
+   }
+
+   touchDistance=newDistance;
+
+  }
+
+ },
+ {passive:false}
+);
+
+
+threeDStage.addEventListener(
+ "touchend",
+ e=>{
+
+  if(e.touches.length<2)
+   touchDistance=null;
+
+  if(e.touches.length===0)
+   dragging=false;
+
+ }
+);
+
+
+/* Touch-Abstand */
+
+function getTouchDistance(touches){
+
+ const dx=
+  touches[0].clientX-
+  touches[1].clientX;
+
+ const dy=
+  touches[0].clientY-
+  touches[1].clientY;
+
+ return Math.sqrt(
+  dx*dx+dy*dy
+ );
+
+}
+
+
+/* Mausrad-Zoom */
+
+threeDStage.addEventListener(
+ "wheel",
+ e=>{
+
+  e.preventDefault();
+
+  if(e.deltaY<0)
+   zoom*=1.08;
+  else
+   zoom*=.92;
+
+  zoom=
+   Math.max(
+    .55,
+    Math.min(1.65,zoom)
+   );
+
+  update3D();
+
+ },
+ {passive:false}
+);
+
+
+/* Buttons */
+
+function rotate3D(y,x){
+
+ rotY+=y;
+ rotX+=x;
+
+ rotX=
+  Math.max(
+   -75,
+   Math.min(75,rotX)
+  );
+
+ update3D();
+
+}
+
+function zoom3D(amount){
+
+ zoom*=amount;
+
+ zoom=
+  Math.max(
+   .55,
+   Math.min(1.65,zoom)
+  );
+
+ update3D();
+
+}
+
+function reset3D(){
+
+ rotX=-8;
+ rotY=25;
+ zoom=1;
+
+ update3D();
+
+}
+
+
+/* =========================================================
+   QUIZ
+========================================================= */
 
 const questions=[
 
  {
-  q:"Welcher Holzbereich transportiert bei einem lebenden Baum hauptsächlich Wasser?",
-  a:["Kernholz","Splintholz","Mark","Rinde"],
+  q:
+  "Welcher Holzbereich transportiert bei einem lebenden Baum hauptsächlich Wasser?",
+  a:[
+   "Kernholz",
+   "Splintholz",
+   "Mark",
+   "Rinde"
+  ],
   c:1
  },
 
  {
-  q:"Wo befindet sich das Kernholz?",
-  a:["Im äußeren Bereich","In der Rinde","Im inneren Bereich","Außerhalb"],
+  q:
+  "Wo befindet sich das Kernholz?",
+  a:[
+   "Im äußeren Bereich",
+   "In der Rinde",
+   "Im inneren Bereich",
+   "Außerhalb"
+  ],
   c:2
  },
 
  {
-  q:"Was ist typisch für echtes Kernholz?",
+  q:
+  "Was ist typisch für echtes Kernholz?",
   a:[
    "Aktiver Wassertransport",
    "Immer weiß",
@@ -1957,7 +3071,8 @@ const questions=[
  },
 
  {
-  q:"Was unterscheidet Reifholz häufig von Kernholz?",
+  q:
+  "Was unterscheidet Reifholz häufig von Kernholz?",
   a:[
    "Es kann farblich kaum vom Splintholz abweichen",
    "Es liegt außerhalb",
@@ -1968,7 +3083,8 @@ const questions=[
  },
 
  {
-  q:"Welche Reihenfolge ist vereinfacht richtig?",
+  q:
+  "Welche Reihenfolge ist vereinfacht richtig?",
   a:[
    "Kernholz → Reifholz → Splintholz",
    "Rinde → Kernholz → Splintholz",
@@ -1979,7 +3095,8 @@ const questions=[
  },
 
  {
-  q:"Wo liegt das Mark?",
+  q:
+  "Wo liegt das Mark?",
   a:[
    "Ganz außen",
    "Im Zentrum",
@@ -2001,32 +3118,40 @@ function loadQuiz(){
 
  locked=false;
 
- const q=questions[quizIndex];
+ const q=
+  questions[quizIndex];
 
- document.getElementById("question")
- .textContent=q.q;
+ document
+  .getElementById("question")
+  .textContent=q.q;
 
- const answers=document.getElementById("answers");
+ const answers=
+  document.getElementById("answers");
 
  answers.innerHTML="";
 
  q.a.forEach((text,index)=>{
 
-  const btn=document.createElement("button");
+  const btn=
+   document.createElement("button");
 
   btn.className="answer";
 
   btn.textContent=text;
 
-  btn.onclick=()=>answer(index,btn);
+  btn.onclick=
+   ()=>answer(index,btn);
 
   answers.appendChild(btn);
 
  });
 
- document.getElementById("progressBar")
- .style.width=
- ((quizIndex)/questions.length*100)+"%";
+ document
+  .getElementById("progressBar")
+  .style.width=
+  ((quizIndex)/
+   questions.length*100)+"%";
+
 }
 
 
@@ -2036,21 +3161,27 @@ function answer(index,button){
 
  locked=true;
 
- const q=questions[quizIndex];
+ const q=
+  questions[quizIndex];
 
- const buttons=document.querySelectorAll(".answer");
+ const buttons=
+  document.querySelectorAll(".answer");
 
  if(index===q.c){
 
-  button.classList.add("correct");
+  button.classList
+   .add("correct");
 
   score++;
 
  }else{
 
-  button.classList.add("wrong");
+  button.classList
+   .add("wrong");
 
-  buttons[q.c].classList.add("correct");
+  buttons[q.c]
+   .classList
+   .add("correct");
 
  }
 
@@ -2058,7 +3189,9 @@ function answer(index,button){
 
   quizIndex++;
 
-  if(quizIndex>=questions.length){
+  if(
+   quizIndex>=questions.length
+  ){
 
    finishQuiz();
 
@@ -2069,23 +3202,29 @@ function answer(index,button){
   }
 
  },900);
+
 }
 
 
 function finishQuiz(){
 
- document.getElementById("quizGame")
- .style.display="none";
+ document
+  .getElementById("quizGame")
+  .style.display="none";
 
- document.getElementById("result")
- .style.display="block";
+ document
+  .getElementById("result")
+  .style.display="block";
 
- document.getElementById("progressBar")
- .style.width="100%";
+ document
+  .getElementById("progressBar")
+  .style.width="100%";
 
- document.getElementById("score")
- .textContent=
- `Du hast ${score} von ${questions.length} Punkten erreicht.`;
+ document
+  .getElementById("score")
+  .textContent=
+  `Du hast ${score} von ${questions.length} Punkten erreicht.`;
+
 }
 
 
@@ -2095,45 +3234,69 @@ function restartQuiz(){
 
  score=0;
 
- document.getElementById("quizGame")
- .style.display="block";
+ document
+  .getElementById("quizGame")
+  .style.display="block";
 
- document.getElementById("result")
- .style.display="none";
+ document
+  .getElementById("result")
+  .style.display="none";
 
  loadQuiz();
+
 }
 
 
-/* TOP BUTTON */
+/* =========================================================
+   TOP BUTTON
+========================================================= */
 
-window.addEventListener("scroll",()=>{
+window.addEventListener(
+ "scroll",
+ ()=>{
 
- const top=document.getElementById("top");
+  const top=
+   document.getElementById("top");
 
- top.style.display=
- window.scrollY>500?"block":"none";
-
-});
-
-
-/* ESC */
-
-document.addEventListener("keydown",e=>{
-
- if(e.key==="Escape" &&
- document.getElementById("app").style.display==="block"){
-
-  showPageById("home");
+  top.style.display=
+   window.scrollY>500
+    ?"block"
+    :"none";
 
  }
+);
 
-});
+
+/* =========================================================
+   ESC
+========================================================= */
+
+document.addEventListener(
+ "keydown",
+ e=>{
+
+  if(
+   e.key==="Escape" &&
+   document
+    .getElementById("app")
+    .style.display==="block"
+  ){
+
+   showPageById("home");
+
+  }
+
+ }
+);
 
 
-/* INIT */
+/* =========================================================
+   INIT
+========================================================= */
 
 loadQuiz();
+
+update3D();
 
 </script>
 
