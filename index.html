@@ -2,3249 +2,2136 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#17100a">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>HolzWissen | Interaktiver Holzaufbau</title>
+<title>HolzWissen | Interaktiv</title>
 
 <style>
-
-/* =========================================================
-   HOLZWISSEN 10.000
-   Eine Datei – direkt für GitHub Pages
-========================================================= */
-
-:root {
-    --bg: #0d0906;
-    --bg2: #17100a;
-    --panel: rgba(38, 24, 13, .78);
-    --panel2: rgba(55, 34, 17, .65);
-
-    --wood1: #e5a15b;
-    --wood2: #b9682f;
-    --wood3: #733b1c;
-    --wood4: #35180b;
-
-    --text: #fff8ef;
-    --muted: #cdb8a2;
-
-    --border: rgba(255,255,255,.11);
-
-    --shadow:
-        0 25px 80px rgba(0,0,0,.55);
+:root{
+ --bg:#090604;
+ --bg2:#130b06;
+ --panel:rgba(34,20,11,.72);
+ --panel2:rgba(70,38,17,.55);
+ --gold:#e9a35d;
+ --gold2:#b9682d;
+ --cream:#fff5e8;
+ --muted:#c7b19b;
+ --line:rgba(255,255,255,.11);
+ --good:#72d27a;
+ --bad:#ef7166;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+*{
+ box-sizing:border-box;
+ margin:0;
+ padding:0;
 }
 
-html {
-    scroll-behavior: smooth;
+html{
+ scroll-behavior:smooth;
 }
 
-body {
-    min-height: 100vh;
-
-    font-family:
-        Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-
-    color: var(--text);
-
-    background:
-        radial-gradient(
-            circle at 50% -10%,
-            #754722 0,
-            #30190b 30%,
-            var(--bg) 70%
-        );
-
-    overflow-x: hidden;
+body{
+ min-height:100vh;
+ color:var(--cream);
+ font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+ background:
+ radial-gradient(circle at 50% -10%,#7b4724 0,transparent 35%),
+ radial-gradient(circle at 100% 50%,#43230f 0,transparent 30%),
+ linear-gradient(135deg,#090604,#160b05 60%,#090604);
+ overflow-x:hidden;
 }
 
-
-/* =========================================================
-   ANIMIERTER HINTERGRUND
-========================================================= */
-
-.background {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: -5;
-    overflow: hidden;
+button{
+ font:inherit;
 }
 
-.background::before,
-.background::after {
-    content: "";
-    position: absolute;
-    width: 500px;
-    height: 500px;
-    border-radius: 50%;
-
-    background: rgba(205, 119, 47, .10);
-
-    filter: blur(80px);
-
-    animation:
-        backgroundMove 14s ease-in-out infinite alternate;
+#particles{
+ position:fixed;
+ inset:0;
+ z-index:-1;
+ pointer-events:none;
+ overflow:hidden;
 }
 
-.background::before {
-    left: -150px;
-    top: 10%;
+.particle{
+ position:absolute;
+ width:4px;
+ height:4px;
+ border-radius:50%;
+ background:#e9a35d;
+ opacity:.35;
+ animation:float 12s linear infinite;
 }
 
-.background::after {
-    right: -180px;
-    bottom: 0;
-    animation-delay: -5s;
+@keyframes float{
+ from{
+  transform:translateY(110vh) translateX(0);
+ }
+ to{
+  transform:translateY(-10vh) translateX(80px);
+ }
 }
 
-@keyframes backgroundMove {
+/* START */
 
-    from {
-        transform: translate(0,0) scale(.8);
-    }
-
-    to {
-        transform: translate(100px,-70px) scale(1.25);
-    }
-
+#start{
+ min-height:100vh;
+ display:grid;
+ place-items:center;
+ padding:25px;
+ position:relative;
+ overflow:hidden;
 }
 
-
-/* =========================================================
-   SCROLLBAR
-========================================================= */
-
-::-webkit-scrollbar {
-    width: 10px;
+.start-glow{
+ position:absolute;
+ width:600px;
+ height:600px;
+ border-radius:50%;
+ background:rgba(225,139,66,.12);
+ filter:blur(100px);
+ animation:glow 7s ease-in-out infinite alternate;
 }
 
-::-webkit-scrollbar-track {
-    background: #100905;
+@keyframes glow{
+ from{transform:scale(.8);}
+ to{transform:scale(1.2);}
 }
 
-::-webkit-scrollbar-thumb {
-    background: #75401f;
-    border-radius: 20px;
+.start-content{
+ position:relative;
+ text-align:center;
+ max-width:1000px;
+ animation:appear 1.2s ease;
 }
 
-
-/* =========================================================
-   STARTSEITE
-========================================================= */
-
-#start {
-    min-height: 100vh;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    position: relative;
-
-    padding: 30px;
+@keyframes appear{
+ from{
+  opacity:0;
+  transform:translateY(35px) scale(.96);
+ }
+ to{
+  opacity:1;
+  transform:none;
+ }
 }
 
-.start-content {
-    width: min(1100px, 100%);
-    text-align: center;
+.tree{
+ font-size:clamp(80px,15vw,160px);
+ filter:drop-shadow(0 25px 30px rgba(0,0,0,.6));
+ animation:tree 4s ease-in-out infinite;
 }
 
-.tree-logo {
-    font-size: clamp(80px, 15vw, 150px);
-
-    filter:
-        drop-shadow(0 20px 35px rgba(0,0,0,.7));
-
-    animation:
-        treeFloat 4s ease-in-out infinite;
+@keyframes tree{
+ 0%,100%{transform:translateY(0) rotate(-2deg);}
+ 50%{transform:translateY(-20px) rotate(2deg);}
 }
 
-@keyframes treeFloat {
-
-    0%,100% {
-        transform:
-            translateY(0)
-            rotate(-1deg);
-    }
-
-    50% {
-        transform:
-            translateY(-22px)
-            rotate(1deg);
-    }
-
+.start-title{
+ font-size:clamp(55px,11vw,125px);
+ font-weight:1000;
+ letter-spacing:-6px;
+ background:linear-gradient(135deg,#fff,#ffd09a,#c66e31);
+ color:transparent;
+ background-clip:text;
+ -webkit-background-clip:text;
 }
 
-.start-title {
-    font-size: clamp(55px, 10vw, 120px);
-    line-height: .95;
-
-    margin-top: 20px;
-
-    letter-spacing: -5px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #fff,
-            #e9b16d,
-            #9e5729
-        );
-
-    -webkit-background-clip: text;
-    background-clip: text;
-
-    color: transparent;
-
-    text-shadow:
-        0 20px 60px rgba(0,0,0,.5);
+.start-subtitle{
+ font-size:clamp(19px,3vw,30px);
+ color:var(--muted);
+ margin-top:20px;
 }
 
-.start-subtitle {
-    margin-top: 25px;
-
-    font-size: clamp(20px, 3vw, 28px);
-
-    color: var(--muted);
+.start-description{
+ max-width:760px;
+ margin:25px auto;
+ line-height:1.8;
+ color:#bba38c;
 }
 
-.start-description {
-    max-width: 720px;
-
-    margin: 25px auto 0;
-
-    color: #bca995;
-
-    font-size: 18px;
-
-    line-height: 1.8;
+.start-button{
+ border:1px solid rgba(255,255,255,.2);
+ border-radius:999px;
+ padding:18px 42px;
+ margin-top:20px;
+ color:white;
+ font-weight:900;
+ cursor:pointer;
+ background:linear-gradient(135deg,#e19a56,#713717);
+ box-shadow:0 20px 60px rgba(0,0,0,.6);
+ transition:.3s;
 }
 
-.start-button {
-    margin-top: 45px;
-
-    padding: 18px 38px;
-
-    border: 1px solid rgba(255,255,255,.15);
-
-    border-radius: 999px;
-
-    color: white;
-
-    font-size: 18px;
-    font-weight: 800;
-
-    cursor: pointer;
-
-    background:
-        linear-gradient(
-            135deg,
-            #d88a48,
-            #713718
-        );
-
-    box-shadow:
-        0 20px 60px rgba(0,0,0,.55),
-        inset 0 1px rgba(255,255,255,.25);
-
-    transition:
-        transform .3s,
-        box-shadow .3s;
+.start-button:hover{
+ transform:translateY(-6px) scale(1.04);
+ box-shadow:0 30px 80px rgba(0,0,0,.75);
 }
 
-.start-button:hover {
-    transform: translateY(-5px) scale(1.04);
+/* APP */
 
-    box-shadow:
-        0 30px 80px rgba(0,0,0,.7);
+#app{
+ display:none;
 }
 
-
-/* =========================================================
-   APP
-========================================================= */
-
-#app {
-    display: none;
+header{
+ position:sticky;
+ top:0;
+ z-index:100;
+ background:rgba(9,5,3,.75);
+ backdrop-filter:blur(22px);
+ border-bottom:1px solid var(--line);
 }
 
-
-/* =========================================================
-   HEADER
-========================================================= */
-
-header {
-    position: sticky;
-    top: 0;
-
-    z-index: 100;
-
-    padding: 12px 18px;
-
-    background:
-        rgba(12,7,4,.78);
-
-    backdrop-filter: blur(20px);
-
-    border-bottom:
-        1px solid var(--border);
+.nav{
+ max-width:1300px;
+ margin:auto;
+ padding:12px 18px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:15px;
 }
 
-.nav {
-    max-width: 1250px;
-
-    margin: auto;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    gap: 15px;
+.logo{
+ font-weight:1000;
+ white-space:nowrap;
 }
 
-.logo-small {
-    font-size: 20px;
-    font-weight: 900;
-
-    white-space: nowrap;
+.nav-buttons{
+ display:flex;
+ gap:7px;
+ flex-wrap:wrap;
+ justify-content:center;
 }
 
-.nav-buttons {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    justify-content: center;
-
-    gap: 7px;
-}
-
-.nav-button {
-    border: 1px solid transparent;
-
-    background: transparent;
-
-    color: #d7c5b4;
-
-    padding: 9px 14px;
-
-    border-radius: 999px;
-
-    cursor: pointer;
-
-    transition: .25s;
+.nav-button{
+ border:1px solid transparent;
+ border-radius:999px;
+ padding:9px 14px;
+ background:transparent;
+ color:#cdb8a2;
+ cursor:pointer;
+ transition:.25s;
 }
 
 .nav-button:hover,
-.nav-button.active {
-    color: white;
-
-    background:
-        rgba(190,107,48,.20);
-
-    border-color:
-        rgba(224,153,88,.25);
+.nav-button.active{
+ background:rgba(211,132,65,.17);
+ border-color:rgba(230,158,94,.25);
+ color:white;
 }
 
-
-/* =========================================================
-   MAIN
-========================================================= */
-
-main {
-    max-width: 1250px;
-
-    margin: auto;
+main{
+ max-width:1300px;
+ margin:auto;
 }
 
-.page {
-    display: none;
-
-    padding:
-        80px 25px
-        120px;
-
-    animation:
-        pageIn .6s ease;
+.page{
+ display:none;
+ padding:80px 22px 120px;
+ animation:pageIn .55s ease;
 }
 
-.page.active {
-    display: block;
+.page.active{
+ display:block;
 }
 
-@keyframes pageIn {
-
-    from {
-        opacity: 0;
-        transform: translateY(25px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
+@keyframes pageIn{
+ from{
+  opacity:0;
+  transform:translateY(20px);
+ }
+ to{
+  opacity:1;
+  transform:none;
+ }
 }
 
-.page-heading {
-    text-align: center;
-
-    margin-bottom: 60px;
+.heading{
+ text-align:center;
+ margin-bottom:55px;
 }
 
-.page-heading h1 {
-    font-size:
-        clamp(42px,7vw,75px);
-
-    letter-spacing: -2px;
+.heading h1{
+ font-size:clamp(42px,7vw,78px);
+ letter-spacing:-3px;
 }
 
-.page-heading p {
-    max-width: 760px;
-
-    margin: 18px auto 0;
-
-    color: var(--muted);
-
-    line-height: 1.8;
-
-    font-size: 18px;
+.heading p{
+ max-width:800px;
+ margin:18px auto 0;
+ color:var(--muted);
+ line-height:1.8;
 }
 
+/* HOME */
 
-/* =========================================================
-   HOME
-========================================================= */
-
-.hero-panel {
-    padding: 50px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 35px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(89,48,22,.55),
-            rgba(19,11,6,.65)
-        );
-
-    box-shadow: var(--shadow);
-
-    text-align: center;
+.hero{
+ padding:55px;
+ border:1px solid var(--line);
+ border-radius:40px;
+ background:
+ linear-gradient(135deg,rgba(88,46,21,.62),rgba(15,8,4,.75));
+ box-shadow:0 30px 100px rgba(0,0,0,.5);
+ position:relative;
+ overflow:hidden;
 }
 
-.hero-panel h2 {
-    font-size: 35px;
-
-    margin-bottom: 20px;
+.hero::before{
+ content:"";
+ position:absolute;
+ width:250px;
+ height:250px;
+ right:-100px;
+ top:-100px;
+ border-radius:50%;
+ background:rgba(231,157,90,.13);
+ filter:blur(20px);
 }
 
-.hero-panel p {
-    color: var(--muted);
-
-    max-width: 800px;
-
-    margin: auto;
-
-    line-height: 1.8;
+.hero h2{
+ font-size:clamp(28px,4vw,44px);
 }
 
-.quick-grid {
-    margin-top: 30px;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(auto-fit,minmax(200px,1fr));
-
-    gap: 18px;
+.hero p{
+ max-width:800px;
+ margin-top:15px;
+ color:var(--muted);
+ line-height:1.8;
 }
 
-.quick-card {
-    padding: 25px;
-
-    border-radius: 25px;
-
-    background:
-        rgba(255,255,255,.045);
-
-    border:
-        1px solid var(--border);
-
-    transition: .3s;
+.stats{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:15px;
+ margin-top:35px;
 }
 
-.quick-card:hover {
-    transform: translateY(-6px);
-
-    background:
-        rgba(255,255,255,.075);
+.stat{
+ padding:22px;
+ border:1px solid var(--line);
+ border-radius:24px;
+ background:rgba(255,255,255,.045);
+ text-align:center;
 }
 
-.quick-icon {
-    font-size: 40px;
-
-    margin-bottom: 12px;
+.stat strong{
+ display:block;
+ font-size:30px;
+ color:var(--gold);
 }
 
-.quick-card h3 {
-    margin-bottom: 8px;
+.stat span{
+ color:var(--muted);
+ font-size:13px;
 }
 
-.quick-card p {
-    color: var(--muted);
-
-    font-size: 14px;
-
-    line-height: 1.6;
+.quick-grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+ gap:18px;
+ margin-top:25px;
 }
 
-
-/* =========================================================
-   KARTEN
-========================================================= */
-
-.cards {
-    display: grid;
-
-    grid-template-columns:
-        repeat(auto-fit,minmax(250px,1fr));
-
-    gap: 25px;
-
-    perspective: 1600px;
+.quick{
+ padding:27px;
+ border:1px solid var(--line);
+ border-radius:28px;
+ background:rgba(255,255,255,.045);
+ cursor:pointer;
+ transition:.3s;
 }
 
-.card-container {
-    height: 380px;
-
-    perspective: 1400px;
-
-    cursor: pointer;
+.quick:hover{
+ transform:translateY(-8px);
+ background:rgba(255,255,255,.08);
+ border-color:rgba(233,163,93,.35);
 }
 
-.card {
-    position: relative;
-
-    width: 100%;
-    height: 100%;
-
-    transform-style: preserve-3d;
-
-    transition:
-        transform .9s
-        cubic-bezier(.2,.8,.2,1);
+.quick-icon{
+ font-size:42px;
+ margin-bottom:12px;
 }
 
-.card-container:hover .card {
-    transform:
-        rotateY(180deg)
-        translateY(-5px);
+.quick h3{
+ margin-bottom:8px;
 }
 
-.card.flipped {
-    transform: rotateY(180deg);
+.quick p{
+ font-size:14px;
+ color:var(--muted);
 }
 
-.card-face {
-    position: absolute;
+/* CARDS */
 
-    inset: 0;
-
-    padding: 35px;
-
-    border-radius: 32px;
-
-    backface-visibility: hidden;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: center;
-
-    align-items: center;
-
-    text-align: center;
-
-    border:
-        1px solid rgba(255,255,255,.12);
-
-    box-shadow:
-        0 25px 60px rgba(0,0,0,.55);
+.cards{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+ gap:24px;
+ perspective:1600px;
 }
 
-.card-front {
-    background:
-        radial-gradient(
-            circle at 30% 10%,
-            rgba(235,164,95,.25),
-            transparent 35%
-        ),
-        linear-gradient(
-            145deg,
-            #633718,
-            #1c0d06
-        );
+.card-container{
+ height:400px;
+ cursor:pointer;
+ perspective:1400px;
 }
 
-.card-back {
-    transform: rotateY(180deg);
-
-    background:
-        radial-gradient(
-            circle at 70% 10%,
-            rgba(231,155,82,.20),
-            transparent 40%
-        ),
-        linear-gradient(
-            145deg,
-            #432311,
-            #120803
-        );
+.card{
+ width:100%;
+ height:100%;
+ position:relative;
+ transform-style:preserve-3d;
+ transition:transform .9s cubic-bezier(.2,.8,.2,1);
 }
 
-.card-icon {
-    font-size: 75px;
-
-    margin-bottom: 20px;
-
-    filter:
-        drop-shadow(
-            0 15px 15px rgba(0,0,0,.5)
-        );
+.card.flipped{
+ transform:rotateY(180deg);
 }
 
-.card-face h2 {
-    font-size: 30px;
-
-    margin-bottom: 15px;
+.card-face{
+ position:absolute;
+ inset:0;
+ padding:35px;
+ border-radius:34px;
+ backface-visibility:hidden;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ text-align:center;
+ border:1px solid rgba(255,255,255,.13);
+ box-shadow:0 30px 70px rgba(0,0,0,.6);
+ overflow:hidden;
 }
 
-.card-face p {
-    color: #d6c1ad;
-
-    line-height: 1.65;
+.card-front{
+ background:
+ radial-gradient(circle at 25% 10%,rgba(241,176,105,.3),transparent 32%),
+ linear-gradient(145deg,#713c1c,#170a04);
 }
 
-.card-hint {
-    margin-top: 25px;
-
-    color: #e6a365;
-
-    font-size: 13px;
-
-    text-transform: uppercase;
-
-    letter-spacing: 2px;
+.card-back{
+ transform:rotateY(180deg);
+ background:
+ radial-gradient(circle at 75% 10%,rgba(241,176,105,.2),transparent 35%),
+ linear-gradient(145deg,#4b2712,#100602);
 }
 
-
-/* =========================================================
-   DETAILBOXEN
-========================================================= */
-
-.details {
-    margin-top: 70px;
+.card-face::after{
+ content:"";
+ position:absolute;
+ inset:-50%;
+ background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.09),transparent 60%);
+ transform:translateX(-50%) rotate(10deg);
+ transition:1s;
 }
 
-.detail {
-    display: none;
-
-    padding: 45px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 35px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(59,32,16,.72),
-            rgba(13,8,4,.78)
-        );
-
-    box-shadow: var(--shadow);
-
-    animation:
-        detailIn .65s ease;
+.card-container:hover .card-face::after{
+ transform:translateX(50%) rotate(10deg);
 }
 
-.detail.active {
-    display: block;
+.card-icon{
+ font-size:78px;
+ margin-bottom:20px;
+ filter:drop-shadow(0 15px 20px rgba(0,0,0,.55));
 }
 
-@keyframes detailIn {
-
-    from {
-        opacity: 0;
-        transform:
-            translateY(35px)
-            scale(.97);
-    }
-
-    to {
-        opacity: 1;
-        transform:
-            translateY(0)
-            scale(1);
-    }
-
+.card-face h2{
+ font-size:31px;
+ margin-bottom:14px;
 }
 
-.detail-title {
-    display: flex;
-
-    align-items: center;
-
-    gap: 15px;
-
-    margin-bottom: 25px;
+.card-face p{
+ color:#d5c0aa;
+ line-height:1.7;
 }
 
-.detail-title span {
-    font-size: 50px;
+.hint{
+ margin-top:24px;
+ font-size:12px;
+ color:#e7a05e;
+ text-transform:uppercase;
+ letter-spacing:2px;
 }
 
-.detail h2 {
-    font-size: 40px;
-
-    color: #eca663;
+.details{
+ margin-top:65px;
 }
 
-.detail h3 {
-    margin-top: 30px;
+.detail{
+ display:none;
+ padding:45px;
+ border:1px solid var(--line);
+ border-radius:38px;
+ background:linear-gradient(145deg,rgba(66,35,17,.75),rgba(11,6,3,.8));
+ box-shadow:0 30px 100px rgba(0,0,0,.5);
+ animation:detail .65s ease;
+}
 
-    margin-bottom: 12px;
+.detail.active{
+ display:block;
+}
 
-    color: #e4c39e;
+@keyframes detail{
+ from{
+  opacity:0;
+  transform:translateY(40px) scale(.97);
+ }
+ to{
+  opacity:1;
+  transform:none;
+ }
+}
 
-    font-size: 22px;
+.detail-title{
+ display:flex;
+ align-items:center;
+ gap:18px;
+ margin-bottom:25px;
+}
+
+.detail-title span{
+ font-size:55px;
+}
+
+.detail h2{
+ font-size:42px;
+ color:var(--gold);
+}
+
+.detail h3{
+ margin-top:30px;
+ margin-bottom:10px;
+ color:#e8c59e;
 }
 
 .detail p,
-.detail li {
-    color: #d7c3ae;
-
-    line-height: 1.8;
-
-    font-size: 17px;
+.detail li{
+ color:#d6c1ad;
+ line-height:1.85;
+ font-size:17px;
 }
 
-.detail ul {
-    padding-left: 25px;
+.detail ul{
+ padding-left:25px;
 }
 
-.detail li {
-    margin: 8px 0;
+.detail li{
+ margin:7px 0;
 }
 
+/* DIAGRAM */
 
-/* =========================================================
-   STAMMQUERSCHNITT
-========================================================= */
-
-.diagram-area {
-    display: flex;
-
-    justify-content: center;
-
-    padding: 30px 0 70px;
+.diagram-wrap{
+ display:flex;
+ justify-content:center;
+ padding:25px 0 70px;
 }
 
-.tree-cross {
-    position: relative;
-
-    width: min(85vw,620px);
-
-    aspect-ratio: 1;
+.tree-cross{
+ width:min(82vw,620px);
+ aspect-ratio:1;
+ position:relative;
 }
 
-
-/* RINDE */
-
-.ring-bark {
-    position: absolute;
-
-    inset: 0;
-
-    border-radius: 50%;
-
-    background:
-        repeating-radial-gradient(
-            circle,
-            #44200f 0 5px,
-            #5d2d13 6px 12px,
-            #351609 13px 18px
-        );
-
-    box-shadow:
-        0 35px 80px rgba(0,0,0,.7),
-        inset 0 0 35px rgba(0,0,0,.7);
+.ring{
+ position:absolute;
+ border-radius:50%;
+ box-shadow:inset 0 0 25px rgba(0,0,0,.35);
 }
 
-
-/* SPLINTHOLZ */
-
-.ring-splint {
-    position: absolute;
-
-    inset: 8%;
-
-    border-radius: 50%;
-
-    background:
-        repeating-radial-gradient(
-            circle,
-            #dca365 0 7px,
-            #c6874d 8px 14px
-        );
+.bark{
+ inset:0;
+ background:repeating-radial-gradient(circle,#3a1709 0 6px,#602b12 7px 14px);
 }
 
-
-/* REIFHOLZ */
-
-.ring-reif {
-    position: absolute;
-
-    inset: 23%;
-
-    border-radius: 50%;
-
-    background:
-        repeating-radial-gradient(
-            circle,
-            #ae6c38 0 7px,
-            #955429 8px 14px
-        );
+.splint{
+ inset:8%;
+ background:repeating-radial-gradient(circle,#dba064 0 7px,#c4834a 8px 14px);
 }
 
-
-/* KERNHOLZ */
-
-.ring-core {
-    position: absolute;
-
-    inset: 38%;
-
-    border-radius: 50%;
-
-    background:
-        repeating-radial-gradient(
-            circle,
-            #70401f 0 7px,
-            #593018 8px 14px
-        );
+.reif{
+ inset:23%;
+ background:repeating-radial-gradient(circle,#b66e37 0 7px,#98552a 8px 14px);
 }
 
-
-/* MARK */
-
-.ring-pith {
-    position: absolute;
-
-    inset: 48%;
-
-    border-radius: 50%;
-
-    background: #351507;
-
-    box-shadow:
-        0 0 20px rgba(0,0,0,.5);
+.core{
+ inset:38%;
+ background:repeating-radial-gradient(circle,#75431f 0 7px,#542c16 8px 14px);
 }
 
-
-/* =========================================================
-   DIAGRAMM LABELS
-========================================================= */
-
-.diagram-label {
-    position: absolute;
-
-    z-index: 10;
-
-    padding: 10px 16px;
-
-    border-radius: 999px;
-
-    background:
-        rgba(12,7,4,.92);
-
-    border:
-        1px solid rgba(255,255,255,.18);
-
-    box-shadow:
-        0 8px 25px rgba(0,0,0,.45);
-
-    font-weight: 800;
-
-    white-space: nowrap;
-
-    cursor: pointer;
-
-    transition: .3s;
+.pith{
+ inset:48%;
+ background:#321307;
 }
 
-.diagram-label:hover {
-    transform: scale(1.08);
-
-    border-color: #e39b5c;
-
-    box-shadow:
-        0 0 30px rgba(221,139,69,.35);
+.label{
+ position:absolute;
+ z-index:5;
+ padding:10px 16px;
+ border-radius:999px;
+ background:rgba(9,5,3,.94);
+ border:1px solid rgba(255,255,255,.2);
+ cursor:pointer;
+ font-weight:900;
+ box-shadow:0 10px 30px rgba(0,0,0,.5);
+ transition:.3s;
 }
 
-
-/* Positionen */
-
-.label-bark {
-    top: 6%;
-    right: -5%;
+.label:hover{
+ transform:scale(1.1);
+ border-color:var(--gold);
 }
 
-.label-splint {
-    top: 32%;
-    right: -13%;
+.l-bark{top:5%;right:-5%}
+.l-splint{top:31%;right:-13%}
+.l-reif{bottom:23%;left:-13%}
+.l-core{top:19%;left:-10%}
+.l-pith{bottom:-4%;left:43%}
+
+.info{
+ margin-top:20px;
+ padding:30px;
+ border:1px solid var(--line);
+ border-radius:28px;
+ background:rgba(255,255,255,.045);
 }
 
-.label-reif {
-    bottom: 23%;
-    left: -13%;
+.info h3{
+ color:var(--gold);
+ margin-bottom:10px;
 }
 
-.label-core {
-    top: 20%;
-    left: -10%;
+.info p{
+ color:var(--muted);
+ line-height:1.8;
 }
 
-.label-pith {
-    bottom: -4%;
-    left: 43%;
+/* LEGEND */
+
+.legend{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+ gap:17px;
 }
 
-
-/* Verbindungslinien */
-
-.diagram-label::before {
-    content: "";
-
-    position: absolute;
-
-    height: 2px;
-
-    background:
-        rgba(255,255,255,.65);
-
-    top: 50%;
+.legend-card{
+ padding:25px;
+ border:1px solid var(--line);
+ border-radius:25px;
+ background:rgba(255,255,255,.04);
+ transition:.3s;
 }
 
-
-/* =========================================================
-   LEGENDE
-========================================================= */
-
-.legend {
-    display: grid;
-
-    grid-template-columns:
-        repeat(auto-fit,minmax(220px,1fr));
-
-    gap: 18px;
-
-    margin-top: 20px;
+.legend-card:hover{
+ transform:translateY(-5px);
 }
 
-.legend-card {
-    padding: 25px;
-
-    border-radius: 25px;
-
-    background:
-        rgba(255,255,255,.045);
-
-    border:
-        1px solid var(--border);
-
-    transition: .3s;
+.legend-card h3{
+ color:var(--gold);
+ margin-bottom:9px;
 }
 
-.legend-card:hover {
-    transform: translateY(-5px);
+.legend-card p{
+ color:var(--muted);
+ line-height:1.7;
 }
 
-.legend-card h3 {
-    margin-bottom: 10px;
+/* TABLE */
 
-    color: #e6a365;
+.table-wrap{
+ overflow-x:auto;
+ border:1px solid var(--line);
+ border-radius:28px;
+ box-shadow:0 25px 80px rgba(0,0,0,.5);
 }
 
-.legend-card p {
-    color: var(--muted);
-
-    line-height: 1.65;
+table{
+ width:100%;
+ min-width:760px;
+ border-collapse:collapse;
 }
 
-
-/* =========================================================
-   VERGLEICH
-========================================================= */
-
-.table-container {
-    overflow-x: auto;
-
-    border-radius: 25px;
-
-    border:
-        1px solid var(--border);
-
-    box-shadow: var(--shadow);
+th,td{
+ padding:18px;
+ text-align:left;
+ border-bottom:1px solid var(--line);
 }
 
-table {
-    width: 100%;
-
-    border-collapse: collapse;
-
-    min-width: 750px;
+th{
+ background:#5d3016;
 }
 
-th,
-td {
-    padding: 18px;
-
-    border-bottom:
-        1px solid var(--border);
-
-    text-align: left;
+td{
+ color:#d7c3ae;
 }
 
-th {
-    background:
-        #5d3016;
-
-    color: white;
+tr:hover td{
+ background:rgba(255,255,255,.04);
 }
 
-td {
-    color: #d7c2ad;
+/* SEARCH */
+
+.search{
+ width:100%;
+ padding:17px 20px;
+ border-radius:18px;
+ border:1px solid var(--line);
+ background:rgba(0,0,0,.25);
+ color:white;
+ outline:none;
+ margin-bottom:20px;
 }
 
-tr:hover td {
-    background:
-        rgba(255,255,255,.035);
+.search:focus{
+ border-color:var(--gold);
+ box-shadow:0 0 25px rgba(233,163,93,.15);
 }
 
+/* QUIZ */
 
-/* =========================================================
-   QUIZ
-========================================================= */
-
-.quiz-box {
-    max-width: 850px;
-
-    margin: auto;
-
-    padding: 40px;
-
-    border-radius: 35px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(65,35,17,.7),
-            rgba(15,9,5,.8)
-        );
-
-    border:
-        1px solid var(--border);
-
-    box-shadow: var(--shadow);
+.quiz{
+ max-width:850px;
+ margin:auto;
+ padding:40px;
+ border:1px solid var(--line);
+ border-radius:38px;
+ background:linear-gradient(145deg,rgba(66,35,17,.7),rgba(12,6,3,.8));
+ box-shadow:0 30px 100px rgba(0,0,0,.5);
 }
 
-.quiz-progress {
-    height: 8px;
-
-    background: rgba(255,255,255,.08);
-
-    border-radius: 999px;
-
-    overflow: hidden;
-
-    margin-bottom: 30px;
+.progress{
+ height:9px;
+ border-radius:99px;
+ overflow:hidden;
+ background:rgba(255,255,255,.08);
+ margin-bottom:30px;
 }
 
-.quiz-progress-bar {
-    height: 100%;
-
-    width: 0%;
-
-    background:
-        linear-gradient(
-            90deg,
-            #a95b29,
-            #e8a261
-        );
-
-    transition: .4s;
+.progress-bar{
+ height:100%;
+ width:0;
+ background:linear-gradient(90deg,#9c5222,#eda864);
+ transition:.5s;
 }
 
-.quiz-question {
-    font-size: 27px;
-
-    line-height: 1.4;
-
-    margin-bottom: 25px;
+.question{
+ font-size:27px;
+ line-height:1.5;
+ margin-bottom:25px;
 }
 
-.answers {
-    display: grid;
-
-    gap: 12px;
+.answers{
+ display:grid;
+ gap:12px;
 }
 
-.answer {
-    width: 100%;
-
-    padding: 16px 20px;
-
-    text-align: left;
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 18px;
-
-    background:
-        rgba(255,255,255,.045);
-
-    color: white;
-
-    cursor: pointer;
-
-    transition: .25s;
+.answer{
+ padding:17px 20px;
+ border-radius:18px;
+ border:1px solid var(--line);
+ background:rgba(255,255,255,.045);
+ color:white;
+ text-align:left;
+ cursor:pointer;
+ transition:.25s;
 }
 
-.answer:hover {
-    transform: translateX(5px);
-
-    background:
-        rgba(206,122,54,.18);
+.answer:hover{
+ transform:translateX(6px);
+ background:rgba(216,135,66,.15);
 }
 
-.answer.correct {
-    background: rgba(65,140,72,.35);
-
-    border-color: #67b66d;
+.answer.correct{
+ background:rgba(70,160,80,.3);
+ border-color:var(--good);
 }
 
-.answer.wrong {
-    background: rgba(180,60,50,.35);
-
-    border-color: #d16b60;
+.answer.wrong{
+ background:rgba(190,60,50,.3);
+ border-color:var(--bad);
 }
 
-.quiz-result {
-    text-align: center;
-
-    display: none;
+.result{
+ display:none;
+ text-align:center;
 }
 
-.quiz-result h2 {
-    font-size: 50px;
-
-    margin-bottom: 15px;
+.result h2{
+ font-size:55px;
+ margin-bottom:12px;
 }
 
-.quiz-score {
-    font-size: 24px;
-
-    color: #e9aa69;
+.score{
+ font-size:25px;
+ color:var(--gold);
 }
 
-
-/* =========================================================
-   INFO BOX
-========================================================= */
-
-.info-box {
-    margin-top: 35px;
-
-    padding: 30px;
-
-    border-radius: 28px;
-
-    background:
-        rgba(255,255,255,.045);
-
-    border:
-        1px solid var(--border);
+.action{
+ margin-top:25px;
+ padding:14px 25px;
+ border:0;
+ border-radius:999px;
+ background:#8d4b22;
+ color:white;
+ font-weight:900;
+ cursor:pointer;
+ transition:.25s;
 }
 
-.info-box h3 {
-    color: #e5a05d;
-
-    margin-bottom: 10px;
+.action:hover{
+ transform:translateY(-3px);
+ background:#b8672e;
 }
 
-.info-box p {
-    color: var(--muted);
+/* TOP */
 
-    line-height: 1.7;
+#top{
+ display:none;
+ position:fixed;
+ right:20px;
+ bottom:20px;
+ width:52px;
+ height:52px;
+ border-radius:50%;
+ border:1px solid var(--line);
+ background:rgba(30,16,8,.92);
+ color:white;
+ cursor:pointer;
+ z-index:90;
 }
 
+/* FOOTER */
 
-/* =========================================================
-   BUTTON
-========================================================= */
-
-.action-button {
-    border: none;
-
-    padding: 14px 24px;
-
-    margin-top: 25px;
-
-    border-radius: 999px;
-
-    background:
-        #8d4b22;
-
-    color: white;
-
-    font-weight: 800;
-
-    cursor: pointer;
-
-    transition: .25s;
+footer{
+ text-align:center;
+ padding:45px 20px;
+ color:#806e5d;
+ border-top:1px solid rgba(255,255,255,.06);
 }
 
-.action-button:hover {
-    transform: translateY(-3px);
+/* MOBILE */
 
-    background:
-        #b8672e;
+@media(max-width:700px){
+
+ .nav{
+  flex-direction:column;
+ }
+
+ .nav-buttons{
+  width:100%;
+ }
+
+ .nav-button{
+  font-size:12px;
+  padding:8px 10px;
+ }
+
+ .page{
+  padding:55px 15px 90px;
+ }
+
+ .hero{
+  padding:30px 20px;
+ }
+
+ .stats{
+  grid-template-columns:repeat(2,1fr);
+ }
+
+ .card-container{
+  height:360px;
+ }
+
+ .detail{
+  padding:28px 20px;
+ }
+
+ .detail h2{
+  font-size:32px;
+ }
+
+ .quiz{
+  padding:25px 18px;
+ }
+
+ .label{
+  font-size:10px;
+  padding:7px 10px;
+ }
+
+ .l-bark{right:-1%}
+ .l-splint{right:-2%}
+ .l-reif{left:-2%}
+ .l-core{left:-1%}
 }
 
+@media(prefers-reduced-motion:reduce){
 
-/* =========================================================
-   BACK TO TOP
-========================================================= */
-
-#topButton {
-    position: fixed;
-
-    right: 20px;
-    bottom: 20px;
-
-    z-index: 90;
-
-    width: 50px;
-    height: 50px;
-
-    border-radius: 50%;
-
-    border:
-        1px solid var(--border);
-
-    background:
-        rgba(35,19,10,.9);
-
-    color: white;
-
-    cursor: pointer;
-
-    display: none;
-
-    box-shadow:
-        0 10px 30px rgba(0,0,0,.5);
-}
-
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-footer {
-    text-align: center;
-
-    padding:
-        45px 20px;
-
-    color: #806e5d;
-
-    border-top:
-        1px solid rgba(255,255,255,.06);
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:700px) {
-
-    header {
-        position: sticky;
-    }
-
-    .nav {
-        flex-direction: column;
-    }
-
-    .page {
-        padding:
-            55px 16px
-            90px;
-    }
-
-    .hero-panel {
-        padding: 30px 20px;
-    }
-
-    .detail {
-        padding: 28px 20px;
-    }
-
-    .detail h2 {
-        font-size: 32px;
-    }
-
-    .card-container {
-        height: 350px;
-    }
-
-    /*
-       Auf Touch-Geräten kein Hover-Flip.
-       Die Karte wird ausschließlich per Klick
-       gesteuert.
-    */
-
-    .card-container:hover .card {
-        transform: none;
-    }
-
-    .card-container:hover .card.flipped {
-        transform: rotateY(180deg);
-    }
-
-    .tree-cross {
-        width: 82vw;
-    }
-
-    .diagram-label {
-        font-size: 11px;
-
-        padding:
-            7px 10px;
-    }
-
-    .label-bark {
-        right: -1%;
-    }
-
-    .label-splint {
-        right: -3%;
-    }
-
-    .label-reif {
-        left: -3%;
-    }
-
-    .label-core {
-        left: -1%;
-    }
-
-    .quiz-box {
-        padding: 25px 18px;
-    }
+ *,
+ *::before,
+ *::after{
+  animation:none!important;
+  transition:none!important;
+  scroll-behavior:auto!important;
+ }
 
 }
-
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
-@media(prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
-        animation-duration: .01ms !important;
-
-        animation-iteration-count: 1 !important;
-
-        scroll-behavior: auto !important;
-
-        transition-duration: .01ms !important;
-    }
-
-}
-
 </style>
 </head>
 
-
 <body>
 
+<div id="particles"></div>
 
-<div class="background"></div>
-
-
-<!-- ======================================================
-     STARTSEITE
-====================================================== -->
+<!-- STARTSEITE -->
 
 <section id="start">
 
-    <div class="start-content">
+ <div class="start-glow"></div>
 
-        <div class="tree-logo">
-            🌳
-        </div>
+ <div class="start-content">
 
-        <h1 class="start-title">
-            HolzWissen
-        </h1>
+  <div class="tree">🌳</div>
 
-        <div class="start-subtitle">
-            Der interaktive Holz-Lernbereich
-        </div>
+  <h1 class="start-title">
+   HolzWissen
+  </h1>
 
-        <p class="start-description">
+  <div class="start-subtitle">
+   Der interaktive Holz-Lernbereich
+  </div>
 
-            Entdecke den Aufbau eines Baumstammes
-            und lerne Splintholz, Kernholz,
-            Reifholz und Kernreifholz kennen.
+  <p class="start-description">
+   Entdecke den inneren Aufbau eines Baumstammes,
+   lerne Splintholz, Reifholz, Kernholz und
+   Kernreifholz kennen und teste anschließend
+   dein Wissen.
+  </p>
 
-        </p>
+  <button
+   class="start-button"
+   onclick="startApp()">
+   🌲 ENTDECKEN
+  </button>
 
-        <button
-            class="start-button"
-            onclick="startApp()">
-
-            🌲 ENTDECKEN
-
-        </button>
-
-    </div>
+ </div>
 
 </section>
 
 
-<!-- ======================================================
-     APP
-====================================================== -->
+<!-- APP -->
 
 <div id="app">
 
-
 <header>
 
-    <nav class="nav">
+ <nav class="nav">
 
-        <div class="logo-small">
-            🌳 HolzWissen
-        </div>
+  <div class="logo">
+   🌳 HolzWissen
+  </div>
 
-        <div class="nav-buttons">
+  <div class="nav-buttons">
 
-            <button
-                class="nav-button active"
-                onclick="showPage('home',this)">
-                🏠 Start
-            </button>
+   <button class="nav-button active"
+    onclick="showPage('home',this)">
+    🏠 Start
+   </button>
 
-            <button
-                class="nav-button"
-                onclick="showPage('bereiche',this)">
-                🪵 Bereiche
-            </button>
+   <button class="nav-button"
+    onclick="showPage('bereiche',this)">
+    🪵 Bereiche
+   </button>
 
-            <button
-                class="nav-button"
-                onclick="showPage('aufbau',this)">
-                🔬 Aufbau
-            </button>
+   <button class="nav-button"
+    onclick="showPage('aufbau',this)">
+    🔬 Aufbau
+   </button>
 
-            <button
-                class="nav-button"
-                onclick="showPage('vergleich',this)">
-                📊 Vergleich
-            </button>
+   <button class="nav-button"
+    onclick="showPage('vergleich',this)">
+    📊 Vergleich
+   </button>
 
-            <button
-                class="nav-button"
-                onclick="showPage('quiz',this)">
-                🧠 Quiz
-            </button>
+   <button class="nav-button"
+    onclick="showPage('quiz',this)">
+    🧠 Quiz
+   </button>
 
-        </div>
+  </div>
 
-    </nav>
+ </nav>
 
 </header>
 
 
 <main>
 
+<!-- HOME -->
 
-<!-- ======================================================
-     START
-====================================================== -->
+<section id="home" class="page active">
 
-<section
-    id="home"
-    class="page active">
+ <div class="heading">
 
-    <div class="page-heading">
+  <h1>
+   Willkommen 🌳
+  </h1>
 
-        <h1>
-            Willkommen 🌳
-        </h1>
+  <p>
+   Dein interaktiver Lernbereich rund um
+   den Aufbau von Holz.
+  </p>
 
-        <p>
-            Eine interaktive Übersicht über den
-            Aufbau und die wichtigsten Bereiche
-            von Holz.
-        </p>
-
-    </div>
+ </div>
 
 
-    <div class="hero-panel">
+ <div class="hero">
 
-        <h2>
-            Was möchtest du entdecken?
-        </h2>
+  <h2>
+   Holz verstehen statt nur auswendig lernen.
+  </h2>
 
-        <p>
-
-            Klicke dich durch die verschiedenen
-            Holzbereiche, untersuche den Stammquerschnitt
-            oder teste dein Wissen im Quiz.
-
-        </p>
+  <p>
+   Klicke dich durch die Bereiche, untersuche
+   den Stammquerschnitt und prüfe anschließend
+   dein Wissen.
+  </p>
 
 
-        <div class="quick-grid">
+  <div class="stats">
 
-            <div
-                class="quick-card"
-                onclick="showPageById('bereiche')">
+   <div class="stat">
+    <strong>4</strong>
+    <span>Holzbereiche</span>
+   </div>
 
-                <div class="quick-icon">
-                    🌱
-                </div>
+   <div class="stat">
+    <strong>5</strong>
+    <span>Stammzonen</span>
+   </div>
 
-                <h3>
-                    Holzbereiche
-                </h3>
+   <div class="stat">
+    <strong>6</strong>
+    <span>Quizfragen</span>
+   </div>
 
-                <p>
-                    Splintholz, Kernholz,
-                    Reifholz und Kernreifholz.
-                </p>
+   <div class="stat">
+    <strong>100%</strong>
+    <span>interaktiv</span>
+   </div>
 
-            </div>
-
-
-            <div
-                class="quick-card"
-                onclick="showPageById('aufbau')">
-
-                <div class="quick-icon">
-                    🔬
-                </div>
-
-                <h3>
-                    Stammaufbau
-                </h3>
-
-                <p>
-                    Untersuche einen
-                    beschrifteten Querschnitt.
-                </p>
-
-            </div>
+  </div>
 
 
-            <div
-                class="quick-card"
-                onclick="showPageById('vergleich')">
+  <div class="quick-grid">
 
-                <div class="quick-icon">
-                    📊
-                </div>
+   <div class="quick"
+    onclick="showPageById('bereiche')">
 
-                <h3>
-                    Vergleich
-                </h3>
+    <div class="quick-icon">🪵</div>
 
-                <p>
-                    Alle Unterschiede
-                    übersichtlich dargestellt.
-                </p>
+    <h3>Holzbereiche</h3>
 
-            </div>
+    <p>
+     Interaktive 3D-Karten mit
+     ausführlichen Informationen.
+    </p>
+
+   </div>
 
 
-            <div
-                class="quick-card"
-                onclick="showPageById('quiz')">
+   <div class="quick"
+    onclick="showPageById('aufbau')">
 
-                <div class="quick-icon">
-                    🧠
-                </div>
+    <div class="quick-icon">🔬</div>
 
-                <h3>
-                    Quiz
-                </h3>
+    <h3>Stammaufbau</h3>
 
-                <p>
-                    Wie gut kennst du
-                    den Aufbau von Holz?
-                </p>
+    <p>
+     Erkunde den Querschnitt und
+     klicke die Beschriftungen an.
+    </p>
 
-            </div>
+   </div>
 
-        </div>
 
-    </div>
+   <div class="quick"
+    onclick="showPageById('vergleich')">
+
+    <div class="quick-icon">📊</div>
+
+    <h3>Vergleich</h3>
+
+    <p>
+     Die Unterschiede übersichtlich
+     in einer Tabelle.
+    </p>
+
+   </div>
+
+
+   <div class="quick"
+    onclick="showPageById('quiz')">
+
+    <div class="quick-icon">🧠</div>
+
+    <h3>Quiz</h3>
+
+    <p>
+     Teste dein Wissen und
+     erreiche die volle Punktzahl.
+    </p>
+
+   </div>
+
+  </div>
+
+ </div>
 
 </section>
 
 
-<!-- ======================================================
-     BEREICHE
-====================================================== -->
+<!-- BEREICHE -->
 
-<section
-    id="bereiche"
-    class="page">
+<section id="bereiche" class="page">
 
-    <div class="page-heading">
+ <div class="heading">
 
-        <h1>
-            🪵 Holzbereiche
-        </h1>
+  <h1>🪵 Holzbereiche</h1>
 
-        <p>
-            Klicke auf eine Karte. Sie dreht sich
-            um und danach springt die Seite
-            automatisch zum passenden Infobereich.
-        </p>
+  <p>
+   Klicke auf eine Karte. Sie dreht sich
+   und springt anschließend automatisch
+   zum passenden Infobereich.
+  </p>
+
+ </div>
+
+
+ <input
+  id="search"
+  class="search"
+  placeholder="🔎 Holzbereich suchen..."
+  oninput="searchCards()">
+
+
+ <div class="cards">
+
+
+  <!-- SPLINT -->
+
+  <div class="card-container"
+   data-name="Splintholz"
+   onclick="openCard('splint',this)">
+
+   <div class="card">
+
+    <div class="card-face card-front">
+
+     <div class="card-icon">🌱</div>
+
+     <h2>Splintholz</h2>
+
+     <p>
+      Der äußere, jüngere und
+      physiologisch aktive Holzbereich.
+     </p>
+
+     <div class="hint">
+      Klicken · Umdrehen
+     </div>
 
     </div>
 
 
-    <div class="cards">
+    <div class="card-face card-back">
 
+     <div class="card-icon">💧</div>
 
-        <!-- SPLINTHOLZ -->
+     <h2>Splintholz</h2>
 
-        <div
-            class="card-container"
-            onclick="openCard('splint',this)">
+     <p>
+      Transportiert Wasser und
+      Mineralsalze und speichert
+      Reservestoffe.
+     </p>
 
-            <div class="card">
+     <div class="hint">
+      ↓ Informationen
+     </div>
 
-                <div class="card-face card-front">
+    </div>
 
-                    <div class="card-icon">
-                        🌱
-                    </div>
+   </div>
 
-                    <h2>
-                        Splintholz
-                    </h2>
+  </div>
 
-                    <p>
-                        Der äußere, jüngere und
-                        physiologisch aktive
-                        Holzbereich.
-                    </p>
 
-                    <div class="card-hint">
-                        Klicken · Umdrehen
-                    </div>
+  <!-- KERN -->
 
-                </div>
+  <div class="card-container"
+   data-name="Kernholz"
+   onclick="openCard('kern',this)">
 
+   <div class="card">
 
-                <div class="card-face card-back">
+    <div class="card-face card-front">
 
-                    <div class="card-icon">
-                        💧
-                    </div>
+     <div class="card-icon">🪵</div>
 
-                    <h2>
-                        Splintholz
-                    </h2>
+     <h2>Kernholz</h2>
 
-                    <p>
-                        Transportiert Wasser und
-                        Mineralsalze und speichert
-                        Reservestoffe.
-                    </p>
+     <p>
+      Der innere, physiologisch
+      nicht mehr aktive Bereich.
+     </p>
 
-                    <div class="card-hint">
-                        ↓ Informationen
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- KERNHOLZ -->
-
-        <div
-            class="card-container"
-            onclick="openCard('kern',this)">
-
-            <div class="card">
-
-                <div class="card-face card-front">
-
-                    <div class="card-icon">
-                        🪵
-                    </div>
-
-                    <h2>
-                        Kernholz
-                    </h2>
-
-                    <p>
-                        Der innere, physiologisch
-                        nicht mehr aktive Bereich.
-                    </p>
-
-                    <div class="card-hint">
-                        Klicken · Umdrehen
-                    </div>
-
-                </div>
-
-
-                <div class="card-face card-back">
-
-                    <div class="card-icon">
-                        🛡️
-                    </div>
-
-                    <h2>
-                        Kernholz
-                    </h2>
-
-                    <p>
-                        Häufig dunkler und bei vielen
-                        Arten natürlicherweise
-                        dauerhafter.
-                    </p>
-
-                    <div class="card-hint">
-                        ↓ Informationen
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- REIFHOLZ -->
-
-        <div
-            class="card-container"
-            onclick="openCard('reif',this)">
-
-            <div class="card">
-
-                <div class="card-face card-front">
-
-                    <div class="card-icon">
-                        🌲
-                    </div>
-
-                    <h2>
-                        Reifholz
-                    </h2>
-
-                    <p>
-                        Innerer Holzbereich,
-                        der farblich kaum vom
-                        Splintholz abweichen kann.
-                    </p>
-
-                    <div class="card-hint">
-                        Klicken · Umdrehen
-                    </div>
-
-                </div>
-
-
-                <div class="card-face card-back">
-
-                    <div class="card-icon">
-                        💨
-                    </div>
-
-                    <h2>
-                        Reifholz
-                    </h2>
-
-                    <p>
-                        Physiologisch nicht mehr
-                        am aktiven Wassertransport
-                        beteiligt.
-                    </p>
-
-                    <div class="card-hint">
-                        ↓ Informationen
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- KERNREIFHOLZ -->
-
-        <div
-            class="card-container"
-            onclick="openCard('kernreif',this)">
-
-            <div class="card">
-
-                <div class="card-face card-front">
-
-                    <div class="card-icon">
-                        🌳
-                    </div>
-
-                    <h2>
-                        Kernreifholz
-                    </h2>
-
-                    <p>
-                        Holzaufbau mit Kernholz,
-                        Reifholzzone und Splintholz.
-                    </p>
-
-                    <div class="card-hint">
-                        Klicken · Umdrehen
-                    </div>
-
-                </div>
-
-
-                <div class="card-face card-back">
-
-                    <div class="card-icon">
-                        🔄
-                    </div>
-
-                    <h2>
-                        Kernreifholz
-                    </h2>
-
-                    <p>
-                        Zwischen Kern und äußerem
-                        Splintholz liegt eine
-                        Reifholzzone.
-                    </p>
-
-                    <div class="card-hint">
-                        ↓ Informationen
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
+     <div class="hint">
+      Klicken · Umdrehen
+     </div>
 
     </div>
 
 
-    <!-- DETAILBEREICH -->
+    <div class="card-face card-back">
 
-    <div
-        id="details"
-        class="details">
+     <div class="card-icon">🛡️</div>
 
+     <h2>Kernholz</h2>
 
-        <!-- SPLINT -->
+     <p>
+      Häufig dunkler und bei vielen
+      Arten natürlicherweise dauerhafter.
+     </p>
 
-        <article
-            id="detail-splint"
-            class="detail">
-
-            <div class="detail-title">
-
-                <span>🌱</span>
-
-                <h2>
-                    Splintholz
-                </h2>
-
-            </div>
-
-            <p>
-                Splintholz ist der äußere, jüngere
-                Bereich des Holzkörpers. Bei einem
-                lebenden Baum ist dieser Bereich
-                physiologisch aktiv.
-            </p>
-
-            <h3>
-                Aufgaben
-            </h3>
-
-            <ul>
-
-                <li>
-                    Transport von Wasser und
-                    Mineralsalzen.
-                </li>
-
-                <li>
-                    Speicherung von Reservestoffen,
-                    beispielsweise Stärke.
-                </li>
-
-                <li>
-                    Versorgung der Baumkrone.
-                </li>
-
-            </ul>
-
-            <h3>
-                Typische Eigenschaften
-            </h3>
-
-            <ul>
-
-                <li>
-                    häufig heller als Kernholz
-                </li>
-
-                <li>
-                    höherer Wassergehalt
-                </li>
-
-                <li>
-                    physiologisch aktiv
-                </li>
-
-                <li>
-                    bei vielen Arten weniger
-                    natürlich dauerhaft
-                </li>
-
-            </ul>
-
-        </article>
-
-
-        <!-- KERN -->
-
-        <article
-            id="detail-kern"
-            class="detail">
-
-            <div class="detail-title">
-
-                <span>🪵</span>
-
-                <h2>
-                    Kernholz
-                </h2>
-
-            </div>
-
-            <p>
-                Kernholz liegt im inneren Bereich
-                vieler Baumstämme. Es ist
-                physiologisch nicht mehr am
-                aktiven Wassertransport beteiligt.
-            </p>
-
-            <h3>
-                Eigenschaften
-            </h3>
-
-            <ul>
-
-                <li>
-                    kein aktiver Wassertransport
-                </li>
-
-                <li>
-                    häufig geringerer
-                    Wassergehalt
-                </li>
-
-                <li>
-                    bei echtem Kernholz oft
-                    dunklere Färbung
-                </li>
-
-                <li>
-                    häufig höhere natürliche
-                    Dauerhaftigkeit
-                </li>
-
-            </ul>
-
-            <h3>
-                Beispiele
-            </h3>
-
-            <p>
-                Eiche, Kiefer, Lärche,
-                Douglasie und Robinie können
-                deutlich ausgeprägtes Kernholz
-                besitzen.
-            </p>
-
-        </article>
-
-
-        <!-- REIF -->
-
-        <article
-            id="detail-reif"
-            class="detail">
-
-            <div class="detail-title">
-
-                <span>🌲</span>
-
-                <h2>
-                    Reifholz
-                </h2>
-
-            </div>
-
-            <p>
-                Reifholz bezeichnet einen inneren
-                Holzbereich, der physiologisch
-                nicht mehr am aktiven Wassertransport
-                beteiligt ist.
-            </p>
-
-            <h3>
-                Besonderheit
-            </h3>
-
-            <p>
-                Anders als beim echten Kernholz ist
-                der Farbunterschied zum Splintholz
-                oft gering oder kaum sichtbar.
-            </p>
-
-            <h3>
-                Beispiele
-            </h3>
-
-            <p>
-                Fichte und Tanne werden häufig
-                im Zusammenhang mit Reifholz
-                genannt.
-            </p>
-
-        </article>
-
-
-        <!-- KERNREIF -->
-
-        <article
-            id="detail-kernreif"
-            class="detail">
-
-            <div class="detail-title">
-
-                <span>🌳</span>
-
-                <h2>
-                    Kernreifholz
-                </h2>
-
-            </div>
-
-            <p>
-                Bei Kernreifholz kommen im Stamm
-                mehrere unterschiedliche Zonen vor.
-            </p>
-
-            <h3>
-                Aufbau
-            </h3>
-
-            <ul>
-
-                <li>
-                    außen: Splintholz
-                </li>
-
-                <li>
-                    danach: Reifholzzone
-                </li>
-
-                <li>
-                    innen: Kernholz
-                </li>
-
-            </ul>
-
-            <h3>
-                Beispiele
-            </h3>
-
-            <p>
-                Esche und Ulme werden häufig
-                als Beispiele für Bäume mit
-                Kernreifholz genannt.
-            </p>
-
-        </article>
+     <div class="hint">
+      ↓ Informationen
+     </div>
 
     </div>
+
+   </div>
+
+  </div>
+
+
+  <!-- REIF -->
+
+  <div class="card-container"
+   data-name="Reifholz"
+   onclick="openCard('reif',this)">
+
+   <div class="card">
+
+    <div class="card-face card-front">
+
+     <div class="card-icon">🌲</div>
+
+     <h2>Reifholz</h2>
+
+     <p>
+      Innerer Holzbereich,
+      der farblich kaum vom
+      Splintholz abweichen kann.
+     </p>
+
+     <div class="hint">
+      Klicken · Umdrehen
+     </div>
+
+    </div>
+
+
+    <div class="card-face card-back">
+
+     <div class="card-icon">💨</div>
+
+     <h2>Reifholz</h2>
+
+     <p>
+      Physiologisch nicht mehr am
+      aktiven Wassertransport beteiligt.
+     </p>
+
+     <div class="hint">
+      ↓ Informationen
+     </div>
+
+    </div>
+
+   </div>
+
+  </div>
+
+
+  <!-- KERNREIF -->
+
+  <div class="card-container"
+   data-name="Kernreifholz"
+   onclick="openCard('kernreif',this)">
+
+   <div class="card">
+
+    <div class="card-face card-front">
+
+     <div class="card-icon">🌳</div>
+
+     <h2>Kernreifholz</h2>
+
+     <p>
+      Holzaufbau mit Kernholz,
+      Reifholzzone und Splintholz.
+     </p>
+
+     <div class="hint">
+      Klicken · Umdrehen
+     </div>
+
+    </div>
+
+
+    <div class="card-face card-back">
+
+     <div class="card-icon">🔄</div>
+
+     <h2>Kernreifholz</h2>
+
+     <p>
+      Zwischen Kern und äußerem
+      Splintholz liegt eine Reifholzzone.
+     </p>
+
+     <div class="hint">
+      ↓ Informationen
+     </div>
+
+    </div>
+
+   </div>
+
+  </div>
+
+ </div>
+
+
+ <div class="details">
+
+
+  <article id="detail-splint" class="detail">
+
+   <div class="detail-title">
+    <span>🌱</span>
+    <h2>Splintholz</h2>
+   </div>
+
+   <p>
+    Splintholz ist der äußere, jüngere Bereich
+    des Holzkörpers. Bei einem lebenden Baum
+    ist dieser Bereich physiologisch aktiv.
+   </p>
+
+   <h3>Aufgaben</h3>
+
+   <ul>
+    <li>Transport von Wasser und Mineralsalzen.</li>
+    <li>Speicherung von Reservestoffen.</li>
+    <li>Versorgung der Baumkrone.</li>
+   </ul>
+
+   <h3>Typische Eigenschaften</h3>
+
+   <ul>
+    <li>häufig heller als Kernholz</li>
+    <li>höherer Wassergehalt</li>
+    <li>physiologisch aktiv</li>
+    <li>bei vielen Arten weniger dauerhaft</li>
+   </ul>
+
+  </article>
+
+
+  <article id="detail-kern" class="detail">
+
+   <div class="detail-title">
+    <span>🪵</span>
+    <h2>Kernholz</h2>
+   </div>
+
+   <p>
+    Kernholz liegt im inneren Bereich vieler
+    Baumstämme. Es ist physiologisch nicht
+    mehr am aktiven Wassertransport beteiligt.
+   </p>
+
+   <h3>Eigenschaften</h3>
+
+   <ul>
+    <li>kein aktiver Wassertransport</li>
+    <li>häufig geringerer Wassergehalt</li>
+    <li>oft dunklere Färbung</li>
+    <li>häufig höhere natürliche Dauerhaftigkeit</li>
+   </ul>
+
+   <h3>Beispiele</h3>
+
+   <p>
+    Eiche, Kiefer, Lärche, Douglasie und
+    Robinie können ausgeprägtes Kernholz besitzen.
+   </p>
+
+  </article>
+
+
+  <article id="detail-reif" class="detail">
+
+   <div class="detail-title">
+    <span>🌲</span>
+    <h2>Reifholz</h2>
+   </div>
+
+   <p>
+    Reifholz bezeichnet einen inneren Holzbereich,
+    der physiologisch nicht mehr am aktiven
+    Wassertransport beteiligt ist.
+   </p>
+
+   <h3>Besonderheit</h3>
+
+   <p>
+    Anders als beim echten Kernholz ist der
+    Farbunterschied zum Splintholz oft gering
+    oder kaum sichtbar.
+   </p>
+
+   <h3>Beispiele</h3>
+
+   <p>
+    Fichte und Tanne werden häufig im
+    Zusammenhang mit Reifholz genannt.
+   </p>
+
+  </article>
+
+
+  <article id="detail-kernreif" class="detail">
+
+   <div class="detail-title">
+    <span>🌳</span>
+    <h2>Kernreifholz</h2>
+   </div>
+
+   <p>
+    Bei Kernreifholz kommen mehrere
+    unterschiedliche Zonen im Stamm vor.
+   </p>
+
+   <h3>Aufbau</h3>
+
+   <ul>
+    <li>außen: Splintholz</li>
+    <li>danach: Reifholzzone</li>
+    <li>innen: Kernholz</li>
+   </ul>
+
+   <h3>Beispiele</h3>
+
+   <p>
+    Esche und Ulme werden häufig als
+    Beispiele genannt.
+   </p>
+
+  </article>
+
+ </div>
 
 </section>
 
 
-<!-- ======================================================
-     AUFBAU
-====================================================== -->
+<!-- AUFBAU -->
 
-<section
-    id="aufbau"
-    class="page">
+<section id="aufbau" class="page">
 
-    <div class="page-heading">
+ <div class="heading">
 
-        <h1>
-            🔬 Stammaufbau
-        </h1>
+  <h1>🔬 Stammaufbau</h1>
 
-        <p>
-            Ein vereinfachter Stammquerschnitt
-            mit den wichtigsten Bereichen.
-            Klicke auf die Beschriftungen.
-        </p>
+  <p>
+   Ein interaktiver, vereinfachter
+   Stammquerschnitt.
+  </p>
 
-    </div>
+ </div>
 
 
-    <div class="diagram-area">
+ <div class="diagram-wrap">
 
-        <div class="tree-cross">
+  <div class="tree-cross">
 
+   <div class="ring bark"></div>
+   <div class="ring splint"></div>
+   <div class="ring reif"></div>
+   <div class="ring core"></div>
+   <div class="ring pith"></div>
 
-            <!-- RINDE -->
 
-            <div class="ring-bark"></div>
+   <div class="label l-bark"
+    onclick="diagramInfo('Rinde')">
+    🟤 Rinde
+   </div>
 
+   <div class="label l-splint"
+    onclick="diagramInfo('Splintholz')">
+    🟡 Splintholz
+   </div>
 
-            <!-- SPLINTHOLZ -->
+   <div class="label l-reif"
+    onclick="diagramInfo('Reifholz')">
+    🟠 Reifholz
+   </div>
 
-            <div class="ring-splint"></div>
+   <div class="label l-core"
+    onclick="diagramInfo('Kernholz')">
+    🔴 Kernholz
+   </div>
 
+   <div class="label l-pith"
+    onclick="diagramInfo('Mark')">
+    ⚫ Mark
+   </div>
 
-            <!-- REIFHOLZ -->
+  </div>
 
-            <div class="ring-reif"></div>
+ </div>
 
 
-            <!-- KERNHOLZ -->
+ <div id="diagramInfo" class="info">
 
-            <div class="ring-core"></div>
+  <h3>
+   💡 Entdecke den Stamm
+  </h3>
 
+  <p>
+   Klicke auf eine Beschriftung.
+  </p>
 
-            <!-- MARK -->
+ </div>
 
-            <div class="ring-pith"></div>
 
+ <div class="legend">
 
-            <!-- BESCHRIFTUNGEN -->
+  <div class="legend-card">
+   <h3>🟤 Rinde</h3>
+   <p>
+    Äußerste Schutzschicht des Baumes.
+   </p>
+  </div>
 
-            <div
-                class="diagram-label label-bark"
-                onclick="diagramInfo('Rinde')">
+  <div class="legend-card">
+   <h3>🟡 Splintholz</h3>
+   <p>
+    Äußerer, aktiver Holzbereich.
+   </p>
+  </div>
 
-                🟤 Rinde
+  <div class="legend-card">
+   <h3>🟠 Reifholz</h3>
+   <p>
+    Innerer Bereich ohne aktiven
+    Wassertransport.
+   </p>
+  </div>
 
-            </div>
+  <div class="legend-card">
+   <h3>🔴 Kernholz</h3>
+   <p>
+    Innerer, nicht mehr aktiv
+    wasserleitender Bereich.
+   </p>
+  </div>
 
+  <div class="legend-card">
+   <h3>⚫ Mark</h3>
+   <p>
+    Zentraler Bereich der jungen
+    Sprossachse.
+   </p>
+  </div>
 
-            <div
-                class="diagram-label label-splint"
-                onclick="diagramInfo('Splintholz')">
+ </div>
 
-                🟡 Splintholz
 
-            </div>
+ <div class="info">
 
+  <h3>📌 Merke</h3>
 
-            <div
-                class="diagram-label label-reif"
-                onclick="diagramInfo('Reifholz')">
+  <p>
+   Der genaue Aufbau hängt von der Baumart ab.
+   Nicht jeder Baum besitzt alle Zonen in
+   derselben Form.
+  </p>
 
-                🟠 Reifholz
-
-            </div>
-
-
-            <div
-                class="diagram-label label-core"
-                onclick="diagramInfo('Kernholz')">
-
-                🔴 Kernholz
-
-            </div>
-
-
-            <div
-                class="diagram-label label-pith"
-                onclick="diagramInfo('Mark')">
-
-                ⚫ Mark
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div
-        id="diagramInfo"
-        class="info-box">
-
-        <h3>
-            💡 Klicke auf eine Beschriftung
-        </h3>
-
-        <p>
-            Dann bekommst du eine kurze Erklärung
-            zu diesem Bereich.
-        </p>
-
-    </div>
-
-
-    <div class="legend">
-
-
-        <div class="legend-card">
-
-            <h3>
-                🟤 Rinde
-            </h3>
-
-            <p>
-                Äußerste Schutzschicht des Baumes.
-                Sie schützt das Innere vor äußeren
-                Einflüssen.
-            </p>
-
-        </div>
-
-
-        <div class="legend-card">
-
-            <h3>
-                🟡 Splintholz
-            </h3>
-
-            <p>
-                Äußerer, aktiver Holzbereich.
-                Hier findet der Wassertransport
-                statt.
-            </p>
-
-        </div>
-
-
-        <div class="legend-card">
-
-            <h3>
-                🟠 Reifholz
-            </h3>
-
-            <p>
-                Innerer Bereich ohne aktiven
-                Wassertransport, aber oft ohne
-                deutlichen Farbunterschied.
-            </p>
-
-        </div>
-
-
-        <div class="legend-card">
-
-            <h3>
-                🔴 Kernholz
-            </h3>
-
-            <p>
-                Innerer Bereich, der nicht mehr
-                aktiv Wasser leitet.
-            </p>
-
-        </div>
-
-
-        <div class="legend-card">
-
-            <h3>
-                ⚫ Mark
-            </h3>
-
-            <p>
-                Zentraler Bereich der jungen
-                Sprossachse.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <div class="info-box">
-
-        <h3>
-            📌 Merke
-        </h3>
-
-        <p>
-            Der genaue Aufbau ist abhängig von
-            der Baumart. Nicht jeder Baum besitzt
-            alle Zonen in derselben Form.
-        </p>
-
-    </div>
+ </div>
 
 </section>
 
 
-<!-- ======================================================
-     VERGLEICH
-====================================================== -->
+<!-- VERGLEICH -->
 
-<section
-    id="vergleich"
-    class="page">
+<section id="vergleich" class="page">
 
-    <div class="page-heading">
+ <div class="heading">
 
-        <h1>
-            📊 Vergleich
-        </h1>
+  <h1>📊 Vergleich</h1>
 
-        <p>
-            Die wichtigsten Unterschiede
-            auf einen Blick.
-        </p>
+  <p>
+   Alle vier Holzbereiche direkt miteinander
+   vergleichen.
+  </p>
 
-    </div>
+ </div>
 
 
-    <div class="table-container">
+ <div class="table-wrap">
 
-        <table>
+  <table>
 
-            <thead>
+   <thead>
 
-                <tr>
+    <tr>
+     <th>Bereich</th>
+     <th>Lage</th>
+     <th>Wassertransport</th>
+     <th>Farbe</th>
+     <th>Besonderheit</th>
+    </tr>
 
-                    <th>
-                        Bereich
-                    </th>
+   </thead>
 
-                    <th>
-                        Lage
-                    </th>
+   <tbody>
 
-                    <th>
-                        Wassertransport
-                    </th>
+    <tr>
+     <td>Splintholz</td>
+     <td>Außen</td>
+     <td>Ja</td>
+     <td>meist heller</td>
+     <td>physiologisch aktiv</td>
+    </tr>
 
-                    <th>
-                        Farbe
-                    </th>
+    <tr>
+     <td>Reifholz</td>
+     <td>Innen</td>
+     <td>Nein</td>
+     <td>kaum Unterschied</td>
+     <td>kein aktiver Wassertransport</td>
+    </tr>
 
-                    <th>
-                        Besonderheit
-                    </th>
+    <tr>
+     <td>Kernholz</td>
+     <td>Innen</td>
+     <td>Nein</td>
+     <td>häufig dunkler</td>
+     <td>oft natürlicherweise dauerhafter</td>
+    </tr>
 
-                </tr>
+    <tr>
+     <td>Kernreifholz</td>
+     <td>Innen + Übergang</td>
+     <td>im inneren Bereich nein</td>
+     <td>Kern sichtbar</td>
+     <td>Kern + Reif + Splint</td>
+    </tr>
 
-            </thead>
+   </tbody>
 
+  </table>
 
-            <tbody>
-
-                <tr>
-
-                    <td>
-                        Splintholz
-                    </td>
-
-                    <td>
-                        Außen
-                    </td>
-
-                    <td>
-                        Ja
-                    </td>
-
-                    <td>
-                        meist heller
-                    </td>
-
-                    <td>
-                        physiologisch aktiv
-                    </td>
-
-                </tr>
+ </div>
 
 
-                <tr>
+ <div class="info">
 
-                    <td>
-                        Reifholz
-                    </td>
+  <h3>🧠 Super-Merksatz</h3>
 
-                    <td>
-                        Innen
-                    </td>
+  <p>
+   <b>Splintholz:</b> außen und aktiv.<br>
+   <b>Reifholz:</b> innen und nicht mehr aktiv,
+   aber meist ohne deutlichen Farbunterschied.<br>
+   <b>Kernholz:</b> innen und nicht mehr aktiv
+   wasserleitend.<br>
+   <b>Kernreifholz:</b> Splintholz + Reifholz + Kernholz.
+  </p>
 
-                    <td>
-                        Nein
-                    </td>
-
-                    <td>
-                        kaum Unterschied
-                    </td>
-
-                    <td>
-                        innerer, älterer Bereich
-                    </td>
-
-                </tr>
-
-
-                <tr>
-
-                    <td>
-                        Kernholz
-                    </td>
-
-                    <td>
-                        Innen
-                    </td>
-
-                    <td>
-                        Nein
-                    </td>
-
-                    <td>
-                        häufig dunkler
-                    </td>
-
-                    <td>
-                        oft natürlicherweise dauerhafter
-                    </td>
-
-                </tr>
-
-
-                <tr>
-
-                    <td>
-                        Kernreifholz
-                    </td>
-
-                    <td>
-                        Innen + Übergang
-                    </td>
-
-                    <td>
-                        im inneren Bereich nein
-                    </td>
-
-                    <td>
-                        Kern sichtbar
-                    </td>
-
-                    <td>
-                        Kern + Reif + Splint
-                    </td>
-
-                </tr>
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-
-    <div class="info-box">
-
-        <h3>
-            🧠 Einfacher Merksatz
-        </h3>
-
-        <p>
-
-            <b>Splintholz:</b>
-            außen und aktiv.<br>
-
-            <b>Reifholz:</b>
-            innen, kein aktiver Wassertransport,
-            aber kaum Farbunterschied.<br>
-
-            <b>Kernholz:</b>
-            innen und nicht mehr aktiv
-            wasserleitend.<br>
-
-            <b>Kernreifholz:</b>
-            Splintholz + Reifholz + Kernholz.
-
-        </p>
-
-    </div>
+ </div>
 
 </section>
 
 
-<!-- ======================================================
-     QUIZ
-====================================================== -->
+<!-- QUIZ -->
 
-<section
-    id="quiz"
-    class="page">
+<section id="quiz" class="page">
 
-    <div class="page-heading">
+ <div class="heading">
 
-        <h1>
-            🧠 Holz-Quiz
-        </h1>
+  <h1>🧠 Holz-Quiz</h1>
 
-        <p>
-            Teste dein Wissen.
-        </p>
+  <p>
+   Beweise dein Wissen.
+  </p>
 
-    </div>
+ </div>
 
 
-    <div class="quiz-box">
+ <div class="quiz">
+
+  <div class="progress">
+   <div id="progressBar" class="progress-bar"></div>
+  </div>
 
 
-        <div class="quiz-progress">
+  <div id="quizGame">
 
-            <div
-                id="quizProgress"
-                class="quiz-progress-bar">
-            </div>
+   <div id="question" class="question"></div>
 
-        </div>
+   <div id="answers" class="answers"></div>
 
-
-        <div
-            id="quizGame">
-
-            <div
-                id="quizQuestion"
-                class="quiz-question">
-            </div>
+  </div>
 
 
-            <div
-                id="answers"
-                class="answers">
-            </div>
+  <div id="result" class="result">
 
-        </div>
+   <h2>🎉 Fertig!</h2>
 
+   <div id="score" class="score"></div>
 
-        <div
-            id="quizResult"
-            class="quiz-result">
+   <button class="action"
+    onclick="restartQuiz()">
+    🔄 Noch einmal
+   </button>
 
-            <h2>
-                🎉 Geschafft!
-            </h2>
+  </div>
 
-            <div
-                id="quizScore"
-                class="quiz-score">
-            </div>
-
-            <button
-                class="action-button"
-                onclick="restartQuiz()">
-
-                🔄 Noch einmal
-
-            </button>
-
-        </div>
-
-    </div>
+ </div>
 
 </section>
-
 
 </main>
 
 
 <footer>
-
-    🌳 HolzWissen · Interaktive Lernwebseite
-
+ 🌳 HolzWissen · Interaktive Lernwebseite
 </footer>
-
 
 </div>
 
 
-<!-- ======================================================
-     NACH OBEN
-====================================================== -->
-
-<button
-    id="topButton"
-    onclick="window.scrollTo({top:0,behavior:'smooth'})">
-
-    ↑
-
+<button id="top"
+ onclick="window.scrollTo({top:0,behavior:'smooth'})">
+ ↑
 </button>
 
 
 <script>
 
-/* =========================================================
-   START APP
-========================================================= */
+/* PARTICLES */
 
-function startApp() {
+for(let i=0;i<35;i++){
 
-    document.getElementById("start").style.display = "none";
+ const p=document.createElement("div");
 
-    document.getElementById("app").style.display = "block";
+ p.className="particle";
 
-    showPageById("home");
+ p.style.left=Math.random()*100+"%";
 
-    window.scrollTo({
-        top: 0
-    });
+ p.style.animationDelay=(-Math.random()*12)+"s";
 
+ p.style.animationDuration=(8+Math.random()*12)+"s";
+
+ p.style.opacity=(.15+Math.random()*.4);
+
+ document.getElementById("particles")
+ .appendChild(p);
 }
 
 
-/* =========================================================
-   SEITE WECHSELN
-========================================================= */
+/* START */
 
-function showPage(id, button) {
+function startApp(){
 
-    document.querySelectorAll(".page")
-        .forEach(page => {
+ document.getElementById("start").style.display="none";
 
-            page.classList.remove("active");
+ document.getElementById("app").style.display="block";
 
-        });
+ showPageById("home");
 
-
-    const page =
-        document.getElementById(id);
-
-    if (!page) return;
-
-    page.classList.add("active");
-
-
-    document.querySelectorAll(".nav-button")
-        .forEach(btn => {
-
-            btn.classList.remove("active");
-
-        });
-
-
-    if (button) {
-
-        button.classList.add("active");
-
-    }
-
-
-    window.scrollTo({
-
-        top: 0,
-
-        behavior: "smooth"
-
-    });
-
+ window.scrollTo(0,0);
 }
 
 
-function showPageById(id) {
+/* NAVIGATION */
 
-    document.querySelectorAll(".page")
-        .forEach(page => {
+function showPage(id,button){
 
-            page.classList.remove("active");
+ document.querySelectorAll(".page")
+ .forEach(p=>p.classList.remove("active"));
 
-        });
+ const page=document.getElementById(id);
 
+ if(!page)return;
 
-    document.getElementById(id)
-        .classList.add("active");
+ page.classList.add("active");
 
+ document.querySelectorAll(".nav-button")
+ .forEach(b=>b.classList.remove("active"));
 
-    document.querySelectorAll(".nav-button")
-        .forEach(btn => {
+ if(button)button.classList.add("active");
 
-            btn.classList.remove("active");
-
-        });
-
-
-    const matchingButton =
-        [...document.querySelectorAll(".nav-button")]
-        .find(btn =>
-            btn.getAttribute("onclick") &&
-            btn.getAttribute("onclick")
-            .includes("'" + id + "'")
-        );
-
-
-    if (matchingButton) {
-
-        matchingButton.classList.add("active");
-
-    }
-
-
-    window.scrollTo({
-
-        top: 0,
-
-        behavior: "smooth"
-
-    });
-
+ window.scrollTo({
+  top:0,
+  behavior:"smooth"
+ });
 }
 
 
-/* =========================================================
-   KARTEN
-========================================================= */
+function showPageById(id){
 
-function openCard(type, container) {
+ document.querySelectorAll(".page")
+ .forEach(p=>p.classList.remove("active"));
 
-    /* Alle Karten zurücksetzen */
+ document.getElementById(id)
+ .classList.add("active");
 
-    document.querySelectorAll(".card")
-        .forEach(card => {
+ document.querySelectorAll(".nav-button")
+ .forEach(b=>b.classList.remove("active"));
 
-            if (card !==
-                container.querySelector(".card")) {
+ const button=[...document.querySelectorAll(".nav-button")]
+ .find(b=>
+  b.getAttribute("onclick")?.includes("'"+id+"'")
+ );
 
-                card.classList.remove("flipped");
+ if(button)button.classList.add("active");
 
-            }
-
-        });
-
-
-    /* Diese Karte drehen */
-
-    const card =
-        container.querySelector(".card");
-
-    card.classList.add("flipped");
-
-
-    /* Alle Details verstecken */
-
-    document.querySelectorAll(".detail")
-        .forEach(detail => {
-
-            detail.classList.remove("active");
-
-        });
-
-
-    /* Passenden Bereich öffnen */
-
-    const detail =
-        document.getElementById(
-            "detail-" + type
-        );
-
-    detail.classList.add("active");
-
-
-    /*
-       Erst Karte animieren,
-       danach nach unten scrollen.
-    */
-
-    setTimeout(() => {
-
-        detail.scrollIntoView({
-
-            behavior: "smooth",
-
-            block: "start"
-
-        });
-
-    }, 550);
-
+ window.scrollTo({
+  top:0,
+  behavior:"smooth"
+ });
 }
 
 
-/* =========================================================
-   DIAGRAMM
-========================================================= */
+/* SEARCH */
 
-function diagramInfo(type) {
+function searchCards(){
 
-    const info =
-        document.getElementById("diagramInfo");
+ const search=
+ document.getElementById("search")
+ .value.toLowerCase();
 
+ document.querySelectorAll(".card-container")
+ .forEach(card=>{
 
-    const data = {
+  const name=
+  card.dataset.name.toLowerCase();
 
-        "Rinde": {
-            title: "🟤 Rinde",
-            text:
-                "Die Rinde bildet die äußere Schutzschicht des Baumes. Sie schützt die inneren Gewebe vor äußeren Einflüssen."
-        },
+  card.style.display=
+  name.includes(search)?"block":"none";
 
-        "Splintholz": {
-            title: "🟡 Splintholz",
-            text:
-                "Das Splintholz liegt außen und ist bei einem lebenden Baum am aktiven Wassertransport beteiligt."
-        },
-
-        "Reifholz": {
-            title: "🟠 Reifholz",
-            text:
-                "Reifholz ist ein innerer Bereich, der physiologisch nicht mehr aktiv Wasser leitet und sich farblich kaum vom Splintholz unterscheiden kann."
-        },
-
-        "Kernholz": {
-            title: "🔴 Kernholz",
-            text:
-                "Kernholz liegt im Inneren und ist physiologisch nicht mehr am aktiven Wassertransport beteiligt."
-        },
-
-        "Mark": {
-            title: "⚫ Mark",
-            text:
-                "Das Mark liegt im Zentrum der Sprossachse. Es gehört zum innersten Bereich des jungen Sprosses."
-        }
-
-    };
-
-
-    info.innerHTML = `
-
-        <h3>
-            ${data[type].title}
-        </h3>
-
-        <p>
-            ${data[type].text}
-        </p>
-
-    `;
-
-
-    info.scrollIntoView({
-
-        behavior: "smooth",
-
-        block: "center"
-
-    });
-
+ });
 }
 
 
-/* =========================================================
-   QUIZ
-========================================================= */
+/* CARD FLIP */
 
-const questions = [
+function openCard(type,container){
 
-    {
-        question:
-            "Welcher Holzbereich transportiert bei einem lebenden Baum hauptsächlich Wasser?",
+ document.querySelectorAll(".card")
+ .forEach(card=>{
 
-        answers: [
-            "Kernholz",
-            "Splintholz",
-            "Mark",
-            "Rinde"
-        ],
+  if(card!==container.querySelector(".card"))
+   card.classList.remove("flipped");
 
-        correct: 1
-    },
+ });
+
+ const card=container.querySelector(".card");
+
+ card.classList.add("flipped");
 
 
-    {
-        question:
-            "Wo befindet sich das Kernholz?",
-
-        answers: [
-            "Im äußeren Bereich",
-            "Nur in der Rinde",
-            "Im inneren Bereich",
-            "Außerhalb des Stammes"
-        ],
-
-        correct: 2
-    },
+ document.querySelectorAll(".detail")
+ .forEach(d=>d.classList.remove("active"));
 
 
-    {
-        question:
-            "Was ist typisch für echtes Kernholz?",
+ const detail=
+ document.getElementById("detail-"+type);
 
-        answers: [
-            "Es transportiert aktiv Wasser",
-            "Es ist immer weiß",
-            "Es ist physiologisch nicht mehr aktiv wasserleitend",
-            "Es liegt außerhalb der Rinde"
-        ],
-
-        correct: 2
-    },
+ detail.classList.add("active");
 
 
-    {
-        question:
-            "Was unterscheidet Reifholz häufig von Kernholz?",
+ setTimeout(()=>{
 
-        answers: [
-            "Reifholz kann farblich kaum vom Splintholz abweichen",
-            "Reifholz liegt immer außerhalb der Rinde",
-            "Reifholz transportiert immer Wasser",
-            "Reifholz ist das Mark"
-        ],
+  detail.scrollIntoView({
+   behavior:"smooth",
+   block:"start"
+  });
 
-        correct: 0
-    },
+ },600);
+}
 
 
-    {
-        question:
-            "Welche Reihenfolge ist bei einem Kernreifholzbaum vereinfacht richtig?",
+/* DIAGRAM */
 
-        answers: [
-            "Kernholz → Reifholz → Splintholz",
-            "Rinde → Kernholz → Splintholz",
-            "Splintholz → Rinde → Kernholz",
-            "Mark → Rinde → Reifholz"
-        ],
+function diagramInfo(type){
 
-        correct: 0
-    },
+ const data={
+
+  "Rinde":{
+   title:"🟤 Rinde",
+   text:"Die Rinde bildet die äußere Schutzschicht des Baumes und schützt die inneren Gewebe."
+  },
+
+  "Splintholz":{
+   title:"🟡 Splintholz",
+   text:"Splintholz liegt außen und ist bei einem lebenden Baum am aktiven Wassertransport beteiligt."
+  },
+
+  "Reifholz":{
+   title:"🟠 Reifholz",
+   text:"Reifholz ist ein innerer Bereich ohne aktiven Wassertransport, der sich farblich kaum vom Splintholz unterscheiden kann."
+  },
+
+  "Kernholz":{
+   title:"🔴 Kernholz",
+   text:"Kernholz liegt im Inneren und ist physiologisch nicht mehr am aktiven Wassertransport beteiligt."
+  },
+
+  "Mark":{
+   title:"⚫ Mark",
+   text:"Das Mark liegt im Zentrum der Sprossachse."
+  }
+
+ };
+
+ const d=data[type];
+
+ const box=document.getElementById("diagramInfo");
+
+ box.innerHTML=`
+  <h3>${d.title}</h3>
+  <p>${d.text}</p>
+ `;
+
+ box.scrollIntoView({
+  behavior:"smooth",
+  block:"center"
+ });
+}
 
 
-    {
-        question:
-            "Wo liegt das Mark?",
+/* QUIZ */
 
-        answers: [
-            "Ganz außen",
-            "Im Zentrum",
-            "In der Rinde",
-            "Außerhalb des Baumes"
-        ],
+const questions=[
 
-        correct: 1
-    }
+ {
+  q:"Welcher Holzbereich transportiert bei einem lebenden Baum hauptsächlich Wasser?",
+  a:["Kernholz","Splintholz","Mark","Rinde"],
+  c:1
+ },
+
+ {
+  q:"Wo befindet sich das Kernholz?",
+  a:["Im äußeren Bereich","In der Rinde","Im inneren Bereich","Außerhalb"],
+  c:2
+ },
+
+ {
+  q:"Was ist typisch für echtes Kernholz?",
+  a:[
+   "Aktiver Wassertransport",
+   "Immer weiß",
+   "Nicht mehr aktiv wasserleitend",
+   "Liegt außerhalb der Rinde"
+  ],
+  c:2
+ },
+
+ {
+  q:"Was unterscheidet Reifholz häufig von Kernholz?",
+  a:[
+   "Es kann farblich kaum vom Splintholz abweichen",
+   "Es liegt außerhalb",
+   "Es transportiert immer Wasser",
+   "Es ist das Mark"
+  ],
+  c:0
+ },
+
+ {
+  q:"Welche Reihenfolge ist vereinfacht richtig?",
+  a:[
+   "Kernholz → Reifholz → Splintholz",
+   "Rinde → Kernholz → Splintholz",
+   "Splintholz → Rinde → Kernholz",
+   "Mark → Rinde → Reifholz"
+  ],
+  c:0
+ },
+
+ {
+  q:"Wo liegt das Mark?",
+  a:[
+   "Ganz außen",
+   "Im Zentrum",
+   "In der Rinde",
+   "Außerhalb"
+  ],
+  c:1
+ }
 
 ];
 
 
-let quizIndex = 0;
-
-let score = 0;
-
-let quizLocked = false;
+let quizIndex=0;
+let score=0;
+let locked=false;
 
 
-function loadQuiz() {
+function loadQuiz(){
 
-    quizLocked = false;
+ locked=false;
 
+ const q=questions[quizIndex];
 
-    const question =
-        questions[quizIndex];
+ document.getElementById("question")
+ .textContent=q.q;
 
+ const answers=document.getElementById("answers");
 
-    document.getElementById(
-        "quizQuestion"
-    ).textContent =
-        question.question;
+ answers.innerHTML="";
 
+ q.a.forEach((text,index)=>{
 
-    const answers =
-        document.getElementById(
-            "answers"
-        );
+  const btn=document.createElement("button");
 
+  btn.className="answer";
 
-    answers.innerHTML = "";
+  btn.textContent=text;
 
+  btn.onclick=()=>answer(index,btn);
 
-    question.answers.forEach(
-        (answer,index) => {
+  answers.appendChild(btn);
 
-            const button =
-                document.createElement("button");
+ });
 
-            button.className =
-                "answer";
-
-            button.textContent =
-                answer;
-
-
-            button.onclick =
-                () => answerQuestion(
-                    index,
-                    button
-                );
-
-
-            answers.appendChild(button);
-
-        }
-    );
-
-
-    const progress =
-        ((quizIndex) /
-        questions.length) * 100;
-
-
-    document.getElementById(
-        "quizProgress"
-    ).style.width =
-        progress + "%";
-
+ document.getElementById("progressBar")
+ .style.width=
+ ((quizIndex)/questions.length*100)+"%";
 }
 
 
-function answerQuestion(
-    selected,
-    button
-) {
+function answer(index,button){
 
-    if (quizLocked) return;
+ if(locked)return;
 
-    quizLocked = true;
+ locked=true;
 
+ const q=questions[quizIndex];
 
-    const question =
-        questions[quizIndex];
+ const buttons=document.querySelectorAll(".answer");
 
+ if(index===q.c){
 
-    const buttons =
-        document.querySelectorAll(
-            ".answer"
-        );
+  button.classList.add("correct");
 
+  score++;
 
-    if (
-        selected ===
-        question.correct
-    ) {
+ }else{
 
-        button.classList.add(
-            "correct"
-        );
+  button.classList.add("wrong");
 
-        score++;
+  buttons[q.c].classList.add("correct");
 
-    } else {
+ }
 
-        button.classList.add(
-            "wrong"
-        );
+ setTimeout(()=>{
 
-        buttons[
-            question.correct
-        ].classList.add(
-            "correct"
-        );
+  quizIndex++;
 
-    }
+  if(quizIndex>=questions.length){
 
+   finishQuiz();
 
-    setTimeout(() => {
+  }else{
 
-        quizIndex++;
+   loadQuiz();
 
+  }
 
-        if (
-            quizIndex >=
-            questions.length
-        ) {
-
-            finishQuiz();
-
-        } else {
-
-            loadQuiz();
-
-        }
-
-    }, 900);
-
+ },900);
 }
 
 
-function finishQuiz() {
+function finishQuiz(){
 
-    document.getElementById(
-        "quizGame"
-    ).style.display = "none";
+ document.getElementById("quizGame")
+ .style.display="none";
 
+ document.getElementById("result")
+ .style.display="block";
 
-    document.getElementById(
-        "quizResult"
-    ).style.display = "block";
+ document.getElementById("progressBar")
+ .style.width="100%";
 
-
-    document.getElementById(
-        "quizProgress"
-    ).style.width = "100%";
-
-
-    document.getElementById(
-        "quizScore"
-    ).textContent =
-        `Du hast ${score} von ${questions.length} Punkten erreicht.`;
-
+ document.getElementById("score")
+ .textContent=
+ `Du hast ${score} von ${questions.length} Punkten erreicht.`;
 }
 
 
-function restartQuiz() {
+function restartQuiz(){
 
-    quizIndex = 0;
+ quizIndex=0;
 
-    score = 0;
+ score=0;
 
+ document.getElementById("quizGame")
+ .style.display="block";
 
-    document.getElementById(
-        "quizGame"
-    ).style.display = "block";
+ document.getElementById("result")
+ .style.display="none";
 
-
-    document.getElementById(
-        "quizResult"
-    ).style.display = "none";
-
-
-    loadQuiz();
-
+ loadQuiz();
 }
 
 
-/* =========================================================
-   TOP BUTTON
-========================================================= */
+/* TOP BUTTON */
 
-window.addEventListener(
-    "scroll",
-    () => {
+window.addEventListener("scroll",()=>{
 
-        const button =
-            document.getElementById(
-                "topButton"
-            );
+ const top=document.getElementById("top");
+
+ top.style.display=
+ window.scrollY>500?"block":"none";
+
+});
 
 
-        if (window.scrollY > 500) {
+/* ESC */
 
-            button.style.display =
-                "block";
+document.addEventListener("keydown",e=>{
 
-        } else {
+ if(e.key==="Escape" &&
+ document.getElementById("app").style.display==="block"){
 
-            button.style.display =
-                "none";
+  showPageById("home");
 
-        }
+ }
 
-    }
-);
+});
 
 
-/* =========================================================
-   ESC = HOME
-========================================================= */
-
-document.addEventListener(
-    "keydown",
-    event => {
-
-        if (
-            event.key === "Escape" &&
-            document.getElementById(
-                "app"
-            ).style.display === "block"
-        ) {
-
-            showPageById("home");
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   QUIZ INITIALISIEREN
-========================================================= */
+/* INIT */
 
 loadQuiz();
 
