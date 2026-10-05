@@ -2,2069 +2,1959 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>HolzWissen 3D – Das große Baumlexikon</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#0b0f0c">
+
+<title>HolzWissen 3D</title>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.161.0/examples/js/controls/OrbitControls.js"></script>
 
 <style>
 :root{
-  --bg:#f4f7f2;
-  --bg2:#ffffff;
-  --text:#142018;
-  --muted:#647067;
-  --green:#1e6b43;
-  --green2:#2f9b63;
-  --green3:#bfe7cf;
-  --brown:#795333;
-  --gold:#d49a42;
-  --line:#dce5de;
-  --shadow:0 25px 70px rgba(25,55,35,.12);
-  --radius:28px;
+    --bg:#070908;
+    --bg2:#0d120f;
+    --panel:rgba(18,23,20,.82);
+    --panel2:#121914;
+    --text:#f4f7f4;
+    --muted:#9da99f;
+    --accent:#63d471;
+    --accent2:#a5efaa;
+    --gold:#d8a05d;
+    --border:rgba(255,255,255,.09);
+    --shadow:0 30px 100px rgba(0,0,0,.45);
 }
 
 *{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
 html{
-  scroll-behavior:smooth;
+    scroll-behavior:smooth;
 }
 
 body{
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:
-    radial-gradient(circle at 20% 0%,#e6f5eb 0,transparent 32%),
-    radial-gradient(circle at 100% 20%,#eef7f0 0,transparent 30%),
-    var(--bg);
-  color:var(--text);
-  overflow-x:hidden;
+    min-height:100vh;
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    color:var(--text);
+    background:
+        radial-gradient(circle at 50% -20%,rgba(93,211,110,.18),transparent 35%),
+        radial-gradient(circle at 100% 30%,rgba(45,125,60,.12),transparent 30%),
+        linear-gradient(135deg,var(--bg),var(--bg2));
+    overflow-x:hidden;
+    transition:
+        background .5s,
+        color .5s;
 }
 
-button,input,select{
-  font:inherit;
+/* THEMES */
+
+body.light{
+    --bg:#f3f6f3;
+    --bg2:#ffffff;
+    --panel:rgba(255,255,255,.88);
+    --panel2:#ffffff;
+    --text:#142018;
+    --muted:#657267;
+    --border:rgba(20,32,24,.1);
+    --shadow:0 30px 80px rgba(30,50,35,.12);
 }
 
-button{
-  cursor:pointer;
+body.green{
+    --bg:#03140a;
+    --bg2:#062516;
+    --panel:rgba(7,35,19,.88);
+    --panel2:#092d18;
+    --text:#f2fff4;
+    --muted:#9fc2a5;
+    --accent:#37f06b;
+    --accent2:#9affb2;
+    --border:rgba(80,255,120,.12);
 }
 
-.hidden{
-  display:none!important;
-}
-
-/* =========================
-   START
-========================= */
+/* START */
 
 #start{
-  min-height:100vh;
-  min-height:100svh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  position:relative;
-  overflow:hidden;
-  padding:30px;
+    min-height:100vh;
+    min-height:100svh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:30px;
+    position:relative;
+    overflow:hidden;
 }
 
 .start-bg{
-  position:absolute;
-  inset:0;
-  overflow:hidden;
-  pointer-events:none;
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
 }
 
 .start-orb{
-  position:absolute;
-  border-radius:50%;
-  filter:blur(70px);
-  opacity:.55;
+    position:absolute;
+    width:600px;
+    height:600px;
+    border-radius:50%;
+    background:
+        radial-gradient(circle,
+        rgba(94,219,112,.25),
+        rgba(94,219,112,.04) 45%,
+        transparent 70%);
+    filter:blur(30px);
+    animation:orb 10s ease-in-out infinite alternate;
 }
 
-.orb1{
-  width:500px;
-  height:500px;
-  background:#b9e5c8;
-  top:-200px;
-  left:-100px;
-  animation:orb 9s ease-in-out infinite alternate;
+.start-orb:nth-child(1){
+    left:-220px;
+    top:-220px;
 }
 
-.orb2{
-  width:450px;
-  height:450px;
-  background:#dcefc4;
-  right:-150px;
-  bottom:-100px;
-  animation:orb 11s ease-in-out infinite alternate-reverse;
+.start-orb:nth-child(2){
+    right:-220px;
+    bottom:-260px;
+    animation-delay:-5s;
 }
 
 @keyframes orb{
-  from{transform:scale(.8) translate(0,0)}
-  to{transform:scale(1.2) translate(50px,30px)}
+    from{
+        transform:scale(.8) translate(0,0);
+    }
+    to{
+        transform:scale(1.25) translate(80px,-40px);
+    }
 }
 
 .start-grid{
-  position:absolute;
-  inset:0;
-  opacity:.22;
-  background-image:
-    linear-gradient(#6c9278 1px,transparent 1px),
-    linear-gradient(90deg,#6c9278 1px,transparent 1px);
-  background-size:60px 60px;
-  mask-image:linear-gradient(to bottom,black,transparent);
+    position:absolute;
+    inset:0;
+    opacity:.16;
+    background-image:
+        linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
+    background-size:50px 50px;
+    mask-image:linear-gradient(to bottom,black,transparent);
 }
 
 .start-content{
-  position:relative;
-  z-index:2;
-  max-width:1150px;
-  text-align:center;
-  animation:startIn 1s cubic-bezier(.2,.8,.2,1);
+    position:relative;
+    z-index:2;
+    width:min(1150px,100%);
+    text-align:center;
+    animation:startIn 1s ease;
 }
 
 @keyframes startIn{
-  from{
-    opacity:0;
-    transform:translateY(50px) scale(.95);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
-}
-
-.logo-mark{
-  width:120px;
-  height:120px;
-  margin:auto;
-  border-radius:36px;
-  display:grid;
-  place-items:center;
-  font-size:70px;
-  background:linear-gradient(145deg,#ffffff,#e2f2e7);
-  border:1px solid white;
-  box-shadow:
-    0 30px 80px rgba(28,92,53,.18),
-    inset 0 1px 0 white;
-  animation:floatTree 4s ease-in-out infinite;
-}
-
-@keyframes floatTree{
-  0%,100%{transform:translateY(0) rotate(-2deg)}
-  50%{transform:translateY(-12px) rotate(2deg)}
+    from{
+        opacity:0;
+        transform:translateY(50px) scale(.94);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
 }
 
 .start-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  margin-top:28px;
-  padding:9px 16px;
-  border-radius:999px;
-  background:white;
-  border:1px solid var(--line);
-  color:var(--green);
-  font-weight:800;
-  font-size:13px;
-  letter-spacing:.5px;
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    padding:9px 16px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.05);
+    border-radius:999px;
+    color:var(--accent2);
+    font-size:13px;
+    font-weight:800;
+    letter-spacing:1px;
+    margin-bottom:25px;
+    backdrop-filter:blur(15px);
 }
 
-.start-content h1{
-  margin-top:18px;
-  font-size:clamp(55px,10vw,125px);
-  line-height:.9;
-  letter-spacing:-7px;
-  font-weight:1000;
-  background:linear-gradient(135deg,#123d26,#2e8c59,#83b85d);
-  color:transparent;
-  background-clip:text;
-  -webkit-background-clip:text;
+.start-tree{
+    font-size:clamp(80px,14vw,170px);
+    line-height:1;
+    filter:
+        drop-shadow(0 30px 30px rgba(0,0,0,.5))
+        drop-shadow(0 0 40px rgba(90,220,110,.15));
+    animation:treeFloat 5s ease-in-out infinite;
 }
 
-.start-content h2{
-  margin-top:25px;
-  font-size:clamp(22px,3vw,36px);
-  color:#304337;
+@keyframes treeFloat{
+    0%,100%{
+        transform:translateY(0) rotate(-2deg);
+    }
+    50%{
+        transform:translateY(-18px) rotate(2deg);
+    }
 }
 
-.start-content p{
-  max-width:800px;
-  margin:20px auto;
-  color:var(--muted);
-  font-size:18px;
-  line-height:1.8;
+.start-title{
+    margin-top:10px;
+    font-size:clamp(55px,10vw,125px);
+    line-height:.9;
+    font-weight:1000;
+    letter-spacing:-7px;
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #caffcf 35%,
+            var(--accent) 70%,
+            #247a36
+        );
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
 }
 
-.start-features{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:10px;
-  margin:28px auto;
+.start-subtitle{
+    margin-top:25px;
+    font-size:clamp(20px,3vw,30px);
+    font-weight:700;
+    color:var(--muted);
 }
 
-.start-feature{
-  padding:11px 16px;
-  background:rgba(255,255,255,.75);
-  backdrop-filter:blur(15px);
-  border:1px solid white;
-  border-radius:999px;
-  color:#435349;
-  font-size:14px;
-  font-weight:700;
+.start-description{
+    max-width:750px;
+    margin:25px auto;
+    line-height:1.8;
+    color:var(--muted);
+}
+
+.start-buttons{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:30px;
 }
 
 .start-button{
-  border:0;
-  color:white;
-  padding:19px 36px;
-  border-radius:18px;
-  background:linear-gradient(135deg,#1d6b43,#2f9b63);
-  box-shadow:0 20px 45px rgba(30,107,67,.28);
-  font-size:17px;
-  font-weight:900;
-  transition:.3s;
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:999px;
+    padding:17px 30px;
+    background:
+        linear-gradient(
+            135deg,
+            var(--accent),
+            #27783a
+        );
+    color:white;
+    font-weight:900;
+    cursor:pointer;
+    box-shadow:
+        0 20px 60px rgba(45,170,70,.2);
+    transition:.3s;
 }
 
 .start-button:hover{
-  transform:translateY(-5px) scale(1.03);
-  box-shadow:0 28px 60px rgba(30,107,67,.35);
+    transform:translateY(-5px) scale(1.03);
 }
 
-/* =========================
-   APP
-========================= */
+.start-secondary{
+    background:rgba(255,255,255,.06);
+    color:var(--text);
+    box-shadow:none;
+}
+
+/* APP */
 
 #app{
-  display:none;
+    display:none;
 }
 
 header{
-  position:sticky;
-  top:0;
-  z-index:1000;
-  background:rgba(255,255,255,.84);
-  backdrop-filter:blur(22px);
-  border-bottom:1px solid var(--line);
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:rgba(5,8,6,.72);
+    backdrop-filter:blur(25px);
+    border-bottom:1px solid var(--border);
+}
+
+body.light header{
+    background:rgba(255,255,255,.78);
 }
 
 .nav{
-  max-width:1450px;
-  margin:auto;
-  padding:12px 18px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
+    max-width:1450px;
+    margin:auto;
+    padding:12px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
 }
 
 .logo{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  font-weight:1000;
-  white-space:nowrap;
+    font-size:19px;
+    font-weight:1000;
+    white-space:nowrap;
 }
 
 .logo span{
-  width:38px;
-  height:38px;
-  display:grid;
-  place-items:center;
-  border-radius:12px;
-  background:#e6f5eb;
+    color:var(--accent);
 }
 
 .nav-buttons{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-  justify-content:center;
+    display:flex;
+    gap:5px;
+    flex-wrap:wrap;
+    justify-content:center;
 }
 
 .nav-button{
-  border:0;
-  padding:10px 14px;
-  border-radius:12px;
-  background:transparent;
-  color:#667168;
-  font-weight:800;
-  transition:.2s;
+    border:1px solid transparent;
+    border-radius:999px;
+    padding:9px 13px;
+    color:var(--muted);
+    background:transparent;
+    cursor:pointer;
+    transition:.25s;
 }
 
 .nav-button:hover,
 .nav-button.active{
-  background:#e7f4eb;
-  color:var(--green);
+    background:rgba(99,212,113,.13);
+    border-color:rgba(99,212,113,.22);
+    color:var(--text);
 }
 
+.theme-buttons{
+    display:flex;
+    gap:5px;
+}
+
+.theme{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.06);
+    cursor:pointer;
+}
+
+/* MAIN */
+
 main{
-  max-width:1450px;
-  margin:auto;
+    width:min(1450px,100%);
+    margin:auto;
 }
 
 .page{
-  display:none;
-  padding:70px 20px 110px;
-  animation:pageIn .45s ease;
+    display:none;
+    padding:75px 22px 110px;
+    animation:pageIn .5s ease;
 }
 
 .page.active{
-  display:block;
+    display:block;
 }
 
 @keyframes pageIn{
-  from{
-    opacity:0;
-    transform:translateY(15px);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
 }
 
 .heading{
-  text-align:center;
-  margin-bottom:45px;
+    text-align:center;
+    margin-bottom:45px;
 }
 
 .heading h1{
-  font-size:clamp(40px,6vw,70px);
-  letter-spacing:-3px;
+    font-size:clamp(40px,7vw,76px);
+    letter-spacing:-4px;
 }
 
 .heading p{
-  max-width:800px;
-  margin:15px auto 0;
-  color:var(--muted);
-  line-height:1.8;
+    max-width:800px;
+    margin:15px auto 0;
+    color:var(--muted);
+    line-height:1.8;
 }
 
-/* =========================
-   HOME
-========================= */
+/* HOME */
 
 .home-hero{
-  padding:50px;
-  border-radius:40px;
-  background:
-    linear-gradient(135deg,#ffffff,#eef8f1);
-  border:1px solid white;
-  box-shadow:var(--shadow);
-  overflow:hidden;
-  position:relative;
-}
-
-.home-hero::after{
-  content:"🌳";
-  position:absolute;
-  right:30px;
-  bottom:-50px;
-  font-size:230px;
-  opacity:.07;
+    padding:55px;
+    border:1px solid var(--border);
+    border-radius:45px;
+    background:
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(99,212,113,.15),
+            transparent 30%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.06),
+            rgba(255,255,255,.015)
+        );
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    position:relative;
 }
 
 .home-hero h2{
-  font-size:clamp(28px,4vw,48px);
-  max-width:800px;
+    font-size:clamp(30px,5vw,58px);
+    letter-spacing:-2px;
 }
 
 .home-hero p{
-  margin-top:15px;
-  max-width:800px;
-  color:var(--muted);
-  line-height:1.8;
+    max-width:800px;
+    margin-top:17px;
+    color:var(--muted);
+    line-height:1.8;
 }
 
 .stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-  margin-top:35px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin-top:35px;
 }
 
 .stat{
-  padding:25px;
-  border-radius:22px;
-  background:white;
-  border:1px solid var(--line);
+    padding:24px;
+    border:1px solid var(--border);
+    border-radius:25px;
+    background:rgba(255,255,255,.04);
+    text-align:center;
 }
 
 .stat strong{
-  display:block;
-  font-size:34px;
-  color:var(--green);
+    display:block;
+    font-size:35px;
+    color:var(--accent);
 }
 
 .stat span{
-  color:var(--muted);
-  font-size:13px;
+    color:var(--muted);
+    font-size:13px;
 }
 
-.quick-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:16px;
-  margin-top:25px;
+.feature-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin-top:22px;
 }
 
-.quick{
-  padding:25px;
-  background:white;
-  border:1px solid var(--line);
-  border-radius:23px;
-  transition:.3s;
+.feature{
+    padding:27px;
+    border:1px solid var(--border);
+    border-radius:27px;
+    background:rgba(255,255,255,.04);
+    cursor:pointer;
+    transition:.3s;
 }
 
-.quick:hover{
-  transform:translateY(-6px);
-  box-shadow:0 20px 45px rgba(25,70,40,.12);
+.feature:hover{
+    transform:translateY(-8px);
+    border-color:rgba(99,212,113,.35);
 }
 
-.quick-icon{
-  font-size:40px;
+.feature-icon{
+    font-size:42px;
+    margin-bottom:13px;
 }
 
-.quick h3{
-  margin-top:12px;
+.feature h3{
+    margin-bottom:8px;
 }
 
-.quick p{
-  font-size:14px;
+.feature p{
+    font-size:14px;
 }
 
-/* =========================
-   3D STAMM
-========================= */
+/* REGISTER */
 
-.stem-layout{
-  display:grid;
-  grid-template-columns:1fr 360px;
-  gap:25px;
-  align-items:stretch;
-}
-
-.stem-card{
-  min-height:650px;
-  border-radius:34px;
-  background:
-    radial-gradient(circle at 50% 45%,rgba(255,255,255,.9),transparent 45%),
-    linear-gradient(145deg,#eef6f0,#dfece2);
-  border:1px solid white;
-  box-shadow:var(--shadow);
-  overflow:hidden;
-  position:relative;
-}
-
-#tree3d{
-  width:100%;
-  height:650px;
-  touch-action:none;
-}
-
-.viewer-help{
-  position:absolute;
-  left:20px;
-  bottom:20px;
-  padding:12px 16px;
-  border-radius:14px;
-  background:rgba(255,255,255,.82);
-  backdrop-filter:blur(15px);
-  border:1px solid white;
-  font-size:13px;
-  color:#59655d;
-  pointer-events:none;
-}
-
-.viewer-title{
-  position:absolute;
-  top:20px;
-  left:20px;
-  padding:12px 16px;
-  border-radius:14px;
-  background:rgba(255,255,255,.85);
-  backdrop-filter:blur(15px);
-  border:1px solid white;
-  font-weight:900;
-  z-index:3;
-}
-
-.stem-controls{
-  padding:25px;
-  border-radius:34px;
-  background:white;
-  border:1px solid var(--line);
-  box-shadow:var(--shadow);
-}
-
-.stem-controls h3{
-  font-size:24px;
-  margin-bottom:18px;
-}
-
-.tree-select{
-  width:100%;
-  padding:14px;
-  border-radius:14px;
-  border:1px solid var(--line);
-  background:#f7faf7;
-  outline:none;
-  margin-bottom:15px;
-}
-
-.tree-select:focus{
-  border-color:var(--green);
-}
-
-.camera-buttons{
-  display:grid;
-  gap:9px;
-}
-
-.camera-btn{
-  border:1px solid var(--line);
-  background:#f7faf7;
-  padding:13px;
-  border-radius:13px;
-  text-align:left;
-  font-weight:800;
-  transition:.2s;
-}
-
-.camera-btn:hover{
-  background:#eaf6ee;
-  border-color:#b8dcc5;
-  color:var(--green);
-}
-
-.layer-info{
-  margin-top:20px;
-  padding:18px;
-  border-radius:18px;
-  background:#f2f8f3;
-}
-
-.layer-info strong{
-  display:block;
-  color:var(--green);
-  margin-bottom:7px;
-}
-
-.layer-info p{
-  color:var(--muted);
-  line-height:1.6;
-  font-size:14px;
-}
-
-.tree-description{
-  margin-top:25px;
-  padding:25px;
-  background:white;
-  border:1px solid var(--line);
-  border-radius:25px;
-}
-
-.tree-description h3{
-  font-size:27px;
-}
-
-.tree-description p{
-  margin-top:10px;
-  color:var(--muted);
-  line-height:1.8;
-}
-
-/* =========================
-   REGISTER
-========================= */
-
-.toolbar{
-  display:grid;
-  grid-template-columns:1fr 220px 220px;
-  gap:12px;
-  margin-bottom:25px;
+.controls{
+    display:grid;
+    grid-template-columns:1fr 220px;
+    gap:12px;
+    margin-bottom:25px;
 }
 
 .search{
-  width:100%;
-  padding:16px 18px;
-  border-radius:15px;
-  border:1px solid var(--line);
-  background:white;
-  outline:none;
+    width:100%;
+    padding:17px 20px;
+    border-radius:17px;
+    border:1px solid var(--border);
+    background:rgba(0,0,0,.18);
+    color:var(--text);
+    outline:none;
+}
+
+body.light .search{
+    background:#f5f7f5;
 }
 
 .search:focus{
-  border-color:var(--green);
-  box-shadow:0 0 0 4px rgba(47,155,99,.1);
+    border-color:var(--accent);
+    box-shadow:0 0 25px rgba(99,212,113,.12);
 }
 
-.filter{
-  padding:16px;
-  border-radius:15px;
-  border:1px solid var(--line);
-  background:white;
-  outline:none;
+select{
+    padding:15px;
+    border-radius:17px;
+    border:1px solid var(--border);
+    background:var(--panel);
+    color:var(--text);
+    outline:none;
 }
 
 .tree-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
-  gap:18px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(245px,1fr));
+    gap:18px;
 }
 
 .tree-card{
-  background:white;
-  border:1px solid var(--line);
-  border-radius:24px;
-  overflow:hidden;
-  transition:.3s;
+    border:1px solid var(--border);
+    border-radius:28px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.07),
+            rgba(255,255,255,.025)
+        );
+    padding:25px;
+    cursor:pointer;
+    transition:.3s;
+    position:relative;
+    overflow:hidden;
 }
 
 .tree-card:hover{
-  transform:translateY(-5px);
-  box-shadow:0 20px 45px rgba(30,70,40,.12);
+    transform:translateY(-7px);
+    border-color:rgba(99,212,113,.35);
+    box-shadow:var(--shadow);
 }
 
-.tree-visual{
-  height:145px;
-  display:grid;
-  place-items:center;
-  font-size:80px;
-  background:linear-gradient(135deg,#eaf5ed,#d8ebdd);
+.tree-card-icon{
+    font-size:55px;
 }
 
-.tree-card-content{
-  padding:20px;
+.tree-card h3{
+    margin-top:12px;
+    font-size:23px;
 }
 
-.tree-card-content h3{
-  font-size:21px;
+.tree-card .latin{
+    color:var(--accent);
+    font-style:italic;
+    margin-top:4px;
 }
 
-.tree-card-content p{
-  margin-top:7px;
-  color:var(--muted);
-  font-size:14px;
-  line-height:1.6;
+.tree-card p{
+    color:var(--muted);
+    line-height:1.6;
+    margin-top:12px;
+    font-size:14px;
 }
 
-.tree-tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-top:12px;
+.badge{
+    display:inline-block;
+    margin-top:15px;
+    padding:6px 10px;
+    border-radius:999px;
+    background:rgba(99,212,113,.11);
+    color:var(--accent2);
+    font-size:11px;
+    font-weight:800;
 }
 
-.tag{
-  padding:5px 9px;
-  border-radius:999px;
-  background:#eef7f0;
-  color:var(--green);
-  font-size:11px;
-  font-weight:800;
+/* TREE DETAIL */
+
+.tree-detail{
+    margin-top:35px;
+    padding:35px;
+    border:1px solid var(--border);
+    border-radius:35px;
+    background:var(--panel);
+    box-shadow:var(--shadow);
+    display:none;
 }
 
-.tree-open{
-  width:100%;
-  margin-top:15px;
-  border:0;
-  padding:11px;
-  border-radius:12px;
-  background:#e9f5ed;
-  color:var(--green);
-  font-weight:900;
+.tree-detail.active{
+    display:block;
+    animation:pageIn .5s ease;
 }
 
-/* =========================
-   DETAILS MODAL
-========================= */
-
-.modal{
-  position:fixed;
-  inset:0;
-  z-index:3000;
-  background:rgba(15,25,18,.45);
-  backdrop-filter:blur(12px);
-  display:none;
-  place-items:center;
-  padding:20px;
+.detail-head{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    margin-bottom:25px;
 }
 
-.modal.active{
-  display:grid;
+.detail-head-icon{
+    font-size:65px;
 }
 
-.modal-box{
-  width:min(850px,100%);
-  max-height:90vh;
-  overflow:auto;
-  background:white;
-  border-radius:30px;
-  padding:35px;
-  box-shadow:0 40px 100px rgba(0,0,0,.25);
-  animation:modalIn .3s ease;
+.detail-head h2{
+    font-size:42px;
 }
 
-@keyframes modalIn{
-  from{
-    opacity:0;
-    transform:scale(.94) translateY(20px);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
+.detail-head p{
+    color:var(--accent);
+    font-style:italic;
 }
 
-.modal-close{
-  float:right;
-  border:0;
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  background:#edf4ee;
+.info-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
 }
 
-.modal-box h2{
-  font-size:38px;
-  margin-bottom:15px;
+.info-box{
+    padding:20px;
+    border:1px solid var(--border);
+    border-radius:20px;
+    background:rgba(255,255,255,.035);
 }
 
-.modal-box h3{
-  margin-top:25px;
-  color:var(--green);
+.info-box strong{
+    display:block;
+    color:var(--accent);
+    margin-bottom:7px;
 }
 
-.modal-box p,
-.modal-box li{
-  color:var(--muted);
-  line-height:1.8;
+.info-box span{
+    color:var(--muted);
+    line-height:1.6;
 }
 
-.modal-box ul{
-  padding-left:25px;
+/* 3D */
+
+.viewer{
+    display:grid;
+    grid-template-columns:1fr 330px;
+    gap:18px;
 }
 
-/* =========================
-   LAYER DIAGRAM
-========================= */
-
-.layer-section{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:30px;
-  align-items:center;
+.canvas-wrap{
+    min-height:700px;
+    border-radius:38px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    background:
+        radial-gradient(circle at center,#1c2b20,#080b09 70%);
+    position:relative;
+    box-shadow:var(--shadow);
 }
 
-.layer-diagram{
-  width:min(500px,90vw);
-  aspect-ratio:1;
-  margin:auto;
-  position:relative;
-  border-radius:50%;
+#treeCanvas{
+    width:100%;
+    height:100%;
+    min-height:700px;
+    display:block;
+    touch-action:none;
 }
 
-.layer-circle{
-  position:absolute;
-  border-radius:50%;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  transition:.4s;
-  box-shadow:
-    inset 0 0 30px rgba(0,0,0,.2),
-    0 15px 40px rgba(0,0,0,.08);
+.viewer-ui{
+    position:absolute;
+    left:18px;
+    top:18px;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
 }
 
-.layer-bark{
-  width:100%;
-  height:100%;
-  background:
-    repeating-radial-gradient(circle,
-      #56331e 0 6px,
-      #795035 7px 13px);
+.viewer-pill{
+    padding:9px 13px;
+    border-radius:999px;
+    background:rgba(0,0,0,.45);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,.1);
+    font-size:12px;
 }
 
-.layer-splint{
-  width:86%;
-  height:86%;
-  background:
-    repeating-radial-gradient(circle,
-      #d7aa70 0 5px,
-      #bd8951 6px 11px);
+.viewer-panel{
+    padding:25px;
+    border:1px solid var(--border);
+    border-radius:30px;
+    background:var(--panel);
+    box-shadow:var(--shadow);
 }
 
-.layer-reif{
-  width:65%;
-  height:65%;
-  background:
-    repeating-radial-gradient(circle,
-      #b67843 0 5px,
-      #9d6034 6px 11px);
+.viewer-panel h2{
+    margin-bottom:8px;
 }
 
-.layer-core{
-  width:43%;
-  height:43%;
-  background:
-    repeating-radial-gradient(circle,
-      #80502d 0 5px,
-      #65391f 6px 11px);
+.viewer-panel>p{
+    color:var(--muted);
+    line-height:1.7;
+    font-size:14px;
 }
 
-.layer-mark{
-  width:12%;
-  height:12%;
-  background:#432517;
+.layer-buttons{
+    display:grid;
+    gap:9px;
+    margin-top:22px;
 }
 
-.layer-label{
-  position:absolute;
-  padding:9px 13px;
-  background:white;
-  border:1px solid var(--line);
-  border-radius:999px;
-  font-size:12px;
-  font-weight:900;
-  box-shadow:0 10px 25px rgba(0,0,0,.1);
+.layer-button{
+    padding:13px 15px;
+    border:1px solid var(--border);
+    border-radius:15px;
+    background:rgba(255,255,255,.035);
+    color:var(--text);
+    text-align:left;
+    cursor:pointer;
+    transition:.25s;
 }
 
-.label1{right:-10px;top:10%}
-.label2{right:-25px;top:35%}
-.label3{left:-25px;top:55%}
-.label4{left:5%;top:23%}
-.label5{bottom:-8px;left:44%}
-
-.layer-list{
-  display:grid;
-  gap:12px;
+.layer-button:hover,
+.layer-button.active{
+    border-color:var(--accent);
+    background:rgba(99,212,113,.12);
+    transform:translateX(4px);
 }
 
-.layer-item{
-  padding:20px;
-  background:white;
-  border:1px solid var(--line);
-  border-radius:20px;
-  cursor:pointer;
-  transition:.25s;
+.layer-dot{
+    display:inline-block;
+    width:11px;
+    height:11px;
+    border-radius:50%;
+    margin-right:8px;
 }
 
-.layer-item:hover,
-.layer-item.active{
-  background:#eef8f1;
-  border-color:#b8ddc4;
-  transform:translateX(5px);
+.controls-3d{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-top:18px;
 }
 
-.layer-item strong{
-  color:var(--green);
+.small-button{
+    padding:12px;
+    border-radius:14px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.05);
+    color:var(--text);
+    cursor:pointer;
 }
 
-.layer-item p{
-  margin-top:5px;
-  color:var(--muted);
-  font-size:14px;
-  line-height:1.6;
+/* COMPARISON */
+
+.table-wrap{
+    overflow:auto;
+    border:1px solid var(--border);
+    border-radius:28px;
+    box-shadow:var(--shadow);
 }
 
-/* =========================
-   QUIZ
-========================= */
+table{
+    width:100%;
+    min-width:850px;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:18px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+}
+
+th{
+    background:rgba(99,212,113,.12);
+    color:var(--accent2);
+}
+
+td{
+    color:var(--muted);
+}
+
+/* QUIZ */
 
 .quiz{
-  max-width:900px;
-  margin:auto;
-  padding:35px;
-  background:white;
-  border:1px solid var(--line);
-  border-radius:32px;
-  box-shadow:var(--shadow);
+    max-width:900px;
+    margin:auto;
+    padding:40px;
+    border:1px solid var(--border);
+    border-radius:35px;
+    background:var(--panel);
+    box-shadow:var(--shadow);
 }
 
 .quiz-top{
-  display:flex;
-  justify-content:space-between;
-  color:var(--muted);
-  font-size:14px;
-  margin-bottom:12px;
+    display:flex;
+    justify-content:space-between;
+    color:var(--muted);
+    margin-bottom:15px;
 }
 
 .progress{
-  height:9px;
-  background:#edf2ee;
-  border-radius:999px;
-  overflow:hidden;
-  margin-bottom:30px;
+    height:9px;
+    background:rgba(255,255,255,.08);
+    border-radius:99px;
+    overflow:hidden;
+    margin-bottom:35px;
 }
 
 .progress-bar{
-  width:0;
-  height:100%;
-  background:linear-gradient(90deg,#1e6b43,#67b979);
-  transition:.4s;
+    width:0;
+    height:100%;
+    background:linear-gradient(90deg,#37a84c,var(--accent));
+    transition:.4s;
 }
 
 .question{
-  font-size:27px;
-  font-weight:900;
-  line-height:1.45;
-  margin-bottom:22px;
+    font-size:28px;
+    line-height:1.5;
+    margin-bottom:25px;
 }
 
 .answers{
-  display:grid;
-  gap:11px;
+    display:grid;
+    gap:12px;
 }
 
 .answer{
-  border:1px solid var(--line);
-  background:#f8faf8;
-  border-radius:16px;
-  padding:16px;
-  text-align:left;
-  transition:.2s;
+    padding:17px 20px;
+    border-radius:17px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.045);
+    color:var(--text);
+    text-align:left;
+    cursor:pointer;
+    transition:.25s;
 }
 
 .answer:hover{
-  transform:translateX(5px);
-  background:#edf7ef;
+    transform:translateX(6px);
+    border-color:var(--accent);
 }
 
 .answer.correct{
-  background:#dff3e5;
-  border-color:#5bbd78;
+    background:rgba(60,180,80,.25);
+    border-color:#65dc72;
 }
 
 .answer.wrong{
-  background:#f9e0dd;
-  border-color:#d36c61;
+    background:rgba(210,65,55,.25);
+    border-color:#ef7166;
 }
 
 .result{
-  text-align:center;
-  display:none;
+    display:none;
+    text-align:center;
 }
 
 .result h2{
-  font-size:50px;
+    font-size:55px;
 }
 
 .result-score{
-  margin:15px;
-  font-size:25px;
-  color:var(--green);
-  font-weight:900;
+    color:var(--accent);
+    font-size:25px;
+    margin-top:10px;
 }
 
 .action{
-  border:0;
-  padding:14px 22px;
-  border-radius:14px;
-  background:var(--green);
-  color:white;
-  font-weight:900;
+    margin-top:25px;
+    padding:14px 25px;
+    border:0;
+    border-radius:999px;
+    background:var(--accent);
+    color:#071008;
+    font-weight:900;
+    cursor:pointer;
 }
 
-/* =========================
-   FOOTER
-========================= */
+/* TOP */
+
+#top{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    border:1px solid var(--border);
+    background:var(--panel);
+    color:var(--text);
+    cursor:pointer;
+    display:none;
+    z-index:900;
+}
+
+/* FOOTER */
 
 footer{
-  text-align:center;
-  padding:45px 20px;
-  color:#78837b;
-  border-top:1px solid var(--line);
+    padding:45px 20px;
+    text-align:center;
+    color:var(--muted);
+    border-top:1px solid var(--border);
 }
 
-/* =========================
-   MOBILE
-========================= */
+/* MOBILE */
 
-@media(max-width:900px){
-  .stem-layout,
-  .layer-section{
-    grid-template-columns:1fr;
-  }
+@media(max-width:1000px){
+    .feature-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
 
-  .toolbar{
-    grid-template-columns:1fr;
-  }
+    .viewer{
+        grid-template-columns:1fr;
+    }
 
-  .quick-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .stats{
-    grid-template-columns:repeat(2,1fr);
-  }
+    .canvas-wrap,
+    #treeCanvas{
+        min-height:600px;
+    }
 }
 
-@media(max-width:650px){
-  .nav{
-    flex-direction:column;
-  }
+@media(max-width:700px){
+    .nav{
+        flex-direction:column;
+    }
 
-  .nav-buttons{
-    width:100%;
-  }
+    .nav-buttons{
+        width:100%;
+    }
 
-  .nav-button{
-    font-size:11px;
-    padding:8px 9px;
-  }
+    .nav-button{
+        font-size:11px;
+        padding:8px 9px;
+    }
 
-  .page{
-    padding:45px 14px 80px;
-  }
+    .theme-buttons{
+        position:absolute;
+        right:10px;
+        top:8px;
+    }
 
-  .home-hero{
-    padding:28px 20px;
-  }
+    .page{
+        padding:50px 14px 80px;
+    }
 
-  .quick-grid{
-    grid-template-columns:1fr;
-  }
+    .home-hero{
+        padding:28px 20px;
+    }
 
-  .stats{
-    grid-template-columns:repeat(2,1fr);
-  }
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
 
-  .stat{
-    padding:18px;
-  }
+    .feature-grid{
+        grid-template-columns:1fr;
+    }
 
-  #tree3d{
-    height:520px;
-  }
+    .controls{
+        grid-template-columns:1fr;
+    }
 
-  .stem-card{
-    min-height:520px;
-  }
+    .tree-grid{
+        grid-template-columns:1fr;
+    }
 
-  .viewer-help{
-    font-size:10px;
-  }
+    .info-grid{
+        grid-template-columns:1fr;
+    }
 
-  .start-content h1{
-    letter-spacing:-4px;
-  }
+    .tree-detail{
+        padding:24px 18px;
+    }
 
-  .start-content p{
-    font-size:15px;
-  }
+    .detail-head h2{
+        font-size:31px;
+    }
+
+    .canvas-wrap,
+    #treeCanvas{
+        min-height:480px;
+    }
+
+    .quiz{
+        padding:25px 18px;
+    }
+
+    .question{
+        font-size:22px;
+    }
+}
+
+@media(prefers-reduced-motion:reduce){
+    *,
+    *::before,
+    *::after{
+        animation:none!important;
+        transition:none!important;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<!-- =========================
-     STARTSEITE
-========================= -->
+<!-- STARTSEITE -->
 
 <section id="start">
 
-  <div class="start-bg">
-    <div class="start-orb orb1"></div>
-    <div class="start-orb orb2"></div>
-    <div class="start-grid"></div>
-  </div>
-
-  <div class="start-content">
-
-    <div class="logo-mark">🌳</div>
-
-    <div class="start-badge">
-      🌍 DAS INTERAKTIVE BAUMLEXIKON
+    <div class="start-bg">
+        <div class="start-grid"></div>
+        <div class="start-orb"></div>
+        <div class="start-orb"></div>
     </div>
 
-    <h1>HolzWissen</h1>
+    <div class="start-content">
 
-    <h2>
-      Entdecke Bäume nicht nur – erforsche sie.
-    </h2>
+        <div class="start-badge">
+            🌳 INTERAKTIVE 3D HOLZDATENBANK
+        </div>
 
-    <p>
-      Erkunde echte 3D-Stammstrukturen, drehe den Stamm,
-      zoome hinein, untersuche die Holzschichten und
-      entdecke zahlreiche Baumarten aus aller Welt.
-    </p>
+        <div class="start-tree">🌳</div>
 
-    <div class="start-features">
-      <div class="start-feature">🌲 3D-Stamm</div>
-      <div class="start-feature">🖱️ Maussteuerung</div>
-      <div class="start-feature">📱 Touch & iPad</div>
-      <div class="start-feature">🔬 5 Stammschichten</div>
-      <div class="start-feature">🌍 Baumregister</div>
-      <div class="start-feature">🧠 100 Quizfragen</div>
+        <h1 class="start-title">
+            HolzWissen
+        </h1>
+
+        <div class="start-subtitle">
+            Entdecke den Baum von außen bis ins Mark.
+        </div>
+
+        <p class="start-description">
+            Untersuche echte 3D-Stammmodelle, entdecke
+            die verschiedenen Holzschichten, durchsuche
+            das Baumregister und teste dein Wissen.
+        </p>
+
+        <div class="start-buttons">
+
+            <button
+                class="start-button"
+                onclick="startApp()">
+                🌲 HOLZWISSEN STARTEN
+            </button>
+
+            <button
+                class="start-button start-secondary"
+                onclick="startApp();setTimeout(()=>showPageById('aufbau'),100)">
+                🪵 3D-STAMM ÖFFNEN
+            </button>
+
+        </div>
+
     </div>
-
-    <button class="start-button" onclick="startApp()">
-      🌳 HOLZWISSEN STARTEN
-    </button>
-
-  </div>
 </section>
 
 
-<!-- =========================
-     APP
-========================= -->
+<!-- APP -->
 
 <div id="app">
 
 <header>
+
 <nav class="nav">
 
-  <div class="logo">
-    <span>🌳</span>
-    HolzWissen
-  </div>
+    <div class="logo">
+        🌳 <span>HolzWissen</span>
+    </div>
 
-  <div class="nav-buttons">
+    <div class="nav-buttons">
 
-    <button class="nav-button active"
-      onclick="showPage('home',this)">
-      🏠 Start
-    </button>
+        <button
+            class="nav-button active"
+            onclick="showPage('home',this)">
+            🏠 Start
+        </button>
 
-    <button class="nav-button"
-      onclick="showPage('stamm',this)">
-      🪵 3D-Stamm
-    </button>
+        <button
+            class="nav-button"
+            onclick="showPage('register',this)">
+            🌍 Baumregister
+        </button>
 
-    <button class="nav-button"
-      onclick="showPage('register',this)">
-      🌍 Baumregister
-    </button>
+        <button
+            class="nav-button"
+            onclick="showPage('aufbau',this)">
+            🪵 3D-Stamm
+        </button>
 
-    <button class="nav-button"
-      onclick="showPage('aufbau',this)">
-      🔬 Aufbau
-    </button>
+        <button
+            class="nav-button"
+            onclick="showPage('vergleich',this)">
+            📊 Vergleich
+        </button>
 
-    <button class="nav-button"
-      onclick="showPage('quiz',this)">
-      🧠 100 Fragen
-    </button>
+        <button
+            class="nav-button"
+            onclick="showPage('quiz',this)">
+            🧠 Quiz
+        </button>
 
-  </div>
+    </div>
+
+    <div class="theme-buttons">
+
+        <button
+            class="theme"
+            title="Dunkel"
+            onclick="setTheme('dark')">
+            🌙
+        </button>
+
+        <button
+            class="theme"
+            title="Hell"
+            onclick="setTheme('light')">
+            ☀️
+        </button>
+
+        <button
+            class="theme"
+            title="Grün"
+            onclick="setTheme('green')">
+            🌿
+        </button>
+
+    </div>
 
 </nav>
+
 </header>
 
 
 <main>
 
-<!-- =========================
-     HOME
-========================= -->
+<!-- HOME -->
 
 <section id="home" class="page active">
 
-  <div class="heading">
-    <h1>Willkommen bei HolzWissen 🌳</h1>
-    <p>
-      Eine moderne interaktive Lernwelt über Bäume,
-      Holz und den inneren Aufbau eines Stammes.
-    </p>
-  </div>
+    <div class="heading">
 
-  <div class="home-hero">
+        <h1>
+            Willkommen bei HolzWissen 🌳
+        </h1>
 
-    <h2>
-      Holz verstehen statt nur auswendig lernen.
-    </h2>
-
-    <p>
-      Wähle eine Baumart, untersuche ihren Stamm in 3D,
-      fahre automatisch durch die Stammschichten und
-      entdecke anschließend weitere Arten im Baumregister.
-    </p>
-
-    <div class="stats">
-
-      <div class="stat">
-        <strong>3D</strong>
-        <span>interaktiver Stamm</span>
-      </div>
-
-      <div class="stat">
-        <strong>5</strong>
-        <span>Stammschichten</span>
-      </div>
-
-      <div class="stat">
-        <strong>100</strong>
-        <span>Quizfragen</span>
-      </div>
-
-      <div class="stat">
-        <strong id="treeCountHome">0</strong>
-        <span>Baumarten im Register</span>
-      </div>
+        <p>
+            Eine interaktive 3D-Lernplattform über
+            Bäume, Holz und den Aufbau eines Stammes.
+        </p>
 
     </div>
 
-    <div class="quick-grid">
+    <div class="home-hero">
 
-      <div class="quick" onclick="showPageById('stamm')">
-        <div class="quick-icon">🪵</div>
-        <h3>3D-Stamm</h3>
-        <p>
-          Drehe und zoome den Stamm und
-          untersuche jede Schicht.
-        </p>
-      </div>
+        <h2>
+            Holz nicht nur lernen.
+            <br>
+            Holz wirklich verstehen.
+        </h2>
 
-      <div class="quick" onclick="showPageById('register')">
-        <div class="quick-icon">🌍</div>
-        <h3>Baumregister</h3>
         <p>
-          Suche nach Baumarten und filtere
-          nach Kategorien.
+            Drehe einen echten 3D-Stamm, schneide
+            ihn virtuell auf, entdecke die einzelnen
+            Schichten und erfahre mehr über zahlreiche
+            Baumarten.
         </p>
-      </div>
 
-      <div class="quick" onclick="showPageById('aufbau')">
-        <div class="quick-icon">🔬</div>
-        <h3>Stammaufbau</h3>
-        <p>
-          Lerne Rinde, Splint, Reifholz,
-          Kernholz und Mark kennen.
-        </p>
-      </div>
+        <div class="stats">
 
-      <div class="quick" onclick="showPageById('quiz')">
-        <div class="quick-icon">🧠</div>
-        <h3>100 Fragen</h3>
-        <p>
-          Teste dein Wissen mit einem
-          großen Holz-Quiz.
-        </p>
-      </div>
+            <div class="stat">
+                <strong>3D</strong>
+                <span>Stamm-Modell</span>
+            </div>
+
+            <div class="stat">
+                <strong>20+</strong>
+                <span>Baumarten</span>
+            </div>
+
+            <div class="stat">
+                <strong>100</strong>
+                <span>Quizfragen</span>
+            </div>
+
+            <div class="stat">
+                <strong>5</strong>
+                <span>Stammschichten</span>
+            </div>
+
+        </div>
+
+        <div class="feature-grid">
+
+            <div
+                class="feature"
+                onclick="showPageById('aufbau')">
+
+                <div class="feature-icon">
+                    🪵
+                </div>
+
+                <h3>
+                    Echter 3D-Stamm
+                </h3>
+
+                <p>
+                    Mit Maus oder Touch drehen,
+                    zoomen und die Kamera bewegen.
+                </p>
+
+            </div>
+
+            <div
+                class="feature"
+                onclick="showPageById('register')">
+
+                <div class="feature-icon">
+                    🌍
+                </div>
+
+                <h3>
+                    Baumregister
+                </h3>
+
+                <p>
+                    Suche und filtere verschiedene
+                    Baumarten.
+                </p>
+
+            </div>
+
+            <div
+                class="feature"
+                onclick="showPageById('vergleich')">
+
+                <div class="feature-icon">
+                    🔬
+                </div>
+
+                <h3>
+                    Stammschichten
+                </h3>
+
+                <p>
+                    Rinde, Splintholz, Reifholz,
+                    Kernholz und Mark.
+                </p>
+
+            </div>
+
+            <div
+                class="feature"
+                onclick="showPageById('quiz')">
+
+                <div class="feature-icon">
+                    🧠
+                </div>
+
+                <h3>
+                    100 Fragen
+                </h3>
+
+                <p>
+                    Pro Runde bekommst du
+                    maximal 10 zufällige Fragen.
+                </p>
+
+            </div>
+
+        </div>
 
     </div>
-
-  </div>
 
 </section>
 
 
-<!-- =========================
-     3D STAMM
-========================= -->
-
-<section id="stamm" class="page">
-
-  <div class="heading">
-    <h1>🪵 Interaktiver 3D-Stamm</h1>
-    <p>
-      Bewege den Stamm mit Maus oder Finger.
-      Nutze das Mausrad bzw. zwei Finger zum Zoomen.
-    </p>
-  </div>
-
-  <div class="stem-layout">
-
-    <div class="stem-card">
-
-      <div class="viewer-title" id="viewerTitle">
-        🌳 Eiche
-      </div>
-
-      <div id="tree3d"></div>
-
-      <div class="viewer-help">
-        🖱️ Ziehen = drehen · 🔍 Scrollen = zoomen · 📱 Finger = drehen
-      </div>
-
-    </div>
-
-
-    <aside class="stem-controls">
-
-      <h3>🌲 Baum auswählen</h3>
-
-      <select id="treeSelect" class="tree-select"
-        onchange="changeTree(this.value)">
-      </select>
-
-      <h3>🔬 Stammschichten</h3>
-
-      <div class="camera-buttons">
-
-        <button class="camera-btn"
-          onclick="focusLayer('bark')">
-          🟤 Rinde
-        </button>
-
-        <button class="camera-btn"
-          onclick="focusLayer('splint')">
-          🟡 Splintholz
-        </button>
-
-        <button class="camera-btn"
-          onclick="focusLayer('reif')">
-          🟠 Reifholz
-        </button>
-
-        <button class="camera-btn"
-          onclick="focusLayer('core')">
-          🔴 Kernholz
-        </button>
-
-        <button class="camera-btn"
-          onclick="focusLayer('mark')">
-          ⚫ Mark
-        </button>
-
-        <button class="camera-btn"
-          onclick="resetCamera()">
-          🔄 Gesamtansicht
-        </button>
-
-      </div>
-
-      <div class="layer-info">
-        <strong id="layerTitle">
-          🌳 Gesamtansicht
-        </strong>
-
-        <p id="layerText">
-          Der komplette Stamm ist sichtbar.
-          Drehe ihn mit Maus oder Touch.
-        </p>
-      </div>
-
-    </aside>
-
-  </div>
-
-
-  <div class="tree-description">
-
-    <h3 id="treeDescriptionTitle">
-      🌳 Eiche
-    </h3>
-
-    <p id="treeDescription">
-      Die Eiche besitzt häufig ausgeprägtes Kernholz
-      und ist ein wichtiges heimisches Laubholz.
-    </p>
-
-  </div>
-
-</section>
-
-
-<!-- =========================
-     BAUMREGISTER
-========================= -->
+<!-- BAUMREGISTER -->
 
 <section id="register" class="page">
 
-  <div class="heading">
-    <h1>🌍 Baumregister</h1>
-    <p>
-      Suche nach Baumarten oder filtere nach
-      Nadelholz, Laubholz, Tropenholz und weiteren Kategorien.
-    </p>
-  </div>
+    <div class="heading">
 
-  <div class="toolbar">
+        <h1>
+            🌍 Baumregister
+        </h1>
 
-    <input
-      id="treeSearch"
-      class="search"
-      placeholder="🔎 Baumart suchen..."
-      oninput="renderTrees()">
+        <p>
+            Suche nach Baumarten und filtere sie
+            nach Kategorien.
+        </p>
 
-    <select id="categoryFilter"
-      class="filter"
-      onchange="renderTrees()">
+    </div>
 
-      <option value="Alle">Alle Kategorien</option>
-      <option value="Laubholz">Laubholz</option>
-      <option value="Nadelholz">Nadelholz</option>
-      <option value="Tropenholz">Tropenholz</option>
-      <option value="Obstbaum">Obstbaum</option>
-      <option value="Schnellwachsend">Schnellwachsend</option>
-      <option value="Europa">Europa</option>
-      <option value="Nordamerika">Nordamerika</option>
-      <option value="Asien">Asien</option>
-      <option value="Afrika">Afrika</option>
-      <option value="Südamerika">Südamerika</option>
+    <div class="controls">
 
-    </select>
+        <input
+            id="treeSearch"
+            class="search"
+            placeholder="🔎 Baumart suchen..."
+            oninput="filterTrees()">
 
-    <select id="sortFilter"
-      class="filter"
-      onchange="renderTrees()">
+        <select
+            id="treeCategory"
+            onchange="filterTrees()">
 
-      <option value="name">Alphabetisch</option>
-      <option value="height">Höhe</option>
-      <option value="wood">Holzart</option>
+            <option value="alle">
+                Alle Kategorien
+            </option>
 
-    </select>
+            <option value="laubbaum">
+                🌿 Laubbäume
+            </option>
 
-  </div>
+            <option value="nadelbaum">
+                🌲 Nadelbäume
+            </option>
 
-  <div id="treeGrid" class="tree-grid"></div>
+            <option value="heimisch">
+                🇩🇪 Heimische Arten
+            </option>
+
+            <option value="exotisch">
+                🌎 Weltweit
+            </option>
+
+        </select>
+
+    </div>
+
+    <div
+        id="treeGrid"
+        class="tree-grid">
+    </div>
+
+    <div
+        id="treeDetail"
+        class="tree-detail">
+
+        <div class="detail-head">
+
+            <div
+                id="detailIcon"
+                class="detail-head-icon">
+                🌳
+            </div>
+
+            <div>
+
+                <h2 id="detailName">
+                    Baum
+                </h2>
+
+                <p id="detailLatin">
+                    Lateinischer Name
+                </p>
+
+            </div>
+
+        </div>
+
+        <div
+            id="detailGrid"
+            class="info-grid">
+        </div>
+
+    </div>
 
 </section>
 
 
-<!-- =========================
-     AUFBAU
-========================= -->
+<!-- 3D -->
 
 <section id="aufbau" class="page">
 
-  <div class="heading">
-    <h1>🔬 Stammaufbau</h1>
-    <p>
-      Die wichtigsten Bereiche eines vereinfachten
-      Baumstamm-Querschnitts.
-    </p>
-  </div>
+    <div class="heading">
 
-  <div class="layer-section">
+        <h1>
+            🪵 3D-Stamm
+        </h1>
 
-    <div class="layer-diagram">
-
-      <div class="layer-circle layer-bark"></div>
-      <div class="layer-circle layer-splint"></div>
-      <div class="layer-circle layer-reif"></div>
-      <div class="layer-circle layer-core"></div>
-      <div class="layer-circle layer-mark"></div>
-
-      <div class="layer-label label1">🟤 Rinde</div>
-      <div class="layer-label label2">🟡 Splint</div>
-      <div class="layer-label label3">🟠 Reifholz</div>
-      <div class="layer-label label4">🔴 Kernholz</div>
-      <div class="layer-label label5">⚫ Mark</div>
+        <p>
+            Bewege den Stamm mit der Maus oder
+            deinem Finger. Ziehe zum Drehen,
+            benutze das Mausrad zum Zoomen.
+        </p>
 
     </div>
 
-    <div class="layer-list">
+    <div class="viewer">
 
-      <div class="layer-item"
-        onclick="focusLayer('bark')">
-        <strong>🟤 Rinde</strong>
-        <p>
-          Äußerste Schutzschicht des Stammes.
-        </p>
-      </div>
+        <div class="canvas-wrap">
 
-      <div class="layer-item"
-        onclick="focusLayer('splint')">
-        <strong>🟡 Splintholz</strong>
-        <p>
-          Äußerer physiologisch aktiver Holzbereich
-          mit Wasserleitung.
-        </p>
-      </div>
+            <canvas id="treeCanvas"></canvas>
 
-      <div class="layer-item"
-        onclick="focusLayer('reif')">
-        <strong>🟠 Reifholz</strong>
-        <p>
-          Innerer Holzbereich ohne aktiven
-          Wassertransport.
-        </p>
-      </div>
+            <div class="viewer-ui">
 
-      <div class="layer-item"
-        onclick="focusLayer('core')">
-        <strong>🔴 Kernholz</strong>
-        <p>
-          Innerer, nicht mehr aktiv wasserleitender
-          Bereich.
-        </p>
-      </div>
+                <div class="viewer-pill">
+                    🖱️ Drehen
+                </div>
 
-      <div class="layer-item"
-        onclick="focusLayer('mark')">
-        <strong>⚫ Mark</strong>
-        <p>
-          Zentraler Bereich der Sprossachse.
-        </p>
-      </div>
+                <div class="viewer-pill">
+                    🔍 Zoom
+                </div>
+
+                <div class="viewer-pill">
+                    📱 Touch
+                </div>
+
+            </div>
+
+        </div>
+
+        <aside class="viewer-panel">
+
+            <h2>
+                Stammschichten
+            </h2>
+
+            <p>
+                Wähle eine Schicht aus. Die Kamera
+                fährt automatisch zu dieser Zone.
+            </p>
+
+            <div class="layer-buttons">
+
+                <button
+                    class="layer-button"
+                    onclick="focusLayer('bark')">
+
+                    <span
+                        class="layer-dot"
+                        style="background:#3b1b0e">
+                    </span>
+
+                    Rinde
+
+                </button>
+
+                <button
+                    class="layer-button"
+                    onclick="focusLayer('splint')">
+
+                    <span
+                        class="layer-dot"
+                        style="background:#d5a25f">
+                    </span>
+
+                    Splintholz
+
+                </button>
+
+                <button
+                    class="layer-button"
+                    onclick="focusLayer('reif')">
+
+                    <span
+                        class="layer-dot"
+                        style="background:#ad6d3d">
+                    </span>
+
+                    Reifholz
+
+                </button>
+
+                <button
+                    class="layer-button"
+                    onclick="focusLayer('core')">
+
+                    <span
+                        class="layer-dot"
+                        style="background:#75421f">
+                    </span>
+
+                    Kernholz
+
+                </button>
+
+                <button
+                    class="layer-button"
+                    onclick="focusLayer('pith')">
+
+                    <span
+                        class="layer-dot"
+                        style="background:#32170c">
+                    </span>
+
+                    Mark
+
+                </button>
+
+            </div>
+
+            <div class="controls-3d">
+
+                <button
+                    class="small-button"
+                    onclick="resetCamera()">
+                    🔄 Reset
+                </button>
+
+                <button
+                    class="small-button"
+                    onclick="toggleCut()">
+                    ✂️ Schnitt
+                </button>
+
+                <button
+                    class="small-button"
+                    onclick="toggleRotation()">
+                    ▶️ Auto
+                </button>
+
+                <button
+                    class="small-button"
+                    onclick="changeTree3D()">
+                    🌳 Baum wechseln
+                </button>
+
+            </div>
+
+        </aside>
 
     </div>
-
-  </div>
 
 </section>
 
 
-<!-- =========================
-     QUIZ
-========================= -->
+<!-- VERGLEICH -->
+
+<section id="vergleich" class="page">
+
+    <div class="heading">
+
+        <h1>
+            📊 Stammschichten
+        </h1>
+
+        <p>
+            Die fünf sichtbaren Bereiche des
+            vereinfachten Stammquerschnitts.
+        </p>
+
+    </div>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Schicht</th>
+                    <th>Lage</th>
+                    <th>Wassertransport</th>
+                    <th>Funktion</th>
+                    <th>Typisch</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>Rinde</td>
+                    <td>Außen</td>
+                    <td>Nein</td>
+                    <td>Schutz</td>
+                    <td>äußerste Schicht</td>
+                </tr>
+
+                <tr>
+                    <td>Splintholz</td>
+                    <td>Außen</td>
+                    <td>Ja</td>
+                    <td>Leitung + Speicherung</td>
+                    <td>oft heller</td>
+                </tr>
+
+                <tr>
+                    <td>Reifholz</td>
+                    <td>Innen</td>
+                    <td>Nein</td>
+                    <td>innerer Holzbereich</td>
+                    <td>kaum Farbunterschied</td>
+                </tr>
+
+                <tr>
+                    <td>Kernholz</td>
+                    <td>Innen</td>
+                    <td>Nein</td>
+                    <td>Stabilität</td>
+                    <td>oft dunkler</td>
+                </tr>
+
+                <tr>
+                    <td>Mark</td>
+                    <td>Zentrum</td>
+                    <td>Nein</td>
+                    <td>Zentralbereich</td>
+                    <td>sehr klein</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- QUIZ -->
 
 <section id="quiz" class="page">
 
-  <div class="heading">
-    <h1>🧠 100-Fragen-Holzquiz</h1>
-    <p>
-      Jede Runde enthält 10 zufällig ausgewählte
-      Fragen aus dem großen Fragenpool.
-    </p>
-  </div>
+    <div class="heading">
 
-  <div class="quiz">
+        <h1>
+            🧠 HolzWissen Quiz
+        </h1>
 
-    <div class="quiz-top">
-      <span id="quizNumber">Frage 1 / 10</span>
-      <span id="quizPoints">0 Punkte</span>
-    </div>
-
-    <div class="progress">
-      <div id="progressBar" class="progress-bar"></div>
-    </div>
-
-    <div id="quizGame">
-
-      <div id="question" class="question"></div>
-
-      <div id="answers" class="answers"></div>
+        <p>
+            Aus einem Pool von 100 Fragen werden
+            pro Runde 10 zufällige Fragen ausgewählt.
+        </p>
 
     </div>
 
-    <div id="result" class="result">
+    <div class="quiz">
 
-      <h2>🎉 Geschafft!</h2>
+        <div class="quiz-top">
 
-      <div id="resultScore"
-        class="result-score">
-      </div>
+            <span id="quizCounter">
+                Frage 1 / 10
+            </span>
 
-      <button class="action"
-        onclick="restartQuiz()">
-        🔄 Neue Runde
-      </button>
+            <span id="quizScore">
+                0 Punkte
+            </span>
+
+        </div>
+
+        <div class="progress">
+
+            <div
+                id="progressBar"
+                class="progress-bar">
+            </div>
+
+        </div>
+
+        <div id="quizGame">
+
+            <div
+                id="question"
+                class="question">
+            </div>
+
+            <div
+                id="answers"
+                class="answers">
+            </div>
+
+        </div>
+
+        <div
+            id="result"
+            class="result">
+
+            <h2>
+                🎉 Fertig!
+            </h2>
+
+            <div
+                id="resultScore"
+                class="result-score">
+            </div>
+
+            <button
+                class="action"
+                onclick="restartQuiz()">
+                🔄 Neue 10 Fragen
+            </button>
+
+        </div>
 
     </div>
-
-  </div>
 
 </section>
 
 </main>
 
+
 <footer>
-  🌳 HolzWissen · Interaktives Baum- und Holzlexikon
+    🌳 HolzWissen 3D · Interaktive Baum- und Holzdatenbank
 </footer>
 
 </div>
 
 
-<!-- =========================
-     TREE MODAL
-========================= -->
-
-<div id="treeModal" class="modal"
-  onclick="closeModal(event)">
-
-  <div class="modal-box">
-
-    <button class="modal-close"
-      onclick="closeTreeModal()">
-      ✕
-    </button>
-
-    <h2 id="modalTitle"></h2>
-
-    <p id="modalIntro"></p>
-
-    <h3>🌳 Wissenschaftlicher Name</h3>
-    <p id="modalScientific"></p>
-
-    <h3>📏 Größe</h3>
-    <p id="modalHeight"></p>
-
-    <h3>🌍 Verbreitung</h3>
-    <p id="modalDistribution"></p>
-
-    <h3>🪵 Holz</h3>
-    <p id="modalWood"></p>
-
-    <h3>🔬 Stammbereiche</h3>
-    <p id="modalLayers"></p>
-
-    <h3>💡 Besonderheiten</h3>
-    <p id="modalFacts"></p>
-
-  </div>
-
-</div>
-
-
-<!-- THREE.JS -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/three@0.161.0/examples/js/controls/OrbitControls.js"></script>
+<button
+    id="top"
+    onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    ↑
+</button>
 
 
 <script>
 
 /* =========================================================
-   BAUMDATEN
+   BAUMDATENBANK
 ========================================================= */
 
 const trees = [
 
 {
-name:"Eiche",
-scientific:"Quercus robur",
-category:["Laubholz","Europa"],
-height:40,
-wood:"Hartholz",
-emoji:"🌳",
-intro:"Eine der bekanntesten europäischen Baumarten.",
-distribution:"Europa und Teile Westasiens.",
-woodInfo:"Schweres, hartes und dauerhaftes Holz.",
-layers:"Deutlich ausgeprägtes Kernholz und Splintholz.",
-facts:"Eichen können mehrere hundert Jahre alt werden."
+    name:"Eiche",
+    latin:"Quercus robur",
+    icon:"🌳",
+    categories:["laubbaum","heimisch"],
+    height:"20–40 m",
+    age:"mehrere hundert Jahre",
+    wood:"hart, schwer und dauerhaft",
+    distribution:"Europa",
+    description:"Eine der bekanntesten heimischen Laubbaumarten."
 },
 
 {
-name:"Rotbuche",
-scientific:"Fagus sylvatica",
-category:["Laubholz","Europa"],
-height:40,
-wood:"Hartholz",
-emoji:"🌳",
-intro:"Eine wichtige Baumart der mitteleuropäischen Wälder.",
-distribution:"Mittel- und Westeuropa.",
-woodInfo:"Hartes, dichtes und helles Holz.",
-layers:"Häufig ohne stark ausgeprägten Farbunterschied.",
-facts:"Die Buche gehört zu den wichtigsten Waldbaumarten Deutschlands."
+    name:"Rotbuche",
+    latin:"Fagus sylvatica",
+    icon:"🌳",
+    categories:["laubbaum","heimisch"],
+    height:"25–40 m",
+    age:"bis etwa 300 Jahre",
+    wood:"hart und feinporig",
+    distribution:"Europa",
+    description:"Eine wichtige Baumart der europäischen Wälder."
 },
 
 {
-name:"Fichte",
-scientific:"Picea abies",
-category:["Nadelholz","Europa"],
-height:60,
-wood:"Nadelholz",
-emoji:"🌲",
-intro:"Eine bedeutende europäische Nadelbaumart.",
-distribution:"Europa.",
-woodInfo:"Helles, leichtes und gut bearbeitbares Holz.",
-layers:"Typisches Reifholz; Kern und Splint sind farblich oft wenig unterschiedlich.",
-facts:"Fichtenholz wird häufig im Bauwesen verwendet."
+    name:"Ahorn",
+    latin:"Acer pseudoplatanus",
+    icon:"🍁",
+    categories:["laubbaum","heimisch"],
+    height:"20–35 m",
+    age:"mehrere hundert Jahre",
+    wood:"hell und fein",
+    distribution:"Europa",
+    description:"Bekannt für seine charakteristischen Blätter."
 },
 
 {
-name:"Tanne",
-scientific:"Abies alba",
-category:["Nadelholz","Europa"],
-height:60,
-wood:"Nadelholz",
-emoji:"🌲",
-intro:"Eine große mitteleuropäische Nadelbaumart.",
-distribution:"Gebirge und Wälder Europas.",
-woodInfo:"Helles, leichtes Holz.",
-layers:"Typisches Reifholz.",
-facts:"Die Weißtanne besitzt keine sichtbaren Harzkanäle."
+    name:"Birke",
+    latin:"Betula pendula",
+    icon:"🌳",
+    categories:["laubbaum","heimisch"],
+    height:"15–30 m",
+    age:"etwa 80–120 Jahre",
+    wood:"hell und relativ leicht",
+    distribution:"Europa und Asien",
+    description:"Typischer Pionierbaum mit heller Rinde."
 },
 
 {
-name:"Kiefer",
-scientific:"Pinus sylvestris",
-category:["Nadelholz","Europa"],
-height:40,
-wood:"Nadelholz",
-emoji:"🌲",
-intro:"Eine sehr weit verbreitete europäische Kiefer.",
-distribution:"Große Teile Europas und Asiens.",
-woodInfo:"Relativ leichtes Holz mit deutlich sichtbarem Kern.",
-layers:"Ausgeprägtes Kernholz.",
-facts:"Kiefernholz besitzt häufig deutlich sichtbare Jahrringe."
+    name:"Esche",
+    latin:"Fraxinus excelsior",
+    icon:"🌳",
+    categories:["laubbaum","heimisch"],
+    height:"25–40 m",
+    age:"bis etwa 300 Jahre",
+    wood:"zäh und elastisch",
+    distribution:"Europa",
+    description:"Wertvolles Holz mit hoher Elastizität."
 },
 
 {
-name:"Lärche",
-scientific:"Larix decidua",
-category:["Nadelholz","Europa"],
-height:45,
-wood:"Nadelholz",
-emoji:"🌲",
-intro:"Ein sommergrüner Nadelbaum.",
-distribution:"Gebirge Europas.",
-woodInfo:"Dichtes und relativ dauerhaftes Holz.",
-layers:"Ausgeprägtes dunkleres Kernholz.",
-facts:"Die Lärche verliert im Herbst ihre Nadeln."
+    name:"Ulme",
+    latin:"Ulmus",
+    icon:"🌳",
+    categories:["laubbaum","heimisch"],
+    height:"bis etwa 40 m",
+    age:"mehrere hundert Jahre",
+    wood:"hart und zäh",
+    distribution:"Europa",
+    description:"Historisch bedeutende europäische Baumgattung."
 },
 
 {
-name:"Douglasie",
-scientific:"Pseudotsuga menziesii",
-category:["Nadelholz","Europa","Nordamerika"],
-height:80,
-wood:"Nadelholz",
-emoji:"🌲",
-intro:"Eine ursprünglich nordamerikanische Baumart.",
-distribution:"Nordamerika und Europa.",
-woodInfo:"Festes, relativ dauerhaftes Holz.",
-layers:"Deutliches Kernholz möglich.",
-facts:"Douglasien können sehr große Höhen erreichen."
+    name:"Linde",
+    latin:"Tilia",
+    icon:"🌳",
+    categories:["laubbaum","heimisch"],
+    height:"20–40 m",
+    age:"mehrere hundert Jahre",
+    wood:"weich und gut bearbeitbar",
+    distribution:"Europa",
+    description:"Häufig in Städten und Dörfern zu finden."
 },
 
 {
-name:"Ahorn",
-scientific:"Acer pseudoplatanus",
-category:["Laubholz","Europa"],
-height:35,
-wood:"Hartholz",
-emoji:"🍁",
-intro:"Ein wichtiger Laubbaum Europas.",
-distribution:"Europa.",
-woodInfo:"Helles, hartes Holz.",
-layers:"Meist kein stark ausgeprägtes Kernholz.",
-facts:"Ahornholz wird unter anderem für Möbel und Instrumente verwendet."
+    name:"Hainbuche",
+    latin:"Carpinus betulus",
+    icon:"🌳",
+    categories:["laubbaum","heimisch"],
+    height:"15–25 m",
+    age:"bis etwa 150 Jahre",
+    wood:"sehr hart",
+    distribution:"Europa",
+    description:"Besonders hartes und schweres Laubholz."
 },
 
 {
-name:"Birke",
-scientific:"Betula pendula",
-category:["Laubholz","Europa","Schnellwachsend"],
-height:30,
-wood:"Hartholz",
-emoji:"🌳",
-intro:"Ein heller und schnell wachsender Laubbaum.",
-distribution:"Europa und Nordasien.",
-woodInfo:"Helles, gleichmäßig strukturiertes Holz.",
-layers:"Kernholz wenig ausgeprägt.",
-facts:"Birken besitzen eine charakteristische helle Rinde."
+    name:"Fichte",
+    latin:"Picea abies",
+    icon:"🌲",
+    categories:["nadelbaum","heimisch"],
+    height:"30–60 m",
+    age:"bis etwa 300 Jahre",
+    wood:"hell, leicht und vielseitig",
+    distribution:"Europa",
+    description:"Eine wichtige Nadelbaumart Europas."
 },
 
 {
-name:"Esche",
-scientific:"Fraxinus excelsior",
-category:["Laubholz","Europa"],
-height:40,
-wood:"Hartholz",
-emoji:"🌳",
-intro:"Ein elastisches und festes Laubholz.",
-distribution:"Europa.",
-woodInfo:"Zähes und elastisches Holz.",
-layers:"Typisches Kernreifholz möglich.",
-facts:"Eschenholz wird für stark beanspruchte Produkte verwendet."
+    name:"Tanne",
+    latin:"Abies alba",
+    icon:"🌲",
+    categories:["nadelbaum","heimisch"],
+    height:"30–60 m",
+    age:"mehrere hundert Jahre",
+    wood:"hell und relativ leicht",
+    distribution:"Europa",
+    description:"Typischer Baum montaner und höherer Wälder."
 },
 
 {
-name:"Ulme",
-scientific:"Ulmus glabra",
-category:["Laubholz","Europa"],
-height:40,
-wood:"Hartholz",
-emoji:"🌳",
-intro:"Eine klassische europäische Laubbaumart.",
-distribution:"Europa.",
-woodInfo:"Zähes und dekoratives Holz.",
-layers:"Kernreifholz möglich.",
-facts:"Ulmenholz besitzt eine markante Maserung."
+    name:"Kiefer",
+    latin:"Pinus sylvestris",
+    icon:"🌲",
+    categories:["nadelbaum","heimisch"],
+    height:"20–40 m",
+    age:"bis etwa 500 Jahre",
+    wood:"harzreich und vielseitig",
+    distribution:"Europa und Asien",
+    description:"Sehr weit verbreitete europäische Nadelbaumart."
 },
 
 {
-name:"Robinie",
-scientific:"Robinia pseudoacacia",
-category:["Laubholz","Europa","Nordamerika"],
-height:30,
-wood:"Hartholz",
-emoji:"🌳",
-intro:"Ein sehr dauerhaftes Laubholz.",
-distribution:"Ursprünglich Nordamerika, heute auch Europa.",
-woodInfo:"Sehr hart und natürlich dauerhaft.",
-layers:"Ausgeprägtes Kernholz.",
-facts:"Robinienholz zählt zu den dauerhaftesten europäischen Nutzhölzern."
+    name:"Lärche",
+    latin:"Larix decidua",
+    icon:"🌲",
+    categories:["nadelbaum","heimisch"],
+    height:"30–45 m",
+    age:"mehrere hundert Jahre",
+    wood:"harzreich und dauerhaft",
+    distribution:"Europa",
+    description:"Eine der wenigen heimischen Nadelbaumarten, die im Winter ihre Nadeln verliert."
 },
 
 {
-name:"Walnuss",
-scientific:"Juglans regia",
-category:["Laubholz","Europa","Asien"],
-height:30,
-wood:"Hartholz",
-emoji:"🌳",
-intro:"Ein wertvolles Holz für Möbel und Innenausbau.",
-distribution:"Europa und Asien.",
-woodInfo:"Dunkles, dekoratives und hochwertiges Holz.",
-layers:"Deutlich gefärbtes Kernholz.",
-facts:"Walnussholz wird häufig für hochwertige Möbel verwendet."
+    name:"Douglasie",
+    latin:"Pseudotsuga menziesii",
+    icon:"🌲",
+    categories:["nadelbaum","exotisch"],
+    height:"40–70 m",
+    age:"mehrere hundert Jahre",
+    wood:"fest und dauerhaft",
+    distribution:"Nordamerika, Europa",
+    description:"Ursprünglich aus Nordamerika stammende Baumart."
 },
 
 {
-name:"Kastanie",
-scientific:"Castanea sativa",
-category:["Laubholz","Europa"],
-height:35,
-wood:"Hartholz",
-emoji:"🌳",
-intro:"Ein wärmeliebender Laubbaum.",
-distribution:"Süd- und Westeuropa.",
-woodInfo:"Dauerhaftes Holz.",
-layers:"Deutliches Kernholz.",
-facts:"Die Edelkastanie bildet essbare Kastanienfrüchte."
+    name:"Zeder",
+    latin:"Cedrus",
+    icon:"🌲",
+    categories:["nadelbaum","exotisch"],
+    height:"25–50 m",
+    age:"mehrere hundert Jahre",
+    wood:"aromatisch und dauerhaft",
+    distribution:"Mittelmeerraum und Asien",
+    description:"Bekannte Nadelbaumgattung mit aromatischem Holz."
 },
 
 {
-name:"Pappel",
-scientific:"Populus nigra",
-category:["Laubholz","Europa","Schnellwachsend"],
-height:35,
-wood:"Laubholz",
-emoji:"🌳",
-intro:"Ein schnell wachsender Baum feuchter Standorte.",
-distribution:"Europa und Asien.",
-woodInfo:"Leichtes und weiches Holz.",
-layers:"Kernholz meist wenig ausgeprägt.",
-facts:"Pappeln wachsen sehr schnell."
+    name:"Mammutbaum",
+    latin:"Sequoia sempervirens",
+    icon:"🌲",
+    categories:["nadelbaum","exotisch"],
+    height:"über 100 m möglich",
+    age:"über 1000 Jahre möglich",
+    wood:"leicht und dauerhaft",
+    distribution:"Nordamerika",
+    description:"Eine der höchsten Baumarten der Erde."
 },
 
 {
-name:"Weide",
-scientific:"Salix alba",
-category:["Laubholz","Europa","Schnellwachsend"],
-height:30,
-wood:"Laubholz",
-emoji:"🌳",
-intro:"Typischer Baum an Gewässern.",
-distribution:"Europa und Asien.",
-woodInfo:"Sehr leichtes und weiches Holz.",
-layers:"Wenig ausgeprägtes Kernholz.",
-facts:"Weiden kommen häufig an Flüssen und Seen vor."
+    name:"Kastanie",
+    latin:"Castanea sativa",
+    icon:"🌰",
+    categories:["laubbaum","exotisch"],
+    height:"20–35 m",
+    age:"mehrere hundert Jahre",
+    wood:"dauerhaft und fest",
+    distribution:"Europa und Asien",
+    description:"Bekannt für Früchte und dauerhaftes Holz."
 },
 
 {
-name:"Linde",
-scientific:"Tilia cordata",
-category:["Laubholz","Europa"],
-height:35,
-wood:"Laubholz",
-emoji:"🌳",
-intro:"Ein traditioneller europäischer Laubbaum.",
-distribution:"Europa.",
-woodInfo:"Weiches, helles und feinporiges Holz.",
-layers:"Kein stark gefärbtes Kernholz.",
-facts:"Lindenholz eignet sich gut für Schnitzarbeiten."
+    name:"Walnuss",
+    latin:"Juglans regia",
+    icon:"🌳",
+    categories:["laubbaum","exotisch"],
+    height:"15–30 m",
+    age:"mehrere hundert Jahre",
+    wood:"dunkel, dekorativ und wertvoll",
+    distribution:"Europa und Asien",
+    description:"Sehr geschätztes Möbel- und Furnierholz."
 },
 
 {
-name:"Kirsche",
-scientific:"Prunus avium",
-category:["Obstbaum","Laubholz","Europa"],
-height:25,
-wood:"Hartholz",
-emoji:"🌸",
-intro:"Ein Obstbaum mit wertvollem Holz.",
-distribution:"Europa und Westasien.",
-woodInfo:"Rötlich-braunes dekoratives Holz.",
-layers:"Deutlich gefärbtes Kernholz.",
-facts:"Kirschholz wird häufig im Möbelbau eingesetzt."
+    name:"Teak",
+    latin:"Tectona grandis",
+    icon:"🌴",
+    categories:["laubbaum","exotisch"],
+    height:"30–40 m",
+    age:"mehrere hundert Jahre",
+    wood:"sehr dauerhaft",
+    distribution:"Süd- und Südostasien",
+    description:"Tropisches Holz mit hoher natürlicher Dauerhaftigkeit."
 },
 
 {
-name:"Apfelbaum",
-scientific:"Malus domestica",
-category:["Obstbaum","Laubholz"],
-height:12,
-wood:"Hartholz",
-emoji:"🍎",
-intro:"Bekannter Obstbaum mit dichtem Holz.",
-distribution:"Weltweit kultiviert.",
-woodInfo:"Hartes, feinporiges Holz.",
-layers:"Kernholz kann deutlich gefärbt sein.",
-facts:"Apfelbäume werden vor allem wegen ihrer Früchte kultiviert."
+    name:"Mahagoni",
+    latin:"Swietenia",
+    icon:"🌳",
+    categories:["laubbaum","exotisch"],
+    height:"30–45 m",
+    age:"mehrere hundert Jahre",
+    wood:"wertvolles Tropenholz",
+    distribution:"Amerika",
+    description:"Bekannte Holzart für hochwertige Möbel."
 },
 
 {
-name:"Birnbaum",
-scientific:"Pyrus communis",
-category:["Obstbaum","Laubholz","Europa"],
-height:20,
-wood:"Hartholz",
-emoji:"🍐",
-intro:"Ein europäischer Obstbaum.",
-distribution:"Europa.",
-woodInfo:"Feines, gleichmäßiges und rötliches Holz.",
-layers:"Kernholz kann dunkler erscheinen.",
-facts:"Birnbaumholz ist bei Drechslern beliebt."
-},
-
-{
-name:"Zeder",
-scientific:"Cedrus libani",
-category:["Nadelholz","Asien"],
-height:40,
-wood:"Nadelholz",
-emoji:"🌲",
-intro:"Eine bekannte Baumart des Mittelmeerraums.",
-distribution:"Vorderasien.",
-woodInfo:"Aromatisches und relativ dauerhaftes Holz.",
-layers:"Deutliches Kernholz.",
-facts:"Die Libanon-Zeder ist ein bekanntes Symbol des Libanon."
-},
-
-{
-name:"Mammutbaum",
-scientific:"Sequoiadendron giganteum",
-category:["Nadelholz","Nordamerika"],
-height:95,
-wood:"Nadelholz",
-emoji:"🌲",
-intro:"Einer der massereichsten Bäume der Erde.",
-distribution:"Kalifornien.",
-woodInfo:"Leichtes und relativ weiches Holz.",
-layers:"Ausgeprägtes Kernholz.",
-facts:"Riesenmammutbäume können enorme Stammumfänge erreichen."
-},
-
-{
-name:"Küstenmammutbaum",
-scientific:"Sequoia sempervirens",
-category:["Nadelholz","Nordamerika"],
-height:115,
-wood:"Nadelholz",
-emoji:"🌲",
-intro:"Eine der höchsten Baumarten der Welt.",
-distribution:"Küstenregion Kaliforniens.",
-woodInfo:"Dauerhaftes rötliches Holz.",
-layers:"Ausgeprägtes Kernholz.",
-facts:"Diese Art erreicht über 100 Meter Höhe."
-},
-
-{
-name:"Zuckerahorn",
-scientific:"Acer saccharum",
-category:["Laubholz","Nordamerika"],
-height:40,
-wood:"Hartholz",
-emoji:"🍁",
-intro:"Bekannter nordamerikanischer Ahorn.",
-distribution:"Nordamerika.",
-woodInfo:"Sehr hartes und helles Holz.",
-layers:"Meist heller Holzkörper.",
-facts:"Der Zuckerahorn liefert Ahornsirup."
-},
-
-{
-name:"Hickory",
-scientific:"Carya ovata",
-category:["Laubholz","Nordamerika"],
-height:35,
-wood:"Hartholz",
-emoji:"🌳",
-intro:"Sehr hartes nordamerikanisches Holz.",
-distribution:"Nordamerika.",
-woodInfo:"Extrem fest und zäh.",
-layers:"Kernholz vorhanden.",
-facts:"Hickory wird wegen seiner Festigkeit eingesetzt."
-},
-
-{
-name:"Eukalyptus",
-scientific:"Eucalyptus globulus",
-category:["Laubholz","Schnellwachsend","Australien"],
-height:70,
-wood:"Hartholz",
-emoji:"🌿",
-intro:"Schnell wachsender Baum Australiens.",
-distribution:"Australien und weltweit kultiviert.",
-woodInfo:"Hartes und schweres Holz.",
-layers:"Kernholz unterschiedlich stark ausgeprägt.",
-facts:"Eukalyptusarten sind an Feuer und Trockenheit angepasst."
-},
-
-{
-name:"Teak",
-scientific:"Tectona grandis",
-category:["Tropenholz","Asien"],
-height:40,
-wood:"Hartholz",
-emoji:"🌳",
-intro:"Ein sehr dauerhaftes Tropenholz.",
-distribution:"Süd- und Südostasien.",
-woodInfo:"Sehr dauerhaft und ölhaltig.",
-layers:"Deutliches Kernholz.",
-facts:"Teak wird häufig im Außenbereich verwendet."
-},
-
-{
-name:"Mahagoni",
-scientific:"Swietenia macrophylla",
-category:["Tropenholz","Südamerika"],
-height:60,
-wood:"Hartholz",
-emoji:"🌳",
-intro:"Bekanntes tropisches Edelholz.",
-distribution:"Mittel- und Südamerika.",
-woodInfo:"Rötlich-braunes dekoratives Holz.",
-layers:"Deutliches Kernholz.",
-facts:"Mahagoni ist wegen seiner Holzqualität bekannt."
-},
-
-{
-name:"Balsa",
-scientific:"Ochroma pyramidale",
-category:["Tropenholz","Südamerika","Schnellwachsend"],
-height:30,
-wood:"Sehr leichtes Holz",
-emoji:"🌳",
-intro:"Einer der leichtesten nutzbaren Hölzer.",
-distribution:"Tropisches Amerika.",
-woodInfo:"Extrem leicht und weich.",
-layers:"Kernholz wenig ausgeprägt.",
-facts:"Balsaholz wird häufig für Modelle verwendet."
-},
-
-{
-name:"Baobab",
-scientific:"Adansonia digitata",
-category:["Laubholz","Afrika"],
-height:25,
-wood:"Weiches Holz",
-emoji:"🌳",
-intro:"Charakteristischer Baum der afrikanischen Savanne.",
-distribution:"Afrika.",
-woodInfo:"Sehr leichtes und schwammiges Holz.",
-layers:"Großer Stamm mit besonderem Aufbau.",
-facts:"Baobabs können enorme Stammumfänge erreichen."
-},
-
-{
-name:"Afrikanisches Mahagoni",
-scientific:"Khaya senegalensis",
-category:["Tropenholz","Afrika"],
-height:35,
-wood:"Hartholz",
-emoji:"🌳",
-intro:"Tropisches Nutzholz Afrikas.",
-distribution:"West- und Zentralafrika.",
-woodInfo:"Rötlich-braunes Holz.",
-layers:"Ausgeprägtes Kernholz.",
-facts:"Wird für Möbel und Innenausbau verwendet."
-},
-
-{
-name:"Kauri",
-scientific:"Agathis australis",
-category:["Nadelholz","Asien"],
-height:50,
-wood:"Nadelholz",
-emoji:"🌲",
-intro:"Großer immergrüner Baum Neuseelands.",
-distribution:"Neuseeland.",
-woodInfo:"Hell und fein strukturiert.",
-layers:"Kernholz vorhanden.",
-facts:"Kauri-Bäume gehören zu den großen Bäumen Neuseelands."
+    name:"Olive",
+    latin:"Olea europaea",
+    icon:"🫒",
+    categories:["laubbaum","exotisch"],
+    height:"5–15 m",
+    age:"sehr alt möglich",
+    wood:"sehr hart und dekorativ",
+    distribution:"Mittelmeerraum",
+    description:"Charakteristischer Baum der mediterranen Regionen."
 }
 
 ];
@@ -2076,12 +1966,17 @@ facts:"Kauri-Bäume gehören zu den großen Bäumen Neuseelands."
 
 function startApp(){
 
-  document.getElementById("start").style.display="none";
+    document.getElementById("start").style.display="none";
 
-  document.getElementById("app").style.display="block";
+    document.getElementById("app").style.display="block";
 
-  window.scrollTo(0,0);
+    showPageById("home");
 
+    setTimeout(()=>{
+        init3D();
+    },100);
+
+    window.scrollTo(0,0);
 }
 
 
@@ -2091,256 +1986,284 @@ function startApp(){
 
 function showPage(id,button){
 
-  document.querySelectorAll(".page")
-    .forEach(p=>p.classList.remove("active"));
+    document.querySelectorAll(".page")
+        .forEach(p=>p.classList.remove("active"));
 
-  const page=document.getElementById(id);
+    const page=document.getElementById(id);
 
-  if(!page)return;
+    if(!page)return;
 
-  page.classList.add("active");
+    page.classList.add("active");
 
-  document.querySelectorAll(".nav-button")
-    .forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".nav-button")
+        .forEach(b=>b.classList.remove("active"));
 
-  if(button){
-    button.classList.add("active");
-  }
+    if(button){
+        button.classList.add("active");
+    }
 
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+    if(id==="aufbau" && !renderer){
+        init3D();
+    }
 
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
 }
 
 
 function showPageById(id){
 
-  document.querySelectorAll(".page")
-    .forEach(p=>p.classList.remove("active"));
+    document.querySelectorAll(".page")
+        .forEach(p=>p.classList.remove("active"));
 
-  document.getElementById(id).classList.add("active");
+    const page=document.getElementById(id);
 
-  document.querySelectorAll(".nav-button")
-    .forEach(b=>b.classList.remove("active"));
+    if(!page)return;
 
-  const button=[...document.querySelectorAll(".nav-button")]
-    .find(b=>b.getAttribute("onclick")?.includes("'"+id+"'"));
+    page.classList.add("active");
 
-  if(button){
-    button.classList.add("active");
-  }
+    document.querySelectorAll(".nav-button")
+        .forEach(b=>b.classList.remove("active"));
 
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+    const button=[
+        ...document.querySelectorAll(".nav-button")
+    ].find(b=>
+        b.getAttribute("onclick")?.includes("'"+id+"'")
+    );
 
+    if(button){
+        button.classList.add("active");
+    }
+
+    if(id==="aufbau" && !renderer){
+        init3D();
+    }
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
 }
 
 
 /* =========================================================
-   TREE REGISTER
+   THEMES
 ========================================================= */
 
-function initTreeRegister(){
+function setTheme(theme){
 
-  const select=document.getElementById("treeSelect");
+    document.body.classList.remove(
+        "light",
+        "green"
+    );
 
-  trees.forEach((tree,index)=>{
+    if(theme!=="dark"){
+        document.body.classList.add(theme);
+    }
 
-    const option=document.createElement("option");
+    localStorage.setItem(
+        "holz-theme",
+        theme
+    );
+}
 
-    option.value=index;
+const savedTheme=
+    localStorage.getItem("holz-theme");
 
-    option.textContent=tree.name;
-
-    select.appendChild(option);
-
-  });
-
-  document.getElementById("treeCountHome").textContent=trees.length;
-
-  renderTrees();
-
+if(savedTheme){
+    setTheme(savedTheme);
 }
 
 
-function renderTrees(){
+/* =========================================================
+   BAUMREGISTER
+========================================================= */
 
-  const search=
-    document.getElementById("treeSearch")
-    .value
-    .toLowerCase()
-    .trim();
+function renderTrees(list=trees){
 
-  const category=
-    document.getElementById("categoryFilter")
-    .value;
+    const grid=
+        document.getElementById("treeGrid");
 
-  const sort=
-    document.getElementById("sortFilter")
-    .value;
+    grid.innerHTML="";
 
-  let list=trees.filter(tree=>{
+    if(list.length===0){
 
-    const text=(
-      tree.name+" "+
-      tree.scientific+" "+
-      tree.category.join(" ")
-    ).toLowerCase();
+        grid.innerHTML=`
+            <div style="
+                grid-column:1/-1;
+                text-align:center;
+                padding:60px;
+                color:var(--muted)">
+                🔎 Keine Baumart gefunden.
+            </div>
+        `;
 
-    const matchesSearch=text.includes(search);
+        return;
+    }
 
-    const matchesCategory=
-      category==="Alle" ||
-      tree.category.includes(category);
+    list.forEach((tree,index)=>{
 
-    return matchesSearch && matchesCategory;
+        const card=
+            document.createElement("div");
 
-  });
+        card.className="tree-card";
 
-  if(sort==="name"){
-    list.sort((a,b)=>a.name.localeCompare(b.name));
-  }
+        card.innerHTML=`
 
-  if(sort==="height"){
-    list.sort((a,b)=>b.height-a.height);
-  }
+            <div class="tree-card-icon">
+                ${tree.icon}
+            </div>
 
-  if(sort==="wood"){
-    list.sort((a,b)=>a.wood.localeCompare(b.wood));
-  }
+            <h3>
+                ${tree.name}
+            </h3>
 
-  const grid=document.getElementById("treeGrid");
+            <div class="latin">
+                ${tree.latin}
+            </div>
 
-  grid.innerHTML="";
+            <p>
+                ${tree.description}
+            </p>
 
-  if(list.length===0){
+            <span class="badge">
+                ${tree.categories
+                    .map(c=>categoryName(c))
+                    .join(" · ")}
+            </span>
+        `;
 
-    grid.innerHTML=`
-      <div style="
-        grid-column:1/-1;
-        padding:50px;
-        text-align:center;
-        background:white;
-        border-radius:25px;
-        color:#718078;">
-        🌱 Keine Baumart gefunden.
-      </div>
-    `;
+        card.onclick=()=>{
+            showTreeDetail(index);
+            change3DTree(index);
+        };
 
-    return;
-  }
+        grid.appendChild(card);
+    });
+}
 
-  list.forEach(tree=>{
 
-    const index=trees.indexOf(tree);
+function categoryName(cat){
 
-    const card=document.createElement("div");
+    const names={
+        laubbaum:"Laubbaum",
+        nadelbaum:"Nadelbaum",
+        heimisch:"Heimisch",
+        exotisch:"Weltweit"
+    };
 
-    card.className="tree-card";
+    return names[cat]||cat;
+}
 
-    card.innerHTML=`
 
-      <div class="tree-visual">
-        ${tree.emoji}
-      </div>
+function filterTrees(){
 
-      <div class="tree-card-content">
+    const search=
+        document
+        .getElementById("treeSearch")
+        .value
+        .toLowerCase();
 
-        <h3>${tree.name}</h3>
+    const category=
+        document
+        .getElementById("treeCategory")
+        .value;
 
-        <p>
-          <i>${tree.scientific}</i>
-        </p>
+    const filtered=
+        trees.filter(tree=>{
 
-        <p>
-          ${tree.intro}
-        </p>
+            const text=(
+                tree.name+
+                " "+
+                tree.latin+
+                " "+
+                tree.description
+            ).toLowerCase();
 
-        <div class="tree-tags">
+            const matchesSearch=
+                text.includes(search);
 
-          ${tree.category
-            .map(c=>`<span class="tag">${c}</span>`)
-            .join("")}
+            const matchesCategory=
+                category==="alle" ||
+                tree.categories.includes(category);
 
+            return matchesSearch &&
+                   matchesCategory;
+        });
+
+    renderTrees(filtered);
+}
+
+
+function showTreeDetail(index){
+
+    const tree=trees[index];
+
+    const detail=
+        document.getElementById("treeDetail");
+
+    document.getElementById("detailIcon")
+        .textContent=tree.icon;
+
+    document.getElementById("detailName")
+        .textContent=tree.name;
+
+    document.getElementById("detailLatin")
+        .textContent=tree.latin;
+
+    document.getElementById("detailGrid")
+        .innerHTML=`
+
+        <div class="info-box">
+            <strong>📏 Höhe</strong>
+            <span>${tree.height}</span>
         </div>
 
-        <button
-          class="tree-open"
-          onclick="openTree(${index})">
-          🔬 Details öffnen
-        </button>
+        <div class="info-box">
+            <strong>⏳ Alter</strong>
+            <span>${tree.age}</span>
+        </div>
 
-      </div>
+        <div class="info-box">
+            <strong>🪵 Holz</strong>
+            <span>${tree.wood}</span>
+        </div>
+
+        <div class="info-box">
+            <strong>🌍 Verbreitung</strong>
+            <span>${tree.distribution}</span>
+        </div>
+
+        <div class="info-box">
+            <strong>📚 Kategorie</strong>
+            <span>
+                ${tree.categories
+                    .map(categoryName)
+                    .join(", ")}
+            </span>
+        </div>
+
+        <div class="info-box">
+            <strong>💡 Kurzinfo</strong>
+            <span>${tree.description}</span>
+        </div>
     `;
 
-    grid.appendChild(card);
+    detail.classList.add("active");
 
-  });
-
+    setTimeout(()=>{
+        detail.scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+        });
+    },100);
 }
 
 
 /* =========================================================
-   TREE DETAILS
-========================================================= */
-
-function openTree(index){
-
-  const tree=trees[index];
-
-  document.getElementById("modalTitle").textContent=
-    tree.emoji+" "+tree.name;
-
-  document.getElementById("modalIntro").textContent=
-    tree.intro;
-
-  document.getElementById("modalScientific").textContent=
-    tree.scientific;
-
-  document.getElementById("modalHeight").textContent=
-    "Bis etwa "+tree.height+" Meter.";
-
-  document.getElementById("modalDistribution").textContent=
-    tree.distribution;
-
-  document.getElementById("modalWood").textContent=
-    tree.woodInfo;
-
-  document.getElementById("modalLayers").textContent=
-    tree.layers;
-
-  document.getElementById("modalFacts").textContent=
-    tree.facts;
-
-  document.getElementById("treeModal")
-    .classList.add("active");
-
-}
-
-
-function closeTreeModal(){
-
-  document.getElementById("treeModal")
-    .classList.remove("active");
-
-}
-
-
-function closeModal(e){
-
-  if(e.target.id==="treeModal"){
-    closeTreeModal();
-  }
-
-}
-
-
-/* =========================================================
-   THREE.JS
+   3D ENGINE
 ========================================================= */
 
 let scene;
@@ -2350,950 +2273,1399 @@ let controls;
 
 let trunkGroup;
 
+let rotating=true;
+let cutOpen=true;
+
+let currentTree=0;
+
 let layerObjects={};
 
-let currentTreeIndex=0;
 
+function init3D(){
 
-function create3D(){
+    if(renderer)return;
 
-  const container=document.getElementById("tree3d");
+    const canvas=
+        document.getElementById("treeCanvas");
 
-  scene=new THREE.Scene();
+    if(!canvas)return;
 
-  scene.background=new THREE.Color(0xe6f0e8);
+    scene=new THREE.Scene();
 
-  camera=new THREE.PerspectiveCamera(
-    45,
-    container.clientWidth/container.clientHeight,
-    .1,
-    100
-  );
+    scene.background=
+        new THREE.Color(0x080c09);
 
-  camera.position.set(7,5,8);
+    camera=
+        new THREE.PerspectiveCamera(
+            45,
+            canvas.clientWidth/
+            canvas.clientHeight,
+            .1,
+            1000
+        );
 
-  renderer=new THREE.WebGLRenderer({
-    antialias:true,
-    alpha:true
-  });
-
-  renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio,2)
-  );
-
-  renderer.setSize(
-    container.clientWidth,
-    container.clientHeight
-  );
-
-  renderer.shadowMap.enabled=true;
-
-  renderer.shadowMap.type=
-    THREE.PCFSoftShadowMap;
-
-  container.appendChild(renderer.domElement);
-
-
-  /* Licht */
-
-  const ambient=
-    new THREE.HemisphereLight(
-      0xffffff,
-      0x665544,
-      2.2
+    camera.position.set(
+        7,
+        4.8,
+        8
     );
 
-  scene.add(ambient);
+    renderer=
+        new THREE.WebGLRenderer({
+            canvas,
+            antialias:true,
+            alpha:true
+        });
 
-
-  const light=
-    new THREE.DirectionalLight(
-      0xffffff,
-      3
+    renderer.setPixelRatio(
+        Math.min(
+            window.devicePixelRatio,
+            2
+        )
     );
 
-  light.position.set(5,10,7);
-
-  light.castShadow=true;
-
-  scene.add(light);
-
-
-  const fill=
-    new THREE.DirectionalLight(
-      0xbfe6ff,
-      1
+    renderer.setSize(
+        canvas.clientWidth,
+        canvas.clientHeight,
+        false
     );
 
-  fill.position.set(-6,3,-5);
+    renderer.shadowMap.enabled=true;
 
-  scene.add(fill);
+    controls=
+        new THREE.OrbitControls(
+            camera,
+            canvas
+        );
 
+    controls.enableDamping=true;
 
-  /* Boden */
+    controls.dampingFactor=.06;
 
-  const floorGeometry=
-    new THREE.CircleGeometry(10,64);
+    controls.minDistance=4;
 
-  const floorMaterial=
-    new THREE.MeshStandardMaterial({
-      color:0xdce9df,
-      roughness:1
-    });
+    controls.maxDistance=18;
 
-  const floor=
-    new THREE.Mesh(
-      floorGeometry,
-      floorMaterial
+    controls.target.set(
+        0,
+        0,
+        0
     );
 
-  floor.rotation.x=-Math.PI/2;
+    /* LIGHT */
 
-  floor.position.y=-3.6;
+    const ambient=
+        new THREE.HemisphereLight(
+            0xffffff,
+            0x263026,
+            2.2
+        );
 
-  floor.receiveShadow=true;
+    scene.add(ambient);
 
-  scene.add(floor);
+    const key=
+        new THREE.DirectionalLight(
+            0xffffff,
+            4
+        );
 
-
-  /* Stamm */
-
-  buildTree3D(trees[0]);
-
-
-  /* Steuerung */
-
-  controls=new THREE.OrbitControls(
-    camera,
-    renderer.domElement
-  );
-
-  controls.enableDamping=true;
-
-  controls.dampingFactor=.07;
-
-  controls.enablePan=false;
-
-  controls.minDistance=5;
-
-  controls.maxDistance=17;
-
-  controls.target.set(0,0,0);
-
-
-  animate3D();
-
-
-  window.addEventListener(
-    "resize",
-    resize3D
-  );
-
-}
-
-
-function buildTree3D(tree){
-
-  if(trunkGroup){
-    scene.remove(trunkGroup);
-  }
-
-  trunkGroup=new THREE.Group();
-
-  layerObjects={};
-
-
-  /*
-    Der Stamm wird als mehrere echte
-    3D-Zylinder aufgebaut.
-  */
-
-  const bark=
-    createLayer(
-      3.15,
-      7,
-      96,
-      0x51301d,
-      .98,
-      "bark"
-    );
-
-  const splint=
-    createLayer(
-      2.92,
-      6.9,
-      96,
-      0xb9844e,
-      .9,
-      "splint"
-    );
-
-  const reif=
-    createLayer(
-      2.35,
-      6.8,
-      96,
-      0x9b6036,
-      .86,
-      "reif"
-    );
-
-  const core=
-    createLayer(
-      1.55,
-      6.7,
-      96,
-      0x693b22,
-      .8,
-      "core"
-    );
-
-  const mark=
-    createLayer(
-      .42,
-      6.6,
-      64,
-      0x3b2115,
-      .72,
-      "mark"
-    );
-
-
-  /*
-    Leichte natürliche Verformung
-  */
-
-  [bark,splint,reif,core,mark]
-    .forEach((mesh,layerIndex)=>{
-
-      const pos=
-        mesh.geometry.attributes.position;
-
-      for(
-        let i=0;
-        i<pos.count;
-        i++
-      ){
-
-        const x=pos.getX(i);
-
-        const y=pos.getY(i);
-
-        const z=pos.getZ(i);
-
-        const angle=Math.atan2(z,x);
-
-        const wave=
-          Math.sin(
-            angle*7+
-            y*.7
-          )*.07;
-
-        const factor=
-          1+wave*(1-layerIndex*.08);
-
-        pos.setX(i,x*factor);
-        pos.setZ(i,z*factor);
-
-      }
-
-      pos.needsUpdate=true;
-
-      mesh.castShadow=true;
-      mesh.receiveShadow=true;
-
-      trunkGroup.add(mesh);
-
-    });
-
-
-  /* Jahresringe */
-
-  for(let r=0;r<9;r++){
-
-    const ringGeometry=
-      new THREE.TorusGeometry(
-        .55+r*.23,
-        .018,
+    key.position.set(
+        5,
         8,
-        96
-      );
+        6
+    );
 
-    const ringMaterial=
-      new THREE.MeshBasicMaterial({
-        color:0x3e2415,
-        transparent:true,
-        opacity:.45
-      });
+    key.castShadow=true;
 
-    const ring=
-      new THREE.Mesh(
-        ringGeometry,
-        ringMaterial
-      );
+    scene.add(key);
 
-    ring.rotation.x=Math.PI/2;
+    const rim=
+        new THREE.PointLight(
+            0x7dff9a,
+            4,
+            20
+        );
 
-    ring.position.y=3.35-r*.1;
+    rim.position.set(
+        -5,
+        2,
+        -4
+    );
 
-    trunkGroup.add(ring);
+    scene.add(rim);
 
-  }
+    createGround();
 
+    createTrunk();
 
-  /* Aststummel */
+    window.addEventListener(
+        "resize",
+        resize3D
+    );
 
-  addBranch(2.0,2.0,.8);
-  addBranch(-2.2,.8,.65);
-  addBranch(2.4,-1.2,.55);
-
-
-  scene.add(trunkGroup);
-
-  document.getElementById("viewerTitle")
-    .textContent="🌳 "+tree.name;
-
-  document.getElementById("treeDescriptionTitle")
-    .textContent=tree.emoji+" "+tree.name;
-
-  document.getElementById("treeDescription")
-    .textContent=
-      tree.intro+" "+
-      tree.woodInfo+" "+
-      tree.facts;
-
+    animate3D();
 }
 
 
-function createLayer(
-  radius,
-  height,
-  segments,
-  color,
-  roughness,
-  name
-){
+function createGround(){
 
-  const geometry=
-    new THREE.CylinderGeometry(
-      radius,
-      radius*1.03,
-      height,
-      segments,
-      32,
-      false
-    );
+    const geometry=
+        new THREE.CircleGeometry(
+            8,
+            64
+        );
 
-  const material=
-    new THREE.MeshStandardMaterial({
-      color:color,
-      roughness:roughness,
-      metalness:0
+    const material=
+        new THREE.MeshStandardMaterial({
+            color:0x101611,
+            roughness:1
+        });
+
+    const ground=
+        new THREE.Mesh(
+            geometry,
+            material
+        );
+
+    ground.rotation.x=
+        -Math.PI/2;
+
+    ground.position.y=-3.3;
+
+    ground.receiveShadow=true;
+
+    scene.add(ground);
+}
+
+
+function createTrunk(){
+
+    if(trunkGroup){
+        scene.remove(trunkGroup);
+    }
+
+    trunkGroup=
+        new THREE.Group();
+
+    layerObjects={};
+
+    /*
+       Der Stamm besteht aus mehreren echten
+       Zylinder-Geometrien.
+    */
+
+    const layers=[
+
+        {
+            id:"bark",
+            radius:3.0,
+            color:0x35170b,
+            roughness:.95
+        },
+
+        {
+            id:"splint",
+            radius:2.72,
+            color:0xd39a5b,
+            roughness:.82
+        },
+
+        {
+            id:"reif",
+            radius:2.25,
+            color:0xa86437,
+            roughness:.86
+        },
+
+        {
+            id:"core",
+            radius:1.55,
+            color:0x6d391c,
+            roughness:.9
+        },
+
+        {
+            id:"pith",
+            radius:.38,
+            color:0x301207,
+            roughness:.95
+        }
+
+    ];
+
+    layers.forEach((layer,index)=>{
+
+        const geometry=
+            new THREE.CylinderGeometry(
+                layer.radius,
+                layer.radius*1.02,
+                5.8,
+                96,
+                24,
+                false,
+                0,
+                cutOpen
+                    ? Math.PI*1.55
+                    : Math.PI*2
+            );
+
+        const material=
+            new THREE.MeshStandardMaterial({
+                color:layer.color,
+                roughness:layer.roughness,
+                metalness:0
+            });
+
+        const mesh=
+            new THREE.Mesh(
+                geometry,
+                material
+            );
+
+        mesh.castShadow=true;
+        mesh.receiveShadow=true;
+
+        /*
+          Jede innere Schicht sitzt exakt
+          innerhalb der vorherigen.
+        */
+
+        trunkGroup.add(mesh);
+
+        layerObjects[layer.id]=mesh;
+
     });
 
-  const mesh=
-    new THREE.Mesh(
-      geometry,
-      material
-    );
+    /*
+      Jahresringe auf dem Querschnitt.
+    */
 
-  layerObjects[name]=mesh;
+    for(let i=0;i<12;i++){
 
-  return mesh;
+        const r=
+            .65+
+            i*.17;
+
+        const ring=
+            new THREE.RingGeometry(
+                r,
+                r+.025,
+                64
+            );
+
+        const material=
+            new THREE.MeshBasicMaterial({
+                color:0x2d160a,
+                side:THREE.DoubleSide,
+                transparent:true,
+                opacity:.55
+            });
+
+        const mesh=
+            new THREE.Mesh(
+                ring,
+                material
+            );
+
+        /*
+          Ring liegt an der Schnittfläche.
+        */
+
+        mesh.rotation.y=
+            Math.PI/2;
+
+        mesh.position.x=
+            0;
+
+        trunkGroup.add(mesh);
+    }
+
+    trunkGroup.rotation.z=
+        Math.PI/2;
+
+    scene.add(trunkGroup);
 
 }
 
 
-function addBranch(x,y,r){
-
-  const geometry=
-    new THREE.CylinderGeometry(
-      r,
-      r*.65,
-      2.8,
-      32
-    );
-
-  const material=
-    new THREE.MeshStandardMaterial({
-      color:0x633c25,
-      roughness:1
-    });
-
-  const branch=
-    new THREE.Mesh(
-      geometry,
-      material
-    );
-
-  branch.position.set(
-    x,
-    y,
-    0
-  );
-
-  branch.rotation.z=
-    x>0?.7:-.7;
-
-  branch.castShadow=true;
-
-  trunkGroup.add(branch);
-
-}
-
+/* =========================================================
+   3D ANIMATION
+========================================================= */
 
 function animate3D(){
 
-  requestAnimationFrame(
-    animate3D
-  );
+    requestAnimationFrame(
+        animate3D
+    );
 
-  if(controls){
-    controls.update();
-  }
+    if(trunkGroup && rotating){
+        trunkGroup.rotation.y+=.0025;
+    }
 
-  if(trunkGroup){
-    trunkGroup.rotation.y+=.0008;
-  }
+    if(controls){
+        controls.update();
+    }
 
-  renderer.render(
-    scene,
-    camera
-  );
+    if(renderer && scene && camera){
 
+        renderer.render(
+            scene,
+            camera
+        );
+    }
 }
 
 
 function resize3D(){
 
-  const container=
-    document.getElementById("tree3d");
+    if(!renderer)return;
 
-  if(!renderer)return;
+    const canvas=
+        document.getElementById("treeCanvas");
 
-  camera.aspect=
-    container.clientWidth/
-    container.clientHeight;
+    camera.aspect=
+        canvas.clientWidth/
+        canvas.clientHeight;
 
-  camera.updateProjectionMatrix();
+    camera.updateProjectionMatrix();
 
-  renderer.setSize(
-    container.clientWidth,
-    container.clientHeight
-  );
-
+    renderer.setSize(
+        canvas.clientWidth,
+        canvas.clientHeight,
+        false
+    );
 }
 
 
 /* =========================================================
-   TREE CHANGE
-========================================================= */
-
-function changeTree(index){
-
-  currentTreeIndex=
-    Number(index);
-
-  const tree=
-    trees[currentTreeIndex];
-
-  buildTree3D(tree);
-
-  resetCamera();
-
-}
-
-
-/* =========================================================
-   CAMERA / SCHICHTEN
+   3D KAMERA
 ========================================================= */
 
 function focusLayer(layer){
 
-  const target=
-    layerObjects[layer];
+    if(!layerObjects[layer])return;
 
-  if(!target)return;
+    const positions={
 
-  const data={
+        bark:{
+            x:5.5,
+            y:2.5,
+            z:5.5
+        },
 
-    bark:{
-      title:"🟤 Rinde",
-      text:"Die äußere Schutzschicht schützt den Baum vor äußeren Einflüssen."
-    },
+        splint:{
+            x:4.5,
+            y:2,
+            z:4.5
+        },
 
-    splint:{
-      title:"🟡 Splintholz",
-      text:"Der äußere aktive Holzbereich transportiert bei lebenden Bäumen Wasser und Mineralsalze."
-    },
+        reif:{
+            x:3.7,
+            y:1.7,
+            z:3.7
+        },
 
-    reif:{
-      title:"🟠 Reifholz",
-      text:"Reifholz liegt im inneren Bereich und ist nicht mehr am aktiven Wassertransport beteiligt."
-    },
+        core:{
+            x:3,
+            y:1.2,
+            z:3
+        },
 
-    core:{
-      title:"🔴 Kernholz",
-      text:"Kernholz befindet sich im Inneren und ist physiologisch nicht mehr aktiv wasserleitend."
-    },
+        pith:{
+            x:2,
+            y:.7,
+            z:2
+        }
 
-    mark:{
-      title:"⚫ Mark",
-      text:"Das Mark liegt im Zentrum des Stammes."
-    }
+    };
 
-  };
+    const p=
+        positions[layer];
 
-  document.getElementById("layerTitle")
-    .textContent=data[layer].title;
+    camera.position.set(
+        p.x,
+        p.y,
+        p.z
+    );
 
-  document.getElementById("layerText")
-    .textContent=data[layer].text;
-
-
-  /*
-    Die entsprechende Schicht wird
-    stärker hervorgehoben.
-  */
-
-  Object.keys(layerObjects)
-    .forEach(key=>{
-
-      const material=
-        layerObjects[key].material;
-
-      material.transparent=true;
-
-      material.opacity=
-        key===layer
-          ? 1
-          : .18;
-
-    });
-
-
-  const radius={
-    bark:3.15,
-    splint:2.92,
-    reif:2.35,
-    core:1.55,
-    mark:.42
-  }[layer];
-
-
-  const targetDistance=
-    layer==="mark"
-      ? 5.3
-      : 6.5;
-
-
-  animateCamera(
-    radius*.7,
-    2.2,
-    targetDistance
-  );
+    controls.target.set(
+        0,
+        0,
+        0
+    );
 
 }
 
 
 function resetCamera(){
 
-  Object.keys(layerObjects)
-    .forEach(key=>{
+    camera.position.set(
+        7,
+        4.8,
+        8
+    );
 
-      layerObjects[key]
-        .material.opacity=1;
+    controls.target.set(
+        0,
+        0,
+        0
+    );
 
-    });
-
-  document.getElementById("layerTitle")
-    .textContent="🌳 Gesamtansicht";
-
-  document.getElementById("layerText")
-    .textContent=
-      "Der komplette Stamm ist sichtbar. Drehe ihn mit Maus oder Touch.";
-
-  animateCamera(
-    7,
-    5,
-    8
-  );
-
+    controls.update();
 }
 
 
-function animateCamera(x,y,z){
+function toggleRotation(){
 
-  const start=
-    camera.position.clone();
+    rotating=!rotating;
+}
 
-  const end=
-    new THREE.Vector3(
-      x,
-      y,
-      z
-    );
 
-  const startTime=
-    performance.now();
+function toggleCut(){
 
-  const duration=
-    800;
+    cutOpen=!cutOpen;
 
-  function move(){
-
-    const t=
-      Math.min(
-        1,
-        (performance.now()-startTime)/
-        duration
-      );
-
-    const ease=
-      1-Math.pow(1-t,3);
-
-    camera.position.lerpVectors(
-      start,
-      end,
-      ease
-    );
-
-    if(t<1){
-      requestAnimationFrame(move);
-    }
-
-  }
-
-  move();
-
+    createTrunk();
 }
 
 
 /* =========================================================
-   100 QUIZFRAGEN
+   BAUM 3D WECHSELN
 ========================================================= */
 
-const questionPool=[
+function changeTree3D(){
 
-["Welcher Holzbereich ist bei einem lebenden Baum hauptsächlich am Wassertransport beteiligt?",["Kernholz","Splintholz","Mark","Rinde"],1],
-["Wo liegt das Kernholz?",["Außen","Im inneren Stammbereich","In der Rinde","Außerhalb"],1],
-["Wo liegt das Mark?",["Im Zentrum","Außen","In der Rinde","Im Splintholz"],0],
-["Was schützt den Baum äußerlich?",["Mark","Rinde","Kernholz","Reifholz"],1],
-["Was ist typischerweise heller?",["Splintholz","Mark","Rinde","Immer Kernholz"],0],
-["Welcher Bereich enthält häufig mehr Wasser?",["Splintholz","Kernholz","Mark","Rinde"],0],
-["Ist Kernholz aktiv wasserleitend?",["Ja","Nein","Immer","Nur im Winter"],1],
-["Ist Reifholz aktiv wasserleitend?",["Ja","Nein","Immer","Nur nachts"],1],
-["Was befindet sich ganz innen?",["Rinde","Splintholz","Mark","Borke"],2],
-["Welche Zone liegt außen am Holz?",["Splintholz","Kernholz","Mark","Reifholz"],0],
+    currentTree++;
 
-["Was ist Kernreifholz?",["Nur Rinde","Kernholz mit Reifholz und Splintholz","Nur Mark","Nur Splintholz"],1],
-["Welche Baumart besitzt typischerweise Reifholz?",["Fichte","Eiche","Robinie","Kirsche"],0],
-["Welche Baumart besitzt ausgeprägtes Kernholz?",["Eiche","Linde","Pappel","Birke"],0],
-["Welche Baumart ist ein Nadelbaum?",["Buche","Eiche","Fichte","Ahorn"],2],
-["Welche Baumart ist ein Laubbaum?",["Fichte","Kiefer","Buche","Tanne"],2],
-["Welche Baumart verliert im Winter ihre Nadeln?",["Lärche","Fichte","Tanne","Kiefer"],0],
-["Welche Baumart ist für sehr große Höhen bekannt?",["Küstenmammutbaum","Birke","Linde","Apfel"],0],
-["Wo wächst der Küstenmammutbaum natürlich?",["Afrika","Kalifornien","Europa","Australien"],1],
-["Welche Baumart liefert Ahornsirup?",["Buche","Zuckerahorn","Eiche","Esche"],1],
-["Welche Baumart ist für besonders leichtes Holz bekannt?",["Balsa","Eiche","Robinie","Hickory"],0],
+    if(currentTree>=trees.length){
+        currentTree=0;
+    }
 
-["Welche Holzart ist besonders dauerhaft?",["Robinie","Pappel","Weide","Balsa"],0],
-["Welche Baumart besitzt eine helle charakteristische Rinde?",["Birke","Eiche","Kiefer","Walnuss"],0],
-["Welche Baumart ist ein Obstbaum?",["Kirsche","Fichte","Tanne","Douglasie"],0],
-["Welche Baumart gehört zu den Tropenhölzern?",["Teak","Fichte","Buche","Birke"],0],
-["Wo wächst Teak natürlich?",["Südostasien","Nordpol","Mitteleuropa","Antarktis"],0],
-["Was ist typisch für Balsaholz?",["Sehr schwer","Sehr leicht","Sehr metallisch","Sehr hart"],1],
-["Welche Baumart ist ein typischer Baum an Gewässern?",["Weide","Douglasie","Lärche","Zeder"],0],
-["Welches Holz ist häufig rötlich-braun?",["Mahagoni","Fichte","Tanne","Birke"],0],
-["Welche Baumart ist besonders schnellwachsend?",["Pappel","Eiche","Buche","Eibe"],0],
-["Welche Baumart besitzt häufig aromatisches Holz?",["Zeder","Pappel","Weide","Linde"],0],
+    change3DTree(currentTree);
+}
 
-["Welche Schicht liegt zwischen Kernholz und Rinde?",["Splintholz","Mark","Nur Luft","Samen"],0],
-["Was passiert mit dem Splintholz im Inneren des Stammes?",["Es kann zu Kernholz werden","Es wird zu Rinde","Es verschwindet sofort","Es wird zu Blättern"],0],
-["Was transportiert das Splintholz?",["Wasser und Mineralsalze","Nur Sauerstoff","Nur Zucker","Nur Harz"],0],
-["Was ist eine typische Eigenschaft von Kernholz?",["Oft höhere natürliche Dauerhaftigkeit","Immer weich","Immer weiß","Aktiver Wassertransport"],0],
-["Welche Schicht ist physiologisch aktiv?",["Splintholz","Kernholz","Reifholz","Mark"],0],
-["Welche Schicht ist nicht mehr aktiv wasserleitend?",["Kernholz","Splintholz","Junges Holz","Blätter"],0],
-["Was kann im Kernholz eingelagert sein?",["Extraktstoffe","Wasserleitungen","Blätter","Wurzeln"],0],
-["Was ist eine Jahrringstruktur?",["Jährliche Holzzuwachszone","Rindenstück","Wurzel","Samen"],0],
-["Was zeigen Jahrringe häufig?",["Wachstumsverlauf","Alter des Bodens","Anzahl der Blätter","Wurzellänge"],0],
-["Wo entsteht neues Holz?",["Am Kambium","Im Mark","In der Rinde","Im Kernholz"],0],
 
-["Welche Baumart ist ein Nadelbaum?",["Douglasie","Buche","Eiche","Ahorn"],0],
-["Welche Baumart ist ein Nadelbaum?",["Kiefer","Esche","Ulme","Linde"],0],
-["Welche Baumart ist ein Nadelbaum?",["Tanne","Walnuss","Kirsche","Birke"],0],
-["Welche Baumart ist ein Laubbaum?",["Ahorn","Fichte","Kiefer","Lärche"],0],
-["Welche Baumart ist ein Laubbaum?",["Esche","Tanne","Douglasie","Kiefer"],0],
-["Welche Baumart ist ein Laubbaum?",["Ulme","Fichte","Lärche","Zeder"],0],
-["Welche Baumart ist ein Laubbaum?",["Walnuss","Kiefer","Tanne","Douglasie"],0],
-["Welche Baumart ist ein Laubbaum?",["Robinie","Fichte","Kiefer","Zeder"],0],
-["Welche Baumart ist ein Nadelbaum?",["Lärche","Eiche","Buche","Esche"],0],
-["Welche Baumart ist ein Nadelbaum?",["Zeder","Linde","Ahorn","Walnuss"],0],
+function change3DTree(index){
 
-["Welche Baumart stammt ursprünglich aus Nordamerika?",["Douglasie","Buche","Linde","Fichte"],0],
-["Welche Baumart stammt aus Kalifornien?",["Küstenmammutbaum","Eiche","Buche","Birke"],0],
-["Welche Baumart stammt aus Australien?",["Eukalyptus","Buche","Fichte","Lärche"],0],
-["Welche Baumart ist typisch für afrikanische Savannen?",["Baobab","Fichte","Buche","Tanne"],0],
-["Welche Baumart ist typisch für Südostasien?",["Teak","Buche","Eiche","Fichte"],0],
-["Welche Baumart ist in Mitteleuropa sehr verbreitet?",["Rotbuche","Baobab","Teak","Eukalyptus"],0],
-["Welche Baumart ist in Europa weit verbreitet?",["Kiefer","Baobab","Teak","Mahagoni"],0],
-["Welche Baumart kommt natürlich in Neuseeland vor?",["Kauri","Eiche","Buche","Robinie"],0],
-["Welche Baumart gehört zu den Mammutbäumen?",["Sequoia","Pappel","Weide","Linde"],0],
-["Welche Baumart ist für große Stammumfänge bekannt?",["Baobab","Birke","Linde","Weide"],0],
+    currentTree=index;
 
-["Was ist Holz?",["Sekundäres Pflanzengewebe","Metall","Stein","Mineral"],0],
-["Was bildet der Baum jedes Jahr neu?",["Holz","Rinde komplett","Mark komplett","Wurzeln komplett"],0],
-["Was ist Kambium?",["Teilungsfähiges Bildungsgewebe","Rinde","Kernholz","Mark"],0],
-["Wo liegt das Kambium?",["Zwischen Holz und Bast","Im Mark","Außen auf der Rinde","Im Kernholz"],0],
-["Was ist Splintholz?",["Jüngerer äußerer Holzkörper","Altes Kernholz","Rinde","Mark"],0],
-["Was ist Kernholz?",["Innerer nicht mehr aktiv leitender Holzkörper","Äußerste Schicht","Blatt","Wurzel"],0],
-["Was ist Reifholz?",["Innerer Bereich ohne aktiven Wassertransport","Rinde","Mark","Jungtrieb"],0],
-["Was ist Borke?",["Äußere abgestorbene Rindenschicht","Kernholz","Mark","Splint"],0],
-["Welche Funktion besitzt die Rinde?",["Schutz","Wasserleitung im Holz","Fotosynthese im Kern","Samenbildung"],0],
-["Welche Funktion besitzt das Holz?",["Leitung und Festigung","Nur Blütenbildung","Nur Samenbildung","Nur Fruchtbildung"],0],
+    /*
+      Unterschiedliche Baumarten bekommen
+      leicht unterschiedliche Stammfarben.
+    */
 
-["Warum ist Splintholz oft feuchter?",["Es ist am Wassertransport beteiligt","Es ist Rinde","Es ist tot","Es liegt im Boden"],0],
-["Warum kann Kernholz dunkler sein?",["Einlagerung von Stoffen","Weil es Wasser transportiert","Weil es Blätter besitzt","Weil es Wurzeln besitzt"],0],
-["Was beeinflusst die Holzfarbe?",["Baumart und Inhaltsstoffe","Nur das Wetter","Nur die Höhe","Nur die Blätter"],0],
-["Was beeinflusst die Holzdichte?",["Baumart und Wachstum","Nur die Rinde","Nur die Krone","Nur das Alter des Bodens"],0],
-["Welche Eigenschaft besitzt Eichenholz?",["Hart und dauerhaft","Extrem weich","Schwammig","Sehr leicht wie Balsa"],0],
-["Welche Eigenschaft besitzt Balsaholz?",["Sehr leicht","Sehr schwer","Metallisch","Sehr hart"],0],
-["Welche Eigenschaft besitzt Robinienholz?",["Hohe natürliche Dauerhaftigkeit","Extrem geringe Dichte","Sehr weiches Holz","Keine Festigkeit"],0],
-["Welche Eigenschaft besitzt Lindenholz?",["Weich und feinporig","Extrem schwer","Metallisch","Sehr harzig"],0],
-["Welche Eigenschaft besitzt Hickory?",["Sehr fest und zäh","Sehr weich","Schwammig","Sehr leicht"],0],
-["Welche Eigenschaft besitzt Teak?",["Hohe natürliche Dauerhaftigkeit","Sehr geringe Dauerhaftigkeit","Sehr weiches Holz","Kein Kernholz"],0],
+    const tree=trees[index];
 
-["Welche Schicht befindet sich am weitesten außen?",["Rinde","Kernholz","Mark","Reifholz"],0],
-["Welche Schicht befindet sich am weitesten innen?",["Mark","Rinde","Splintholz","Borke"],0],
-["Welche Schicht ist meist zwischen Rinde und Kern?",["Splintholz","Mark","Borke","Samen"],0],
-["Welche Zone kann zwischen Splint und Kern liegen?",["Reifholz","Mark","Rinde","Borke"],0],
-["Welche vier Holzbereiche werden in diesem Lernmodell betrachtet?",["Splint, Reif, Kern, Kernreif","Nur Rinde","Nur Mark","Blätter, Blüten, Früchte"],0],
-["Welche fünf Stammbereiche zeigt das Modell?",["Rinde, Splint, Reif, Kern, Mark","Blätter und Blüten","Nur Kern","Nur Rinde"],0],
-["Kann jeder Baum exakt dieselben Holzbereiche besitzen?",["Nein","Ja, immer","Nur Nadelbäume","Nur Laubbäume"],0],
-["Ist die Farbe von Splintholz immer gleich?",["Nein","Ja","Nur bei Eiche","Nur bei Fichte"],0],
-["Ist Kernholz bei allen Baumarten gleich dunkel?",["Nein","Ja","Immer schwarz","Immer weiß"],0],
-["Besitzt jeder Baum stark ausgeprägtes Kernholz?",["Nein","Ja","Nur Bäume unter 10 Jahren","Nur Obstbäume"],0],
+    if(!trunkGroup)return;
 
-["Welche Art gehört zu den Obstbäumen?",["Birnbaum","Fichte","Tanne","Kiefer"],0],
-["Welche Art gehört zu den Obstbäumen?",["Apfelbaum","Douglasie","Lärche","Zeder"],0],
-["Welche Art gehört zu den Obstbäumen?",["Kirschbaum","Fichte","Buche","Tanne"],0],
-["Welche Art besitzt essbare Kastanien?",["Edelkastanie","Fichte","Kiefer","Douglasie"],0],
-["Welche Baumart liefert Walnüsse?",["Walnussbaum","Linde","Pappel","Weide"],0],
-["Welche Baumart liefert Äpfel?",["Apfelbaum","Tanne","Fichte","Kiefer"],0],
-["Welche Baumart liefert Birnen?",["Birnbaum","Eiche","Buche","Lärche"],0],
-["Welche Baumart liefert Kirschen?",["Kirschbaum","Douglasie","Fichte","Zeder"],0],
-["Welche Baumart ist für Ahornsirup bekannt?",["Zuckerahorn","Eiche","Buche","Kiefer"],0],
-["Welche Baumart besitzt sehr charakteristische weiße Rinde?",["Birke","Eiche","Robinie","Walnuss"],0]
+    let barkColor=0x35170b;
+    let splintColor=0xd39a5b;
+    let coreColor=0x6d391c;
+
+    if(tree.name==="Birke"){
+        barkColor=0xddd8c8;
+        splintColor=0xe2bd83;
+    }
+
+    if(tree.name==="Buche" ||
+       tree.name==="Rotbuche"){
+        coreColor=0x9b5b32;
+    }
+
+    if(tree.name==="Walnuss"){
+        coreColor=0x35160b;
+        splintColor=0xc48a55;
+    }
+
+    if(tree.name==="Eiche"){
+        coreColor=0x583018;
+    }
+
+    if(tree.name==="Kiefer"){
+        barkColor=0x4a2411;
+        coreColor=0x874c25;
+    }
+
+    if(layerObjects.bark){
+        layerObjects.bark.material.color
+            .setHex(barkColor);
+    }
+
+    if(layerObjects.splint){
+        layerObjects.splint.material.color
+            .setHex(splintColor);
+    }
+
+    if(layerObjects.core){
+        layerObjects.core.material.color
+            .setHex(coreColor);
+    }
+
+    resetCamera();
+}
+
+
+/* =========================================================
+   QUIZ – 100 FRAGEN
+========================================================= */
+
+const questions=[
+
+{
+q:"Welche Schicht liegt ganz außen?",
+a:["Mark","Kernholz","Rinde","Reifholz"],
+c:2
+},
+
+{
+q:"Welche Holzschicht transportiert bei einem lebenden Baum hauptsächlich Wasser?",
+a:["Kernholz","Splintholz","Mark","Rinde"],
+c:1
+},
+
+{
+q:"Wo befindet sich das Mark?",
+a:["Außen","In der Rinde","Im Zentrum","Im Splintholz"],
+c:2
+},
+
+{
+q:"Welche Schicht liegt direkt innerhalb der Rinde?",
+a:["Splintholz","Kernholz","Mark","Reifholz"],
+c:0
+},
+
+{
+q:"Was ist Kernholz?",
+a:["Äußerste Schutzschicht","Innerer nicht aktiv wasserleitender Holzbereich","Das Mark","Die Rinde"],
+c:1
+},
+
+{
+q:"Was ist typisch für Splintholz?",
+a:["Es ist außen und physiologisch aktiv","Es liegt im Zentrum","Es ist immer schwarz","Es ist die Rinde"],
+c:0
+},
+
+{
+q:"Welche Schicht kann sich farblich kaum vom Splintholz unterscheiden?",
+a:["Kernholz","Reifholz","Rinde","Mark"],
+c:1
+},
+
+{
+q:"Welche Schicht befindet sich im Zentrum des Stammes?",
+a:["Rinde","Splintholz","Mark","Kernholz"],
+c:2
+},
+
+{
+q:"Welche Funktion hat die Rinde?",
+a:["Schutz","Wassertransport im Xylem","Samenbildung","Photosynthese"],
+c:0
+},
+
+{
+q:"Welche Holzschicht ist bei vielen Baumarten heller?",
+a:["Splintholz","Kernholz","Mark","Rinde"],
+c:0
+},
+
+{
+q:"Welche Baumart ist ein typischer Nadelbaum?",
+a:["Eiche","Buche","Fichte","Ahorn"],
+c:2
+},
+
+{
+q:"Welche Baumart ist ein Laubbaum?",
+a:["Fichte","Kiefer","Eiche","Tanne"],
+c:2
+},
+
+{
+q:"Welche Baumart besitzt eine auffällig weiße Rinde?",
+a:["Birke","Eiche","Buche","Kiefer"],
+c:0
+},
+
+{
+q:"Welche Baumart ist für besonders hartes Holz bekannt?",
+a:["Hainbuche","Weide","Pappel","Linde"],
+c:0
+},
+
+{
+q:"Welche Baumart verliert ihre Nadeln im Herbst?",
+a:["Fichte","Tanne","Lärche","Kiefer"],
+c:2
+},
+
+{
+q:"Welche Baumart ist ursprünglich nordamerikanisch?",
+a:["Douglasie","Buche","Eiche","Hainbuche"],
+c:0
+},
+
+{
+q:"Welche Baumart ist ein tropisches Holz?",
+a:["Teak","Fichte","Buche","Birke"],
+c:0
+},
+
+{
+q:"Welche Baumart ist für dunkles dekoratives Holz bekannt?",
+a:["Walnuss","Fichte","Birke","Tanne"],
+c:0
+},
+
+{
+q:"Was ist Splintholz?",
+a:["Äußerer jüngerer Holzbereich","Mark","Rinde","Kern"],
+c:0
+},
+
+{
+q:"Wo liegt Kernholz?",
+a:["Außen","Im inneren Stammbereich","Außerhalb des Baumes","In den Blättern"],
+c:1
+},
+
+{
+q:"Welche Schicht ist physiologisch nicht mehr aktiv?",
+a:["Kernholz","Junges Splintholz","Blätter","Wurzeln"],
+c:0
+},
+
+{
+q:"Welche Farbe hat Kernholz häufig?",
+a:["Immer weiß","Häufig dunkler","Immer blau","Immer grün"],
+c:1
+},
+
+{
+q:"Welche Farbe kann Splintholz häufig besitzen?",
+a:["Heller","Immer schwarz","Immer rot","Immer grün"],
+c:0
+},
+
+{
+q:"Welche Schicht liegt zwischen Splintholz und Kernholz?",
+a:["Reifholz","Mark","Rinde","Borke"],
+c:0
+},
+
+{
+q:"Was bedeutet 'Kernreifholz' vereinfacht?",
+a:["Splint, Reifholz und Kernholz kommen gemeinsam vor","Nur Rinde","Nur Mark","Nur Splintholz"],
+c:0
+},
+
+{
+q:"Welche Schicht schützt den Baum vor äußeren Einflüssen?",
+a:["Rinde","Mark","Kernholz","Reifholz"],
+c:0
+},
+
+{
+q:"Welche Schicht enthält das aktive Leitgewebe?",
+a:["Splintholz","Kernholz","Mark","Rinde"],
+c:0
+},
+
+{
+q:"Was wird im Splintholz unter anderem gespeichert?",
+a:["Reservestoffe","Steine","Samen","Nadeln"],
+c:0
+},
+
+{
+q:"Was ist eine typische Eigenschaft von Kernholz?",
+a:["Es ist nicht mehr aktiv wasserleitend","Es transportiert hauptsächlich Wasser","Es liegt außen","Es ist das Mark"],
+c:0
+},
+
+{
+q:"Welche Baumart ist ein typischer heimischer Nadelbaum?",
+a:["Fichte","Teak","Mahagoni","Olive"],
+c:0
+},
+
+{
+q:"Welche Baumart ist ein typischer heimischer Laubbaum?",
+a:["Rotbuche","Teak","Douglasie","Zeder"],
+c:0
+},
+
+{
+q:"Welche Baumart besitzt häufig ein ausgeprägtes Kernholz?",
+a:["Eiche","Gras","Bambus","Moos"],
+c:0
+},
+
+{
+q:"Was macht Holz für den Menschen besonders nützlich?",
+a:["Es ist vielseitig bearbeitbar","Es ist immer flüssig","Es wächst innerhalb eines Tages","Es besteht aus Metall"],
+c:0
+},
+
+{
+q:"Welche Baumart ist für Möbelholz bekannt?",
+a:["Walnuss","Gras","Moos","Schilf"],
+c:0
+},
+
+{
+q:"Welche Baumart wird häufig als Weihnachtsbaum verwendet?",
+a:["Fichte","Olive","Teak","Walnuss"],
+c:0
+},
+
+{
+q:"Welche Baumart besitzt Nadeln?",
+a:["Kiefer","Eiche","Buche","Ahorn"],
+c:0
+},
+
+{
+q:"Welche Baumart besitzt Blätter?",
+a:["Eiche","Fichte","Tanne","Kiefer"],
+c:0
+},
+
+{
+q:"Welche Holzschicht liegt zwischen Rinde und innerem Holz?",
+a:["Splintholz","Mark","Kernholz","Reifholz"],
+c:0
+},
+
+{
+q:"Welche Schicht ist im Stammquerschnitt am kleinsten?",
+a:["Mark","Rinde","Splintholz","Kernholz"],
+c:0
+},
+
+{
+q:"Was ist die Hauptaufgabe des Xylems?",
+a:["Wasserleitung","Blütenbildung","Samenbildung","Fruchtbildung"],
+c:0
+},
+
+{
+q:"Wo findet man das Xylem hauptsächlich?",
+a:["Im Holz","In der Frucht","In der Blüte","Nur in der Rinde"],
+c:0
+},
+
+{
+q:"Welche Baumart ist für ihre Früchte bekannt?",
+a:["Walnuss","Fichte","Tanne","Kiefer"],
+c:0
+},
+
+{
+q:"Welche Baumart hat häufig eine sehr markante Rinde?",
+a:["Birke","Buche","Tanne","Fichte"],
+c:0
+},
+
+{
+q:"Welche Holzart ist oft sehr dauerhaft?",
+a:["Teak","Pappel","Weide","Linde"],
+c:0
+},
+
+{
+q:"Welche Baumart gehört zu den höchsten der Erde?",
+a:["Küstenmammutbaum","Birke","Hainbuche","Olive"],
+c:0
+},
+
+{
+q:"Welche Baumart ist mediterran?",
+a:["Olive","Fichte","Tanne","Birke"],
+c:0
+},
+
+{
+q:"Welche Baumart besitzt aromatisches Holz?",
+a:["Zeder","Buche","Ahorn","Birke"],
+c:0
+},
+
+{
+q:"Welche Baumart ist für elastisches Holz bekannt?",
+a:["Esche","Pappel","Birke","Linde"],
+c:0
+},
+
+{
+q:"Was ist Reifholz?",
+a:["Innerer Bereich ohne aktiven Wassertransport","Rinde","Mark","Blatt"],
+c:0
+},
+
+{
+q:"Was passiert beim Übergang zum Kernholz?",
+a:["Das Holz wird physiologisch inaktiv","Das Holz wird zu Blättern","Es entsteht Rinde","Der Stamm verschwindet"],
+c:0
+},
+
+{
+q:"Welche Schicht besitzt meist den höchsten Wassertransport?",
+a:["Splintholz","Kernholz","Mark","Rinde"],
+c:0
+},
+
+{
+q:"Welche Schicht befindet sich außerhalb des Holzkörpers?",
+a:["Rinde","Kernholz","Reifholz","Mark"],
+c:0
+},
+
+{
+q:"Welche Baumart gehört zu den Laubbäumen?",
+a:["Esche","Kiefer","Fichte","Tanne"],
+c:0
+},
+
+{
+q:"Welche Baumart gehört zu den Nadelbäumen?",
+a:["Lärche","Eiche","Buche","Ahorn"],
+c:0
+},
+
+{
+q:"Was ist Holz biologisch gesehen?",
+a:["Sekundäres Dauergewebe eines Baumes","Metall","Mineral","Wasser"],
+c:0
+},
+
+{
+q:"Warum ist Kernholz häufig dunkler?",
+a:["Durch eingelagerte Stoffe","Durch Chlorophyll","Durch Wasser","Durch Nadeln"],
+c:0
+},
+
+{
+q:"Was befindet sich im Zentrum eines jungen Sprosses?",
+a:["Mark","Rinde","Splintholz","Kernholz"],
+c:0
+},
+
+{
+q:"Welche Baumart ist besonders bekannt für helles Holz?",
+a:["Birke","Walnuss","Mahagoni","Teak"],
+c:0
+},
+
+{
+q:"Welche Baumart liefert häufig rötlich-braunes Holz?",
+a:["Kirsche","Birke","Tanne","Fichte"],
+c:0
+},
+
+{
+q:"Welche Baumart gehört zur Gattung Quercus?",
+a:["Eiche","Buche","Kiefer","Tanne"],
+c:0
+},
+
+{
+q:"Welche Baumart gehört zur Gattung Fagus?",
+a:["Buche","Eiche","Fichte","Birke"],
+c:0
+},
+
+{
+q:"Welche Baumart gehört zur Gattung Picea?",
+a:["Fichte","Tanne","Kiefer","Eiche"],
+c:0
+},
+
+{
+q:"Welche Baumart gehört zur Gattung Pinus?",
+a:["Kiefer","Fichte","Buche","Eiche"],
+c:0
+},
+
+{
+q:"Welche Baumart gehört zur Gattung Betula?",
+a:["Birke","Buche","Eiche","Tanne"],
+c:0
+},
+
+{
+q:"Welche Baumart gehört zur Gattung Fraxinus?",
+a:["Esche","Eiche","Kiefer","Linde"],
+c:0
+},
+
+{
+q:"Welche Baumart gehört zur Gattung Tilia?",
+a:["Linde","Buche","Eiche","Birke"],
+c:0
+},
+
+{
+q:"Welche Baumart gehört zur Gattung Acer?",
+a:["Ahorn","Eiche","Buche","Fichte"],
+c:0
+},
+
+{
+q:"Welche Baumart gehört zur Gattung Larix?",
+a:["Lärche","Kiefer","Fichte","Tanne"],
+c:0
+},
+
+{
+q:"Welche Schicht ist direkt um das Mark herum?",
+a:["Kernholz","Rinde","Splintholz","Borke"],
+c:0
+},
+
+{
+q:"Welche Schicht ist bei einem lebenden Baum aktiv?",
+a:["Splintholz","Kernholz","Reifholz","Mark"],
+c:0
+},
+
+{
+q:"Welche Schicht kann Reservestoffe speichern?",
+a:["Splintholz","Kernholz","Rinde","Mark"],
+c:0
+},
+
+{
+q:"Welche Schicht ist äußerlich am stärksten der Umwelt ausgesetzt?",
+a:["Rinde","Mark","Kernholz","Reifholz"],
+c:0
+},
+
+{
+q:"Welche Baumart wird häufig für Bauholz verwendet?",
+a:["Fichte","Olive","Teak","Walnuss"],
+c:0
+},
+
+{
+q:"Welche Baumart besitzt ein hartes und zähes Holz?",
+a:["Esche","Pappel","Weide","Linde"],
+c:0
+},
+
+{
+q:"Welche Baumart ist ein typischer Pionierbaum?",
+a:["Birke","Buche","Tanne","Eiche"],
+c:0
+},
+
+{
+q:"Was ist die Rinde im Vergleich zum Kernholz?",
+a:["Sie liegt außen","Sie liegt innen","Sie ist das Mark","Sie ist Splintholz"],
+c:0
+},
+
+{
+q:"Welche Zone ist normalerweise näher an der Stammoberfläche?",
+a:["Splintholz","Mark","Kernholz","Reifholz"],
+c:0
+},
+
+{
+q:"Welche Zone ist normalerweise am weitesten vom Stammrand entfernt?",
+a:["Mark","Rinde","Splintholz","Reifholz"],
+c:0
+},
+
+{
+q:"Welche Schicht kann bei manchen Arten kaum farblich auffallen?",
+a:["Reifholz","Rinde","Mark","Kernholz"],
+c:0
+},
+
+{
+q:"Welche Baumart kann besonders alt werden?",
+a:["Eiche","Pappel","Birke","Weide"],
+c:0
+},
+
+{
+q:"Welche Baumart ist bekannt für ihre goldgelbe Herbstfärbung?",
+a:["Ahorn","Fichte","Tanne","Kiefer"],
+c:0
+},
+
+{
+q:"Welche Baumart hat charakteristische handförmige Blätter?",
+a:["Ahorn","Fichte","Tanne","Kiefer"],
+c:0
+},
+
+{
+q:"Welche Baumart hat charakteristische Bucheckern?",
+a:["Rotbuche","Eiche","Birke","Fichte"],
+c:0
+},
+
+{
+q:"Welche Baumart produziert Eicheln?",
+a:["Eiche","Buche","Fichte","Tanne"],
+c:0
+},
+
+{
+q:"Welche Baumart produziert Walnüsse?",
+a:["Walnuss","Eiche","Buche","Ahorn"],
+c:0
+},
+
+{
+q:"Welche Baumart produziert Kastanien?",
+a:["Kastanie","Fichte","Tanne","Kiefer"],
+c:0
+},
+
+{
+q:"Welche Holzart wird häufig für hochwertige Furniere verwendet?",
+a:["Walnuss","Gras","Moos","Schilf"],
+c:0
+},
+
+{
+q:"Welche Holzschicht ist bei vielen Arten besonders dauerhaft?",
+a:["Kernholz","Mark","Splintholz","Rinde"],
+c:0
+},
+
+{
+q:"Welche Schicht ist nicht bei jedem Baum in gleicher Form ausgeprägt?",
+a:["Kernholz/Reifholz","Mark","Rinde","Splintholz"],
+c:0
+},
+
+{
+q:"Welche Baumart ist ein immergrüner Nadelbaum?",
+a:["Tanne","Buche","Eiche","Ahorn"],
+c:0
+},
+
+{
+q:"Welche Baumart ist in Mitteleuropa weit verbreitet?",
+a:["Fichte","Teak","Mahagoni","Olive"],
+c:0
+},
+
+{
+q:"Welche Baumart ist für sehr dauerhaftes Tropenholz bekannt?",
+a:["Teak","Birke","Fichte","Buche"],
+c:0
+},
+
+{
+q:"Welche Baumart kann über 100 Meter hoch werden?",
+a:["Küstenmammutbaum","Eiche","Buche","Kiefer"],
+c:0
+},
+
+{
+q:"Welche Schicht bildet den größten äußeren Bereich des Holzkörpers?",
+a:["Splintholz","Mark","Rinde","Kernholz"],
+c:0
+},
+
+{
+q:"Welche Schicht befindet sich zwischen Rinde und Kernholz?",
+a:["Splintholz","Mark","Nur Rinde","Nur Reifholz"],
+c:0
+},
+
+{
+q:"Was bedeutet physiologisch aktiv?",
+a:["Lebensvorgänge finden dort noch statt","Das Holz ist tot und trocken","Es ist außen","Es ist das Mark"],
+c:0
+},
+
+{
+q:"Welche Schicht ist physiologisch inaktiv?",
+a:["Kernholz","Junges Splintholz","Blätter","Wurzeln"],
+c:0
+},
+
+{
+q:"Welche Baumart ist ein typischer Stadtbaum?",
+a:["Linde","Fichte","Tanne","Kiefer"],
+c:0
+},
+
+{
+q:"Welche Baumart besitzt besonders aromatische Früchte?",
+a:["Olive","Fichte","Buche","Birke"],
+c:0
+},
+
+{
+q:"Welche Baumart gehört zu den tropischen Laubbäumen?",
+a:["Teak","Fichte","Tanne","Kiefer"],
+c:0
+},
+
+{
+q:"Welche Baumart ist bekannt für wertvolles rötliches Holz?",
+a:["Mahagoni","Birke","Tanne","Fichte"],
+c:0
+},
+
+{
+q:"Was ist die wichtigste Funktion des Holzkörpers?",
+a:["Stabilität und Leitung","Blütenbildung","Fruchtbildung","Samenbildung"],
+c:0
+},
+
+{
+q:"Warum ist der Stamm innen meist dunkler?",
+a:["Durch Kernholz und eingelagerte Stoffe","Durch Blätter","Durch Nadeln","Durch Blüten"],
+c:0
+},
+
+{
+q:"Welche Zone liegt am nächsten an der Rinde?",
+a:["Splintholz","Mark","Kernholz","Reifholz"],
+c:0
+},
+
+{
+q:"Welche Zone liegt am nächsten am Mark?",
+a:["Kernholz","Rinde","Splintholz","Borke"],
+c:0
+},
+
+{
+q:"Was kann man im 3D-Modell von außen nach innen erkennen?",
+a:["Rinde, Splint, Reifholz, Kernholz, Mark","Mark, Rinde, Splint","Nur Rinde","Nur Kernholz"],
+c:0
+}
 
 ];
 
-
-/* =========================================================
-   QUIZ
-========================================================= */
-
 let quizQuestions=[];
 let quizIndex=0;
-let quizScore=0;
-let quizLocked=false;
+let score=0;
+let locked=false;
 
+
+/* SHUFFLE */
 
 function shuffle(array){
 
-  return [...array]
-    .sort(()=>Math.random()-.5);
+    const arr=[...array];
 
+    for(let i=arr.length-1;i>0;i--){
+
+        const j=
+            Math.floor(
+                Math.random()*(i+1)
+            );
+
+        [
+            arr[i],
+            arr[j]
+        ]=[
+            arr[j],
+            arr[i]
+        ];
+    }
+
+    return arr;
 }
 
 
+/* START QUIZ */
+
 function startQuiz(){
 
-  quizQuestions=
-    shuffle(questionPool)
-    .slice(0,10);
+    quizQuestions=
+        shuffle(questions)
+        .slice(0,10);
 
-  quizIndex=0;
-  quizScore=0;
+    quizIndex=0;
+    score=0;
 
-  document.getElementById("quizGame")
-    .style.display="block";
+    document.getElementById("quizGame")
+        .style.display="block";
 
-  document.getElementById("result")
-    .style.display="none";
+    document.getElementById("result")
+        .style.display="none";
 
-  loadQuiz();
-
+    loadQuiz();
 }
 
 
 function loadQuiz(){
 
-  quizLocked=false;
+    locked=false;
 
-  const q=
-    quizQuestions[quizIndex];
+    const q=
+        quizQuestions[quizIndex];
 
-  document.getElementById("quizNumber")
-    .textContent=
-      "Frage "+
-      (quizIndex+1)+
-      " / 10";
+    document.getElementById("question")
+        .textContent=q.q;
 
-  document.getElementById("quizPoints")
-    .textContent=
-      quizScore+" Punkte";
+    document.getElementById("quizCounter")
+        .textContent=
+        `Frage ${quizIndex+1} / 10`;
 
-  document.getElementById("progressBar")
-    .style.width=
-      (quizIndex/10*100)+"%";
+    document.getElementById("quizScore")
+        .textContent=
+        `${score} Punkte`;
 
-  document.getElementById("question")
-    .textContent=q[0];
+    document.getElementById("progressBar")
+        .style.width=
+        `${quizIndex/10*100}%`;
 
-  const answers=
-    document.getElementById("answers");
+    const answers=
+        document.getElementById("answers");
 
-  answers.innerHTML="";
+    answers.innerHTML="";
 
-  const shuffled=
-    q[1]
-      .map((answer,index)=>({
-        answer,
-        original:index
-      }))
-      .sort(()=>Math.random()-.5);
+    q.a.forEach((text,index)=>{
 
-  shuffled.forEach(item=>{
+        const button=
+            document.createElement("button");
 
-    const button=
-      document.createElement("button");
+        button.className="answer";
 
-    button.className="answer";
+        button.textContent=text;
 
-    button.textContent=
-      item.answer;
+        button.onclick=()=>{
+            answerQuiz(
+                index,
+                button
+            );
+        };
 
-    button.onclick=()=>{
-      answerQuiz(
-        item.original,
-        button,
-        q[2]
-      );
-    };
+        answers.appendChild(button);
 
-    answers.appendChild(button);
-
-  });
-
+    });
 }
 
 
-function answerQuiz(
-  selected,
-  button,
-  correct
-){
+function answerQuiz(index,button){
 
-  if(quizLocked)return;
+    if(locked)return;
 
-  quizLocked=true;
+    locked=true;
 
-  if(selected===correct){
-
-    button.classList.add("correct");
-
-    quizScore++;
-
-  }else{
-
-    button.classList.add("wrong");
+    const q=
+        quizQuestions[quizIndex];
 
     const buttons=
-      document.querySelectorAll(".answer");
+        document.querySelectorAll(".answer");
 
-    buttons.forEach(btn=>{
+    if(index===q.c){
 
-      /*
-       * Richtige Antwort anhand
-       * des Textes markieren.
-       */
+        button.classList.add("correct");
 
-      if(btn.textContent===
-        quizQuestions[quizIndex][1][correct]
-      ){
-        btn.classList.add("correct");
-      }
-
-    });
-
-  }
-
-  document.getElementById("quizPoints")
-    .textContent=
-      quizScore+" Punkte";
-
-  setTimeout(()=>{
-
-    quizIndex++;
-
-    if(quizIndex>=10){
-
-      finishQuiz();
+        score++;
 
     }else{
 
-      loadQuiz();
+        button.classList.add("wrong");
 
+        buttons[q.c]
+            .classList.add("correct");
     }
 
-  },850);
+    document.getElementById("quizScore")
+        .textContent=
+        `${score} Punkte`;
 
+    setTimeout(()=>{
+
+        quizIndex++;
+
+        if(quizIndex>=10){
+
+            finishQuiz();
+
+        }else{
+
+            loadQuiz();
+
+        }
+
+    },850);
 }
 
 
 function finishQuiz(){
 
-  document.getElementById("quizGame")
-    .style.display="none";
+    document.getElementById("quizGame")
+        .style.display="none";
 
-  document.getElementById("result")
-    .style.display="block";
+    document.getElementById("result")
+        .style.display="block";
 
-  document.getElementById("progressBar")
-    .style.width="100%";
+    document.getElementById("progressBar")
+        .style.width="100%";
 
-  document.getElementById("resultScore")
-    .textContent=
-      "Du hast "+
-      quizScore+
-      " von 10 Punkten erreicht.";
-
+    document.getElementById("resultScore")
+        .textContent=
+        `Du hast ${score} von 10 Punkten erreicht.`;
 }
 
 
 function restartQuiz(){
 
-  startQuiz();
-
+    startQuiz();
 }
 
 
 /* =========================================================
-   INIT
+   SCROLL BUTTON
 ========================================================= */
 
 window.addEventListener(
-  "load",
-  ()=>{
+    "scroll",
+    ()=>{
 
-    initTreeRegister();
+        const top=
+            document.getElementById("top");
 
-    create3D();
-
-    startQuiz();
-
-  }
+        top.style.display=
+            window.scrollY>500
+                ?"block"
+                :"none";
+    }
 );
+
+
+/* =========================================================
+   ESC
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    e=>{
+
+        if(e.key==="Escape"){
+
+            showPageById("home");
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   INITIALISIERUNG
+========================================================= */
+
+renderTrees();
+
+startQuiz();
 
 </script>
 
