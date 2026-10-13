@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BaumWelt 3D – HolzWissen Katalog</title>
+<style>
+:root{--bg:#101a16;--panel:#1b2b23;--panel2:#243d2e;--green:#83e0a4;--text:#f4f8f4;--muted:#bdcbbf;--border:#3a5745;--accent:#d7b779}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+header{padding:36px 18px 28px;text-align:center;background:radial-gradient(ellipse at top,#28533a,#101a16 70%);border-bottom:1px solid var(--border)}
+header h1{font-size:clamp(2rem,6vw,3.7rem);line-height:1.1;margin:0;color:var(--green)}
+header p{color:var(--muted);max-width:760px;margin:14px auto 0}
+nav{position:sticky;top:0;z-index:10;display:flex;justify-content:center;flex-wrap:wrap;gap:8px;padding:10px;background:#14221bf2;border-bottom:1px solid var(--border);backdrop-filter:blur(8px)}
+nav a{color:var(--text);text-decoration:none;padding:8px 12px;background:var(--panel);border-radius:9px}
+nav a:hover,button:hover{background:#39754f}
+main{width:min(1200px,94%);margin:auto;padding:22px 0 55px}
+section{margin:22px 0;padding:clamp(16px,3vw,26px);background:var(--panel);border:1px solid var(--border);border-radius:17px}
+h2{margin:0 0 12px;color:var(--green)}
+h3{margin:0 0 8px;color:#e5f4e8}
+.muted,.small{color:var(--muted)}
+.small{font-size:.9rem}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0;align-items:center}
+input,select{min-width:0;max-width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:9px;background:#101a16;color:var(--text);font:inherit}
+input[type=search]{flex:1;min-width:190px}
+button{padding:10px 14px;border:1px solid var(--border);border-radius:9px;background:#28533a;color:white;font:inherit;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,245px),1fr));gap:14px}
+.tree-card,.info-card{padding:17px;background:#14221b;border:1px solid var(--border);border-radius:13px;display:flex;flex-direction:column;gap:8px}
+.tree-card .symbol{font-size:2.4rem}
+.tag{display:inline-block;padding:3px 8px;border-radius:99px;background:#294b35;color:#dff7e5;font-size:.8rem;margin:2px 3px 2px 0}
+.tree-card button{margin-top:auto;align-self:flex-start}
+.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:12px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:18px}
+.stat{padding:15px;background:#14221b;border-radius:12px;text-align:center}
+.stat strong{display:block;color:var(--green);font-size:1.7rem}
+details{border:1px solid var(--border);border-radius:10px;padding:12px 14px;background:#14221b;margin:9px 0}
+summary{cursor:pointer;color:#e5f4e8;font-weight:650}
+.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px;margin-top:12px}
+.detail-grid div{padding:12px;background:#1b2b23;border-radius:9px}
+.viewer{background:radial-gradient(circle,#36513c,#14221b);border-radius:12px;overflow:hidden;min-height:290px}
+#treeCanvas{display:block;width:100%;height:340px;touch-action:pan-y}
+.layer-legend{display:flex;gap:10px;flex-wrap:wrap}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px}
+.flashcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:13px}
+.flash{min-height:175px;padding:18px;border-radius:12px;border:1px solid var(--border);background:#243d2e;text-align:left;display:flex;flex-direction:column;justify-content:center}
+.flash strong{font-size:1.2rem;color:var(--green)}
+#answers{display:grid;gap:9px;margin:15px 0}
+#answers button{text-align:left;background:#14221b}
+#quizResult{min-height:28px;font-weight:650}
+footer{text-align:center;padding:25px;color:var(--muted);border-top:1px solid var(--border)}
+dialog{max-width:760px;width:calc(100% - 28px);max-height:85vh;overflow:auto;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:16px;padding:22px}
+dialog::backdrop{background:#000b}
+.dialog-head{display:flex;justify-content:space-between;gap:12px;align-items:start}
+.dialog-head button{flex-shrink:0}
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px}
+table{width:100%;border-collapse:collapse;min-width:1050px;background:#14221b;font-size:.92rem}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}
+th{background:#243d2e;color:#e5f4e8;position:sticky;top:0}
+tbody tr:hover{background:#1b2b23}
+.rating{white-space:nowrap;font-weight:700;color:var(--green)}
+@media(max-width:550px){
+nav{position:static}
+header{padding:28px 15px}
+section{padding:16px}
+.controls>*{flex:1}
+#treeCanvas{height:280px}
+}
+</style>
+</head>
+<body>
+<header>
+<h1>🌳 BaumWelt 3D</h1>
+<p><strong>HolzWissen – Baumarten entdecken, Holz verstehen.</strong><br>Ein katalogisiertes Lernlexikon für Laub- und Nadelbäume, Holzaufbau, Nutzung und Wissenstests.</p>
+<div class="stats">
+<div class="stat"><strong id="treeCount">0</strong>Baumarten im Katalog</div>
+<div class="stat"><strong>7</strong>Holz-Lexikonbereiche</div>
+<div class="stat"><strong id="quizBest">0</strong>Quiz-Bestleistung</div>
+</div>
+</header>
+<nav>
+<a href="#katalog">Baumarten-Katalog</a>
+<a href="#schreinerei">Schreinerei</a>
+<a href="#holz">Holzlexikon</a>
+<a href="#stamm">3D-Stamm</a>
+<a href="#karten">Lernkarten</a>
+<a href="#quiz">Quiz</a>
+</nav>
+<main>
+<section id="start">
+<h2>Willkommen im HolzWissen-Katalog</h2>
+<p>Nutze die Suche, die Gruppenfilter und die alphabetische Sortierung, um Baumarten zu finden. Öffne einen Steckbrief für Merkmale, Standort, Holz und typische Verwendung. Die Angaben sind allgemeine Orientierung: Holzmerkmale variieren unter anderem mit Alter, Wuchsbedingungen und Feuchtigkeit.</p>
+<p class="small">Hinweis: Dieses Lernprojekt arbeitet mit einer eingebauten Wissenssammlung und benötigt für Suche, Filter, Steckbriefe, Lernkarten und Quiz keine Datenbank. Nur die optionale 3D-Darstellung lädt Three.js aus dem Internet.</p>
+</section>
+<section id="katalog">
+<h2>📚 Baumarten-Katalog</h2>
+<p class="muted">Suche nach deutschem oder wissenschaftlichem Namen, Holzmerkmal, Standort oder Verwendung. Filtere nach Baumgruppe und sortiere alphabetisch.</p>
+<div class="controls">
+<input id="search" type="search" placeholder="🔎 Baum, Holz, Standort oder Verwendung suchen…" aria-label="Baumarten durchsuchen">
+<select id="groupFilter" aria-label="Baumgruppe filtern">
+<option value="alle">Alle Baumgruppen</option>
+<option value="Laubbaum">Laubbäume</option>
+<option value="Nadelbaum">Nadelbäume</option>
+</select>
+<select id="sortBy" aria-label="Sortierung">
+<option value="de">Deutsch A–Z</option>
+<option value="de-desc">Deutsch Z–A</option>
+<option value="latin">Wissenschaftlich A–Z</option>
+</select>
+<button id="clearFilters" type="button">Filter zurücksetzen</button>
+</div>
+<p id="resultCount" class="small" aria-live="polite"></p>
+<div id="treeGrid" class="grid"></div>
+</section>
+<section id="schreinerei">
+<h2>🪚 Schreinerei – Holzarten vergleichen</h2>
+<p>Praxisübersicht für die Schreinerei: Farbe, Splint- und Kernholz, Festigkeit, Härte, Schwund, Formstabilität, Witterungsbeständigkeit, Pilz- und Insektenresistenz sowie typische Verwendungen.</p>
+<div class="controls">
+<input id="woodSearch" type="search" placeholder="🔎 Holzart oder Verwendung suchen…" aria-label="Schreinerei-Holzarten suchen">
+<select id="woodSort" aria-label="Holzarten sortieren">
+<option value="name">Holzart A–Z</option>
+<option value="hardness">Härte hoch bis niedrig</option>
+<option value="stability">Formstabilität hoch bis niedrig</option>
+<option value="weather">Witterungsbeständigkeit hoch bis niedrig</option>
+</select>
+</div>
+<p class="small">Bewertungsskala 1–5: 1 = niedrig, 5 = hoch. Bei Schwund bedeutet 5 ausdrücklich <strong>hoher Schwund</strong> (mehr Bewegung beim Trocknen/bei Feuchtewechseln, also ungünstiger). Die Werte sind grobe, vergleichende Lernwerte und keine normierten Festigkeitsklassen. Eigenschaften variieren je nach Holzfeuchte, Wuchs, Sortierung, Holzfehlern und Behandlung.</p>
+<div id="carpentryTableWrap"></div>
+</section>
+<section id="holz">
+<h2>🪵 Holzlexikon – Aufbau und Begriffe</h2>
+<p>Die Einteilung ist eine vereinfachte Lernhilfe. Nicht jede Baumart besitzt alle Bereiche in derselben Form oder mit klar sichtbaren Farbgrenzen.</p>
+<div id="woodGlossary"></div>
+</section>
+<section id="stamm">
+<h2>🌀 Interaktiver 3D-Baumstamm</h2>
+<p>Wähle eine Schicht aus. Der Stamm ist als aufgeschnittenes 3D-Modell dargestellt, damit Rinde, Splintholz und Kernholz gleichzeitig sichtbar sind. Mit Maus oder Touch kannst du drehen; Zoomen hängt vom Browser und Gerät ab.</p>
+<div class="controls">
+<label for="layerSelect">Anzeigen:</label>
+<select id="layerSelect">
+<option value="all">Alle Schichten (schematisch)</option>
+<option value="bark">Rinde</option>
+<option value="sapwood">Splintholz</option>
+<option value="heartwood">Kernholz</option>
+</select>
+<button id="reset3d" type="button">Ansicht zurücksetzen</button>
+</div>
+<div class="layer-legend">
+<span><i class="dot" style="background:#765038"></i>Rinde</span>
+<span><i class="dot" style="background:#d5b77a"></i>Splintholz</span>
+<span><i class="dot" style="background:#8e5832"></i>Kernholz</span>
+</div>
+<div class="viewer" id="viewer"><canvas id="treeCanvas" aria-label="Schematischer 3D-Baumstamm"></canvas></div>
+<p id="threeStatus" class="small" aria-live="polite">3D wird geladen …</p>
+</section>
+<section id="karten">
+<h2>🧠 Lernkarten</h2>
+<p class="muted">Tippe auf eine Karte, um die Erklärung einzublenden. Mit „Alle mischen“ ändert sich die Reihenfolge.</p>
+<div class="controls"><button id="shuffleCards" type="button">Lernkarten mischen</button></div>
+<div id="flashcards" class="flashcards"></div>
+</section>
+<section id="quiz">
+<h2>🎯 HolzWissen-Quiz</h2>
+<p id="questionProgress" class="small"></p>
+<p id="questionText" class="quiz-question"></p>
+<div id="answers"></div>
+<p id="quizResult" aria-live="polite"></p>
+<div class="controls">
+<button id="nextQuestion" type="button">Nächste Frage</button>
+<button id="restartQuiz" type="button">Quiz neu starten</button>
+</div>
+<p id="quizScore" class="small">Punkte: 0</p>
+</section>
+</main>
+<footer>BaumWelt 3D – HolzWissen · Lernkatalog für Schule und Holzkunde</footer>
+<dialog id="treeDialog">
+<div class="dialog-head">
+<div><h2 id="dialogTitle">Baum-Steckbrief</h2><p id="dialogSubtitle" class="muted"></p></div>
+<button id="closeDialog" type="button" aria-label="Steckbrief schließen">✕ Schließen</button>
+</div>
+<div id="dialogContent"></div>
+</dialog>
+<script>
+"use strict";
